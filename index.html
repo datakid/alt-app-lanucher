@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Launcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Quicksand:wght@400;600&family=Roboto+Mono:wght@400;700&family=Comic+Neue:wght@700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --glass-steampunk-bg: #d1c7bd;
+            --glass-steampunk-text: #5c4a3a;
+            --glass-steampunk-accent: #a89070;
+            --glass-steampunk-icon: #7a6a58;
+            --glass-steampunk-card-bg: rgba(235, 226, 217, 0.55);
+            --glass-steampunk-card-border: rgba(255, 255, 255, 0.4);
+            --glass-steampunk-shadow-light: rgba(235, 226, 217, 0.7);
+            --glass-steampunk-shadow-dark: rgba(183, 174, 177, 0.5);
+            --glass-steampunk-hover-glow: rgba(255, 255, 255, 0.2);
+
+            --control-bg: rgba(50, 50, 50, 0.6);
+            --control-border: rgba(255, 255, 255, 0.1);
+            --control-hover-bg: rgba(70, 70, 70, 0.7);
+            --control-active-bg: rgba(80, 80, 80, 0.9);
+            --control-active-inset-shadow: rgba(0,0,0,0.4);
+            --control-icon-color: #e0e0e0;
+            --control-active-icon-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background 0.4s ease, color 0.4s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s ease, backdrop-filter 0.3s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background: #111;
+            color: #fff;
+            position: relative;
+        }
+
+        #matrix-rain-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
+        }
+        body.matrix #matrix-rain-canvas { opacity: 0.7; }
+
+        .controls {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background-color: var(--control-bg);
+            border: 1px solid var(--control-border);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 5px;
+            display: flex;
+            gap: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-btn {
+            width: 48px; height: 40px; padding: 0; border: none;
+            background-color: transparent; color: var(--control-icon-color);
+            border-radius: 8px; cursor: pointer; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            transform: none; box-shadow: none;
+            transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+            margin: 0 2px;
+        }
+         .theme-btn i {
+             font-size: 18px; width: auto; height: auto;
+             transition: color 0.25s ease; color: currentColor; line-height: 1;
+         }
+         .theme-btn:hover { background-color: var(--control-hover-bg); }
+        .theme-btn.active {
+            background-color: var(--control-active-bg);
+            color: var(--control-active-icon-color);
+            box-shadow: inset 0 2px 4px var(--control-active-inset-shadow);
+        }
+        .theme-btn:hover { transform: none; box-shadow: none; }
+        .theme-btn:active { transform: none; box-shadow: none; }
+        .theme-btn.active:hover { background-color: var(--control-active-bg); }
+        .theme-btn::after { display: none; }
+
+        #launcher {
+            width: 90%; max-width: 1100px; padding: 40px; margin-top: 80px;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 1;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; position: relative; }
+        .title { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; transition: color 0.4s ease; }
+        .subtitle { font-size: 1.1rem; opacity: 0.8; max-width: 600px; margin: 10px auto 0; transition: color 0.4s ease; }
+
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 30px; }
+        body.matrix .grid { display: none; }
+
+        .app {
+            aspect-ratio: 1 / 1; border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; overflow: hidden;
+            transform-style: preserve-3d; perspective: 800px;
+            padding: 20px; text-decoration: none; color: inherit;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, backdrop-filter 0.3s ease;
+        }
+        .app:hover { transform: scale(1.05); z-index: 5; }
+        .app:active { transform: scale(0.98); }
+
+        /* --- Icon Centering & Proximity Fix --- */
+        .app-icon {
+            width: 65px; height: 65px;
+            margin-bottom: 10px; /* Reduced margin for proximity */
+            transition: all 0.3s ease; fill: currentColor;
+            flex-shrink: 0;
+            /* Flex Centering */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-icon i {
+            font-size: 40px;
+            line-height: 1; /* Ensure no extra line height */
+            color: inherit;
+            display: block; /* Treat as block */
+            margin: 0; /* Reset margin */
+            padding: 0; /* Reset padding */
+            width: auto; /* Allow natural width */
+            text-align: center; /* Center text within the block */
+        }
+        .app-name {
+            font-weight: 600; text-align: center; font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            margin-top: 0; /* Removed margin-top: auto */
+        }
+        /* --- End Fix --- */
+
+        .app-description {
+            font-size: 0.8rem; text-align: center; opacity: 0;
+            position: absolute; bottom: 15px; left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            width: 90%; line-height: 1.3;
+            transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+        }
+        /* Keep Hover effect, but adjusted for new layout */
+        .app:hover .app-icon { transform: translateY(-4px); /* Less movement needed */ }
+        .app:hover .app-name { transform: translateY(4px); /* Move name slightly down */ }
+        /* Hide description on hover for now to simplify layout */
+        /* .app:hover .app-description { transform: translateX(-50%) translateY(0); opacity: 0.8; } */
+
+
+        .futuristic { background: linear-gradient(135deg, #0a192f, #112240); color: #ccd6f6; }
+        .futuristic .app { background: rgba(16, 33, 65, 0.8); border: 1px solid rgba(100, 255, 218, 0.2); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(100, 255, 218, 0.1); color: #ccd6f6; }
+        .futuristic .app-icon i { color: #64ffda; }
+        .futuristic .app:hover { box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(100, 255, 218, 0.2); border: 1px solid rgba(100, 255, 218, 0.4); transform: scale(1.05) translateZ(5px); }
+        .futuristic .app::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(100, 255, 218, 0.05) 0%, transparent 70%); opacity: 0; transform: scale(0.5); transition: opacity 0.5s, transform 0.5s; z-index: -1; }
+        .futuristic .app:hover::before { opacity: 1; transform: scale(1); }
+        .futuristic .title { color: #64ffda; }
+        .futuristic .title::after { content: ''; position: absolute; width: 80px; height: 3px; background: #64ffda; bottom: -10px; left: 50%; transform: translateX(-50%); }
+        .futuristic .app::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, #64ffda, transparent); transform: scaleX(0); transform-origin: center; transition: transform 0.5s ease; }
+        .futuristic .app:hover::after { transform: scaleX(1); }
+        /* .futuristic .app-description { color: #a8b2d1; opacity: 0; } */
+        /* .futuristic .app:hover .app-description { opacity: 0.8; } */
+
+        .cartoon { background: #f8f8f8 url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MiIgaGVpZ2h0PSI1MiI+PGNpcmNsZSBjeD0iMjYiIGN5PSIyNiIgcj0iMiIgZmlsbD0iI2ZkZDgzNSIgZmlsbC1vcGFjaXR5PSIwLjEiLz4='); color: #333; }
+        .cartoon .title { font-family: 'Comic Neue', 'Comic Sans MS', cursive; color: #ff6b6b; text-shadow: 3px 3px 0 #fff, 4px 4px 0 #333; }
+        .cartoon .subtitle { font-family: 'Comic Neue', 'Comic Sans MS', cursive; color: #333; }
+        .cartoon .app { background: #fff; border: 4px solid #333; box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2); border-radius: 16px; transform: rotate(-2deg); animation: floating 3s infinite alternate ease-in-out; color: #333; }
+        .cartoon .app-icon i { color: inherit; }
+        .cartoon .app:nth-child(even) { transform: rotate(2deg); animation-delay: -1.5s; }
+        .cartoon .app:hover { transform: rotate(0) scale(1.08); box-shadow: 15px 15px 0 rgba(0, 0, 0, 0.15); animation-play-state: paused; }
+        @keyframes floating { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-10px) rotate(-2deg); } }
+        .cartoon .app:nth-child(even) { animation-name: floating-alt; }
+        @keyframes floating-alt { from { transform: translateY(0) rotate(2deg); } to { transform: translateY(-10px) rotate(2deg); } }
+        .cartoon .app-name { font-family: 'Comic Neue', 'Comic Sans MS', cursive; font-size: 1.3em; color: #333; }
+        /* .cartoon .app-description { font-family: 'Comic Neue', 'Comic Sans MS', cursive; color: #555; opacity: 0; } */
+        /* .cartoon .app:hover .app-description { opacity: 0.7; } */
+        .cartoon::before { content: "★"; position: absolute; top: 10%; left: 10%; font-size: 2rem; color: #ffcc00; animation: spin 8s linear infinite; z-index: 0; }
+        .cartoon::after { content: "♫"; position: absolute; bottom: 10%; right: 10%; font-size: 2rem; color: #ff6b6b; animation: bounce 3s ease-in-out infinite; z-index: 0; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .matrix { background-color: #000; color: #00ff41; font-family: 'Roboto Mono', 'Courier New', monospace; }
+        .matrix .title { font-family: inherit; letter-spacing: 2px; text-shadow: 0 0 8px #00ff41, 0 0 15px rgba(0, 255, 65, 0.4); color: #00ff41; }
+        .matrix .subtitle { font-family: inherit; text-shadow: 0 0 5px #00ff41; letter-spacing: 1px; color: #00ff41; opacity: 0.8; }
+        #matrix-terminal { display: none; width: 100%; max-width: 800px; margin: 30px auto 0; background: rgba(0, 10, 0, 0.8); border: 1px solid #008a22; border-radius: 4px; padding: 20px; font-size: 0.95rem; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); position: relative; min-height: 250px; }
+        body.matrix #matrix-terminal { display: block; }
+        #matrix-terminal .command-line { display: block; color: #00ff41; text-decoration: none; margin-bottom: 8px; line-height: 1.5; transition: background-color 0.2s ease, color 0.2s ease; padding: 2px 5px; border-radius: 2px; }
+        #matrix-terminal .command-line:hover { background-color: rgba(0, 255, 65, 0.15); color: #adffc4; }
+        #matrix-terminal .command-line .prompt { color: #00ff41; margin-right: 8px; user-select: none; }
+        #matrix-terminal .command-line .command-text { color: #9effb5; }
+        #matrix-terminal::after { content: '_'; font-weight: bold; color: #00ff41; animation: blink 1s step-end infinite; display: inline-block; margin-top: 10px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .steampunk {
+            background-color: var(--glass-steampunk-bg); color: var(--glass-steampunk-text);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="60" height="60"><path d="M50,10 A40,40 0 0,1 50,90 A40,40 0 0,1 50,10 M50,20 A30,30 0 0,0 50,80 A30,30 0 0,0 50,20 Z M50,30 L50,70 M30,50 L70,50 M35.8,35.8 L64.2,64.2 M35.8,64.2 L64.2,35.8" fill="none" stroke="%23A08C6E" stroke-width="1" opacity="0.08" /></svg>');
+            background-size: 60px 60px;
+        }
+        .steampunk .title { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; color: var(--glass-steampunk-text); text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6); letter-spacing: 1px; }
+        .steampunk .subtitle { font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--glass-steampunk-text); opacity: 0.85; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3); }
+        .steampunk .app {
+            background-image: linear-gradient(rgba(255,255,255,0.05), rgba(0,0,0,0.02));
+            background-color: var(--glass-steampunk-card-bg); border-radius: 18px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-steampunk-card-border);
+            box-shadow: inset 3px 3px 6px var(--glass-steampunk-shadow-dark), inset -3px -3px 6px var(--glass-steampunk-shadow-light), 3px 3px 8px rgba(0, 0, 0, 0.1);
+            color: var(--glass-steampunk-text); overflow: hidden; padding: 25px;
+        }
+        .steampunk .app:hover {
+             background-color: rgba(235, 226, 217, 0.7); border-color: rgba(255, 255, 255, 0.6);
+             box-shadow: inset 2px 2px 5px var(--glass-steampunk-shadow-dark), inset -2px -2px 5px var(--glass-steampunk-shadow-light), 4px 4px 10px rgba(0, 0, 0, 0.12), inset 0 0 15px var(--glass-steampunk-hover-glow);
+             transform: scale(1.04) translateY(-2px); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .steampunk .app:active {
+             background-color: rgba(235, 226, 217, 0.5);
+             box-shadow: inset 5px 5px 9px var(--glass-steampunk-shadow-dark), inset -5px -5px 9px var(--glass-steampunk-shadow-light);
+             transform: scale(0.99); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+        .steampunk .app-icon i { color: var(--glass-steampunk-icon); filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.15)); text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2); }
+        .steampunk .app-name { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; color: var(--glass-steampunk-text); text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5); font-size: 1.1rem; }
+        /* .steampunk .app-description { font-family: 'Montserrat', sans-serif; font-style: normal; font-size: 0.75rem; color: var(--glass-steampunk-text); opacity: 0; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3); } */
+        /* .steampunk .app:hover .app-description { opacity: 0.75; } */
+        .steampunk .theme-btn { background: rgba(210, 199, 189, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; box-shadow: none; }
+        .steampunk .theme-btn i { color: var(--glass-steampunk-text); }
+        .steampunk .theme-btn:hover { box-shadow: none; background: rgba(210, 199, 189, 0.7); transform: none; }
+        .steampunk .theme-btn.active { background-color: rgba(210, 199, 189, 0.8); color: var(--glass-steampunk-text); box-shadow: inset 0 2px 4px rgba(183, 174, 177, 0.7); }
+        .steampunk .theme-btn.active:hover { background-color: rgba(210, 199, 189, 0.8); }
+
+        @media (max-width: 992px) { .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); } #matrix-terminal { max-width: 90%; } }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
+            .app-icon { width: 55px; height: 55px; margin-bottom: 8px;} .app-icon i { font-size: 30px; }
+            .app-name { font-size: 1rem; } .app:hover .app-name { transform: translateY(2px); } .app:hover .app-icon { transform: translateY(-2px); }
+            /* .app-description { font-size: 0.75rem; bottom: 10px;} */
+            #matrix-terminal { font-size: 0.9rem; padding: 15px; } #matrix-terminal .command-line { margin-bottom: 6px; }
+            .controls { top: 10px; right: 10px; padding: 4px; border-radius: 10px; }
+            .theme-btn { width: 42px; height: 36px; margin: 0 1px; } .theme-btn i { font-size: 16px;}
+            .title { font-size: 2rem; } .subtitle { font-size: 0.9rem; }
+        }
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            #launcher { padding: 15px; width: 95%; margin-top: 70px; }
+            .title { font-size: 1.8rem; } .app { padding: 15px;}
+            .app-icon { width: 50px; height: 50px; margin-bottom: 8px; } .app-icon i { font-size: 28px; }
+            .steampunk .app-icon { width: 45px; height: 45px; } .steampunk .app-icon i { font-size: 26px; }
+            .app-name { font-size: 0.9rem;} .app-description { display: none; }
+            .app:hover .app-name { transform: translateY(2px); } .app:hover .app-icon { transform: translateY(-2px); }
+            #matrix-terminal { font-size: 0.8rem; padding: 12px; min-height: 200px;} #matrix-terminal .command-line { margin-bottom: 4px; line-height: 1.4; } #matrix-terminal::after { margin-top: 5px; }
+            .controls { top: auto; bottom: 10px; right: 5px; left: 5px; justify-content: center; padding: 4px; }
+            .theme-btn { width: 40px; height: 36px; margin: 0 1px;} .theme-btn i { font-size: 16px; }
+        }
+
+    </style>
+</head>
+<body class="futuristic">
+
+    <div class="controls">
+        <button class="theme-btn active" id="futuristic-btn" title="Futuristic"> <i class="fas fa-rocket"></i> </button>
+        <button class="theme-btn" id="cartoon-btn" title="Cartoon"> <i class="fas fa-face-grin-beam"></i> </button>
+        <button class="theme-btn" id="steampunk-btn" title="Steampunk"> <i class="fas fa-cogs"></i> </button>
+        <button class="theme-btn" id="matrix-btn" title="Matrix"> <i class="fas fa-terminal"></i> </button>
+    </div>
+
+    <canvas id="matrix-rain-canvas"></canvas>
+
+    <div id="launcher">
+         <div class="header">
+             <h1 class="title">LinkExpress</h1>
+             <p class="subtitle"></p>
+         </div>
+
+         <div class="grid">
+             <a href="https://datakid-github-io.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-briefcase-medical"></i></div>
+                 <div class="app-name">خارجي قوي عاملة</div>
+             </a>
+             <a href="https://datakid2.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-graduation-cap"></i></div>
+                 <div class="app-name">خارجي طلاب</div>
+             </a>
+             <a href="https://desktop-ru4x.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-pills"></i></div>
+                 <div class="app-name">مجموعات دوائية</div>
+             </a>
+             <a href="https://searchbar-five-beta.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-search"></i></div>
+                 <div class="app-name">لستة الادوية</div>
+             </a>
+             <a href="https://newlist2.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-dollar-sign"></i></div>
+                 <div class="app-name">المنفذ والتحمل</div>
+             </a>
+             <a href="https://protocols-one.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-folder-open"></i></div>
+                 <div class="app-name">بروتوكولات التأمين</div>
+             </a>
+             <a href="https://simpledashboard21.netlify.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-eye"></i></div>
+                 <div class="app-name">بيانات الخارجي</div>
+             </a>
+             <a href="https://josn.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
+                 <div class="app-icon"><i class="fas fa-gamepad"></i></div>
+                 <div class="app-name">---</div>
+             </a>
+        </div>
+
+        <div id="matrix-terminal">
+            <a href="https://datakid-github-io.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">connect --service عاملة --url datakid-github-io.vercel.app</span>
+            </a>
+            <a href="https://datakid2.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">connect --service طلاب --url datakid2.vercel.app</span>
+            </a>
+             <a href="https://desktop-ru4x.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">run --app مجموعات_دوائية --url desktop-ru4x.vercel.app</span>
+            </a>
+             <a href="https://searchbar-five-beta.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">run --app لستة_الادوية --url searchbar-five-beta.vercel.app</span>
+            </a>
+             <a href="https://newlist2.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">run --app المنفذ_والتحمل --url newlist2.vercel.app</span>
+            </a>
+             <a href="https://protocols-one.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">open --resource بروتوكولات --url protocols-one.vercel.app</span>
+            </a>
+             <a href="https://simpledashboard21.netlify.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">view --data بيانات_الخارجي --url simpledashboard21.netlify.app</span>
+            </a>
+             <a href="https://josn.vercel.app/" target="_blank" rel="noopener noreferrer" class="command-line">
+                <span class="prompt">&gt;</span><span class="command-text">exec --module josn --url josn.vercel.app</span>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        const body = document.body;
+        const themeButtons = document.querySelectorAll('.controls .theme-btn');
+        const controlsContainer = document.querySelector('.controls');
+
+        const canvas = document.getElementById('matrix-rain-canvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId = null;
+        let drops = [];
+        let fontSize = 14;
+        let columns = 0;
+        const matrixChars = 'アァカサタナハマヤラワガザダバパイキシチニヒミリヰギジビピウゥクスツヌフムユルグズブヅプエケセテネヘメレゲゼデベペオコソトノホモヨロヲゴゾドボポヴン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.:*+-=<>!?#$';
+        const characters = matrixChars.split('');
+        let lastTime = 0;
+        const fps = 15;
+        const interval = 1000 / fps;
+
+        function setupCanvas() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            if (columns <= 0) columns = 1;
+            drops = [];
+            for (let x = 0; x < columns; x++) {
+                drops[x] = -Math.random() * canvas.height / fontSize;
+            }
+        }
+
+        function drawMatrix(timestamp) {
+            if (!animationFrameId) return;
+            const deltaTime = timestamp - lastTime;
+            if (deltaTime > interval) {
+                lastTime = timestamp - (deltaTime % interval);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#008a22';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    if (drops[i] * fontSize > 0) {
+                        const text = characters[Math.floor(Math.random() * characters.length)];
+                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    }
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            animationFrameId = requestAnimationFrame(drawMatrix);
+        }
+
+        function startMatrixRain() {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            setupCanvas(); lastTime = performance.now();
+            animationFrameId = requestAnimationFrame(drawMatrix);
+        }
+
+        function stopMatrixRain() {
+            if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        window.addEventListener('resize', () => {
+            const wasMatrix = body.classList.contains('matrix');
+            if(wasMatrix) stopMatrixRain();
+            setupCanvas();
+            if (wasMatrix) startMatrixRain();
+        });
+
+        function setActiveTheme(themeName, clickedButton) {
+            themeButtons.forEach(btn => btn.classList.remove('active'));
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            } else {
+                const initialButton = document.getElementById(`${themeName}-btn`);
+                if (initialButton) initialButton.classList.add('active');
+            }
+
+            body.className = themeName;
+
+            if (themeName === 'matrix') {
+                startMatrixRain();
+            } else {
+                stopMatrixRain();
+            }
+
+            if (themeName === 'steampunk') {
+                 controlsContainer.style.backgroundColor = 'rgba(210, 199, 189, 0.6)';
+                 controlsContainer.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+             } else if (themeName === 'cartoon') {
+                 controlsContainer.style.backgroundColor = 'rgba(240, 240, 240, 0.7)';
+                 controlsContainer.style.borderColor = 'rgba(100, 100, 100, 0.2)';
+             }
+             else {
+                 controlsContainer.style.backgroundColor = 'var(--control-bg)';
+                 controlsContainer.style.borderColor = 'var(--control-border)';
+             }
+        }
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.id.replace('-btn', '');
+                setActiveTheme(theme, button);
+            });
+        });
+
+        setupCanvas();
+        const initialTheme = body.className || 'futuristic';
+        setActiveTheme(initialTheme);
+
+        const header = document.querySelector('.header');
+        if(header) {
+            header.style.opacity = '0'; header.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                header.style.opacity = '1'; header.style.transform = 'translateY(0)';
+                header.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            }, 100);
+        }
+    </script>
+</body>
+</html>
