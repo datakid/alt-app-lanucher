@@ -1,624 +1,602 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkExpress</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Orbitron:wght@900&family=Share+Tech+Mono&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-:root {
-    --dark-bg: #010413;
-    --dark-bg-gradient: linear-gradient(145deg, #010413, #0a0c20, #03010f);
-    --dark-card-bg: rgba(18, 25, 58, 0.6);
-    --dark-text: #00eaff;
-    --dark-accent: #2d68ff; 
-    --dark-border: rgba(0, 234, 255, 0.25);
-    --dark-shadow: rgba(0, 234, 255, 0.1);
+        :root {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+            --bg-base: #09090b;
+            --bg-surface: #18181b;
+            --text-main: #fcfcfc;
+            --text-muted: #a1a1aa;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --card-inner-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --font-family: 'Tajawal', 'Outfit', sans-serif;
+            --bento-gap: 20px;
+            --bento-radius: 28px;
+            --grain-opacity: 0.04;
+            --gradient-spot: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+        }
 
-    --light-bg: #f4f5f7;
-    --light-bg-gradient: linear-gradient(145deg, #fdfcff, #f2f1f7, #e8e6f0);
-    --light-card-bg: rgba(255, 255, 255, 0.9);
-    --light-text: #ff3a8b;
-    --light-accent: #8e2de2;
-    --light-border: rgba(255, 58, 139, 0.4);
-    --light-shadow: rgba(255, 58, 139, 0.2); 
+        body.light-mode {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-border: rgba(226, 232, 240, 0.8);
+            --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+            --card-inner-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 1);
+            --accent: #0ea5e9;
+            --accent-glow: rgba(14, 165, 233, 0.15);
+            --font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
+            --grain-opacity: 0.02;
+            --gradient-spot: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.08) 0%, transparent 60%);
+        }
 
-    --matrix-bg: #000000;
-    --matrix-bg-gradient: linear-gradient(145deg, #000, #020a02, #000500, #000);
-    --matrix-card-bg: rgba(0, 20, 0, 0.75);
-    --matrix-text: #39ff14;
-    --matrix-border: rgba(57, 255, 20, 0.3);
-    --matrix-shadow: rgba(57, 255, 20, 0.2);
+        body.neomorph-mode {
+            --bg-base: #e2e8f0;
+            --bg-surface: #e2e8f0;
+            --text-main: #334155;
+            --text-muted: #94a3b8;
+            --card-border: transparent;
+            --card-shadow: 12px 12px 24px #c1c9d2, -12px -12px 24px #ffffff;
+            --card-inner-shadow: none;
+            --accent: #8b5cf6;
+            --accent-glow: transparent;
+            --font-family: 'Tajawal', 'Outfit', sans-serif;
+            --bento-radius: 36px;
+            --grain-opacity: 0;
+            --gradient-spot: none;
+        }
 
-    --steampunk-bg: #e6e7ee;
-    --steampunk-card-bg: #e6e7ee;
-    --steampunk-text: #5b627a;
-    --steampunk-accent: #9299b0;
-    --steampunk-shadow-dark: #babecc;
-    --steampunk-shadow-light: #ffffff;
-    --steampunk-glow: rgba(224, 194, 142, 0.8);
-}
+        body.matrix-mode {
+            --bg-base: #010301;
+            --bg-surface: #030803;
+            --text-main: #22c55e;
+            --text-muted: #15803d;
+            --card-border: rgba(34, 197, 94, 0.2);
+            --card-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            --card-inner-shadow: inset 0 0 15px rgba(34, 197, 94, 0.05);
+            --accent: #4ade80;
+            --accent-glow: rgba(74, 222, 128, 0.2);
+            --font-family: 'Fira Code', monospace;
+            --bento-radius: 4px;
+            --grain-opacity: 0.08;
+            --gradient-spot: radial-gradient(circle at center, rgba(34, 197, 94, 0.05) 0%, transparent 70%);
+        }
 
-::selection { background: var(--dark-accent); color: var(--dark-bg); }
-.light-mode ::selection { background: var(--light-text); color: var(--light-bg); }
-.matrix-mode ::selection { background: var(--matrix-text); color: var(--matrix-bg); }
-.steampunk-mode ::selection { background: var(--steampunk-text); color: var(--steampunk-card-bg); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-base);
+            background-image: var(--gradient-spot);
+            background-repeat: no-repeat;
+            background-size: 100vw 100vh;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.6s ease, color 0.6s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-body {
-    font-family: 'Orbitron', sans-serif;
-    background: var(--dark-bg);
-    color: var(--dark-text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background 0.8s ease, color 0.8s ease;
-    background-attachment: fixed;
-    position: relative;
-}
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: var(--grain-opacity);
+            pointer-events: none;
+            z-index: 100;
+            mix-blend-mode: overlay;
+        }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--dark-bg-gradient);
-    z-index: -2;
-    animation: gradientMove 20s ease-in-out infinite;
-    background-size: 200% 200%;
-    transition: background 0.8s ease;
-}
+        .matrix-mode::after {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            opacity: 1;
+            mix-blend-mode: normal;
+        }
 
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem 2rem 1rem;
+            z-index: 10;
+        }
 
-body.light-mode { background: var(--light-bg); color: var(--light-text); font-family: 'Bungee', sans-serif; }
-body.matrix-mode { background: var(--matrix-bg); color: var(--matrix-text); font-family: 'Share Tech Mono', monospace; }
-body.steampunk-mode { background: var(--steampunk-bg); color: var(--steampunk-text); font-family: 'Lato', sans-serif; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-.light-mode::before { background: var(--light-bg-gradient); }
-.matrix-mode::before { background: var(--matrix-bg-gradient); }
-.steampunk-mode::before { background: var(--steampunk-bg); }
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--bg-surface);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent);
+            box-shadow: var(--card-shadow), var(--card-inner-shadow);
+        }
 
-#theme-toggle {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    z-index: 1001;
-    width: 60px;
-    height: 60px;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    background: var(--dark-card-bg);
-    color: var(--dark-text);
-    backdrop-filter: blur(20px);
-    border-radius: 50%;
-    border: 1px solid var(--dark-border);
-    box-shadow: 0 0 15px var(--dark-shadow), inset 0 0 10px rgba(0, 234, 255, 0.1);
-}
+        .neomorph-mode .brand-icon {
+            box-shadow: 6px 6px 12px #c1c9d2, -6px -6px 12px #ffffff;
+        }
 
-#theme-toggle:hover {
-    transform: rotate(360deg) scale(1.1);
-    box-shadow: 0 0 30px var(--dark-shadow), inset 0 0 15px rgba(0, 234, 255, 0.2);
-}
+        .brand-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.light-mode #theme-toggle {
-    background: var(--light-card-bg);
-    color: var(--light-text);
-    border: 2px solid var(--light-border);
-    box-shadow: 5px 5px 15px var(--light-shadow);
-}
+        .matrix-mode .brand-text {
+            -webkit-text-fill-color: var(--text-main);
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+            letter-spacing: 0.1em;
+        }
 
-.matrix-mode #theme-toggle {
-    border-radius: 0;
-    border: 2px solid var(--matrix-border);
-    color: var(--matrix-text);
-    background: var(--matrix-card-bg);
-    animation: matrix-flicker 3s infinite;
-    box-shadow: 0 0 20px var(--matrix-shadow);
-}
+        #theme-toggle {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--card-shadow), var(--card-inner-shadow);
+            position: relative;
+            overflow: hidden;
+        }
 
-.steampunk-mode #theme-toggle {
-    background: var(--steampunk-card-bg);
-    color: var(--steampunk-text);
-    border: none;
-    border-radius: 50%;
-    box-shadow: 6px 6px 12px var(--steampunk-shadow-dark), -6px -6px 12px var(--steampunk-shadow-light);
-}
-.steampunk-mode #theme-toggle:hover {
-    box-shadow: 8px 8px 16px var(--steampunk-shadow-dark), -8px -8px 16px var(--steampunk-shadow-light);
-}
-.steampunk-mode #theme-toggle:active {
-    box-shadow: inset 4px 4px 8px var(--steampunk-shadow-dark), inset -4px -4px 8px var(--steampunk-shadow-light);
-}
+        #theme-toggle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-#bg-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    transition: opacity 0.5s ease;
-}
+        #theme-toggle i {
+            position: relative;
+            z-index: 2;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 80px 40px;
-    perspective: 2000px;
-}
+        #theme-toggle:hover i {
+            transform: scale(1.15) rotate(15deg);
+        }
 
-.title {
-    font-size: 5rem;
-    font-weight: 900;
-    margin-bottom: 70px;
-    text-align: center;
-    letter-spacing: 5px;
-    position: relative;
-    z-index: 2;
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
+        #theme-toggle:hover::before {
+            opacity: 0.1;
+        }
 
-.dark-mode .title {
-    color: #fff;
-    text-shadow: 0 0 5px #fff, 0 0 10px var(--dark-text), 0 0 20px var(--dark-text), 0 0 40px var(--dark-text);
-    animation: neon-flicker 4s infinite alternate;
-}
-@keyframes neon-flicker {
-  0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 18px var(--dark-text), 0 0 38px var(--dark-text); }
-  20%, 24%, 55% { text-shadow: 0 0 4px #fff; }
-}
+        .neomorph-mode #theme-toggle {
+            box-shadow: 6px 6px 12px #c1c9d2, -6px -6px 12px #ffffff;
+            border: none;
+        }
 
-.dark-mode .title::before, .dark-mode .title::after {
-    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; mix-blend-mode: screen;
-}
-.dark-mode .title::before { color: var(--dark-text); animation: glitch 6s infinite linear alternate-reverse; }
-.dark-mode .title::after { color: var(--dark-accent); animation: glitch 4.5s infinite linear alternate; }
-@keyframes glitch{
-  0% { clip-path: inset(78% 0 20% 0); transform: translate(-5px, 2px); }
-  10% { clip-path: inset(45% 0 53% 0); transform: translate(3px, -1px); }
-  20% { clip-path: inset(90% 0 5% 0); transform: translate(-7px, 4px); }
-  30% { clip-path: inset(23% 0 70% 0); transform: translate(6px, -3px); }
-  40% { clip-path: inset(5% 0 88% 0); transform: translate(-4px, 1px); }
-  50% { clip-path: inset(62% 0 35% 0); transform: translate(2px, 3px); }
-  60% { clip-path: inset(98% 0 1% 0); transform: translate(-6px, -2px); }
-  70% { clip-path: inset(30% 0 65% 0); transform: translate(8px, 0); }
-  80% { clip-path: inset(70% 0 27% 0); transform: translate(-3px, 2px); }
-  90% { clip-path: inset(15% 0 80% 0); transform: translate(5px, -4px); }
-  100% { clip-path: inset(95% 0 2% 0); transform: translate(-2px, 0); }
-}
+        .neomorph-mode #theme-toggle:active {
+            box-shadow: inset 4px 4px 8px #c1c9d2, inset -4px -4px 8px #ffffff;
+        }
 
-.light-mode .title {
-    color: var(--light-text);
-    text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
-    animation: pop-in 1s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-}
-@keyframes pop-in {
-    0% { transform: scale(0.5) rotate(-15deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+            z-index: 10;
+        }
 
-.matrix-mode .title {
-    color: var(--matrix-text);
-    text-shadow: 0 0 10px var(--matrix-text), 0 0 20px rgba(57, 255, 20, 0.5);
-    animation: matrix-title-flicker 5s infinite;
-}
-.matrix-mode .title::after {
-    content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: var(--matrix-text); text-shadow: -2px 0 #008F11; clip-path: inset(50% 0 0 0); opacity: 0.8; animation: matrix-glitch-bottom 2s infinite;
-}
-@keyframes matrix-glitch-bottom { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(0.08em); } }
-@keyframes matrix-title-flicker { 0%, 100% { opacity: 1; filter: brightness(1.2); } 50% { opacity: 0.9; filter: brightness(1); } }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 180px;
+            gap: var(--bento-gap);
+            width: 100%;
+        }
 
-.steampunk-mode .title { font-size: 6rem; font-weight: 700; color: var(--steampunk-text); text-shadow: 1px 1px 1px var(--steampunk-shadow-light); }
+        .hub:has(.app:hover) .app:not(:hover) {
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
 
-.hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; max-width: 1500px; width: 100%; }
+        .app {
+            background: var(--bg-surface);
+            border: 1px solid var(--card-border);
+            border-radius: var(--bento-radius);
+            position: relative;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--card-shadow), var(--card-inner-shadow);
+            isolation: isolate;
+        }
 
-.app {
-    aspect-ratio: 1 / 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    border-radius: 30px;
-}
+        .neomorph-mode .app {
+            border: none;
+        }
+        
+        .neomorph-mode .app:hover {
+            box-shadow: inset 8px 8px 16px #c1c9d2, inset -8px -8px 16px #ffffff;
+        }
 
-.dark-mode .app {
-    background: var(--dark-card-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--dark-border);
-    box-shadow: 0 10px 30px var(--dark-shadow);
-    transform: rotateX(10deg) rotateY(0deg);
-}
-.dark-mode .app:hover {
-    transform: translateY(-20px) scale(1.05) rotateX(0deg) rotateY(0deg);
-    box-shadow: 0 25px 50px var(--dark-shadow);
-    border-color: var(--dark-text);
-}
-.dark-mode .app::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 234, 255, 0.1), transparent);
-    transition: left 0.8s ease;
-}
-.dark-mode .app:hover::before { left: 100%; }
+        .matrix-mode .app:hover {
+            background: rgba(34, 197, 94, 0.05);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2), inset 0 0 15px rgba(34, 197, 94, 0.1);
+        }
 
-.light-mode .app {
-    background: var(--light-card-bg);
-    box-shadow: 8px 8px 0px var(--light-shadow);
-    transform: none;
-}
-.light-mode .app:hover {
-    transform: translate(-8px, -8px);
-    box-shadow: 16px 16px 0px var(--light-shadow), 16px 16px 20px rgba(255, 58, 139, 0.1);
-}
+        .app:not(.neomorph-mode):not(.matrix-mode)::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), var(--accent-glow), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
 
-.matrix-mode .app {
-    background: var(--matrix-card-bg);
-    border: 2px solid var(--matrix-border);
-    border-radius: 10px;
-    box-shadow: 0 0 25px var(--matrix-shadow), inset 0 0 15px rgba(57, 255, 20, 0.1);
-    transform: none;
-    animation: matrix-flicker 4s infinite ease-in-out;
-}
-.matrix-mode .app::after {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: repeating-linear-gradient(0deg, rgba(57, 255, 20, 0.1), rgba(57, 255, 20, 0.1) 1px, transparent 1px, transparent 4px);
-    opacity: 0.5;
-    pointer-events: none;
-}
-.matrix-mode .app:hover {
-    transform: scale(1.03);
-    background: rgba(0, 40, 0, 0.8);
-    box-shadow: 0 0 40px var(--matrix-shadow), inset 0 0 20px rgba(57, 255, 20, 0.2);
-    border-color: var(--matrix-text);
-}
+        .app:hover::before {
+            opacity: 1;
+        }
 
-.steampunk-mode .app {
-    background: var(--steampunk-card-bg);
-    border: none;
-    box-shadow: 12px 12px 24px var(--steampunk-shadow-dark), -12px -12px 24px var(--steampunk-shadow-light);
-    transform: none;
-}
-.steampunk-mode .app:hover {
-    transform: scale(1.05);
-    box-shadow: 15px 15px 30px var(--steampunk-shadow-dark), -15px -15px 30px var(--steampunk-shadow-light);
-}
-.steampunk-mode .app:active, .steampunk-mode .app.active {
-    transform: scale(0.98);
-    box-shadow: inset 7px 7px 14px var(--steampunk-shadow-dark), inset -7px -7px 14px var(--steampunk-shadow-light);
-}
+        .app-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            padding: 2.25rem;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-.app-icon { font-size: 5rem; margin-bottom: 20px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2; }
-.dark-mode .app-icon { text-shadow: 0 0 15px var(--dark-text); }
-.dark-mode .app:hover .app-icon { transform: scale(1.1) rotate(-10deg); color: #fff; text-shadow: 0 0 10px #fff, 0 0 20px var(--dark-text), 0 0 35px var(--dark-accent); }
-.light-mode .app-icon { color: var(--light-text); text-shadow: 3px 3px 0 var(--light-accent); }
-.light-mode .app:hover .app-icon { transform: scale(1.2) rotate(10deg); color: var(--light-accent); text-shadow: 3px 3px 0 var(--light-text); animation: bounce 0.5s; }
-@keyframes bounce { 0%, 100% { transform: scale(1.2) rotate(10deg) translateY(0); } 50% { transform: scale(1.2) rotate(10deg) translateY(-10px); } }
-.matrix-mode .app-icon { text-shadow: 0 0 10px var(--matrix-text); }
-.matrix-mode .app:hover .app-icon { transform: scale(1.1); color: #fff; text-shadow: 0 0 7px rgba(255, 255, 255, 0.8), 0 0 15px var(--matrix-text), 0 0 25px var(--matrix-text); }
-.steampunk-mode .app-icon { color: var(--steampunk-text); text-shadow: 1px 1px 1px var(--steampunk-shadow-light); font-size: 4.5rem; }
-.steampunk-mode .app:hover .app-icon { transform: scale(1.1); color: var(--steampunk-text); text-shadow: 0 0 8px var(--steampunk-glow), 1px 1px 1px var(--steampunk-shadow-light); }
-.steampunk-mode .app:active .app-icon, .steampunk-mode .app.active .app-icon { transform: scale(0.95); }
+        .app:not(.neomorph-mode):hover .app-content {
+            transform: translateY(-4px);
+        }
 
-.app-name { font-size: 1.5rem; font-weight: 700; text-align: center; transition: all 0.4s ease; text-transform: uppercase; letter-spacing: 2px; z-index: 2; padding: 0 10px; }
-.dark-mode .app:hover .app-name { color: var(--dark-text); text-shadow: 0 0 10px var(--dark-text); }
-.steampunk-mode .app-name { font-size: 1.4rem; font-weight: 700; color: var(--steampunk-accent); text-shadow: 1px 1px 1px var(--steampunk-shadow-light); }
+        .app-icon {
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-@media (max-width: 768px) {
-    .title { font-size: 3rem; } .steampunk-mode .title { font-size: 4rem; } .hub { grid-template-columns: 1fr 1fr; gap: 30px; } .app-icon { font-size: 4rem; } .app-name { font-size: 1.2rem; }
-}
-@media (max-width: 480px) {
-    .title { font-size: 2.5rem; letter-spacing: 2px; } .hub { grid-template-columns: 1fr; gap: 25px; } .container { padding: 80px 20px; } #theme-toggle { width: 50px; height: 50px; top: 15px; right: 15px; }
-}
+        .app:hover .app-icon {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .neomorph-mode .app:hover .app-icon {
+            transform: scale(0.95);
+        }
+
+        .app-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            line-height: 1.2;
+        }
+
+        .app-link-icon {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            opacity: 0;
+            transform: translate(10px, 10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--card-border);
+        }
+
+        .light-mode .app-link-icon {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .neomorph-mode .app-link-icon {
+            background: transparent;
+            box-shadow: 3px 3px 6px #c1c9d2, -3px -3px 6px #ffffff;
+            border: none;
+        }
+
+        .app:hover .app-link-icon {
+            opacity: 1;
+            transform: translate(0, 0);
+            color: var(--accent);
+        }
+
+        .b-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        .b-large .app-content {
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .b-large .app-icon {
+            font-size: 4rem;
+            margin-bottom: auto;
+            color: var(--accent);
+        }
+        .b-large .app-name {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .b-wide {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        .b-wide .app-content {
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+        }
+        .b-wide .app-icon {
+            font-size: 2.75rem;
+        }
+        .b-wide .app-name {
+            font-size: 1.5rem;
+        }
+
+        .b-tall {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+        .b-tall .app-content {
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .b-tall .app-icon {
+            font-size: 3.5rem;
+        }
+        .b-tall .app-name {
+            font-size: 1.5rem;
+        }
+
+        .b-std {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        .b-std .app-content {
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .b-std .app-icon {
+            font-size: 2.25rem;
+        }
+        .b-std .app-name {
+            font-size: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-flow: dense;
+            }
+            .b-large { grid-column: span 2; grid-row: span 2; }
+            .b-wide { grid-column: span 2; }
+            .b-tall { grid-column: span 1; }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 2rem 1.5rem 1rem; }
+            main { padding: 1.5rem; }
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                grid-auto-rows: 160px;
+            }
+            .b-large { grid-column: span 2; grid-row: span 2; }
+            .b-wide { grid-column: span 2; grid-row: span 1; }
+            .b-tall { grid-column: span 1; grid-row: span 1; }
+            .b-tall .app-content { flex-direction: row; align-items: center; justify-content: flex-start; gap: 1.5rem; }
+            .b-tall .app-icon { font-size: 2.25rem; margin-bottom: 0; }
+            .b-std { grid-column: span 1; }
+            
+            .app-link-icon { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            header { padding: 1.5rem 1rem 0.5rem; }
+            main { padding: 1rem; }
+            .brand-text { font-size: 1.5rem; }
+            .brand-icon { width: 40px; height: 40px; font-size: 1.25rem; }
+            #theme-toggle { width: 40px; height: 40px; font-size: 1rem; }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+                gap: 1rem;
+            }
+            .b-large, .b-wide, .b-tall, .b-std {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            .app-content {
+                flex-direction: row !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                padding: 1.5rem !important;
+                gap: 1.25rem !important;
+            }
+            .app-icon { font-size: 2rem !important; margin-bottom: 0 !important; }
+            .b-large .app-name { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body class="dark-mode">
 
-    <button id="theme-toggle"> <i class="fas fa-moon"></i> </button>
-    <canvas id="bg-canvas"></canvas>
+    <header>
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
+            <div class="brand-text">LinkExpress</div>
+        </div>
+        <button id="theme-toggle" aria-label="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
 
-    <div class="container">
-        <h1 class="title" data-text="LinkExpress">LinkExpress</h1>
-        <div class="hub">
-            <a href="https://datakid-github-io.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-briefcase-medical"></i></div>
-                <div class="app-name">خارجي 1</div>
+    <main>
+        <div class="hub bento-grid">
+            <a href="https://lx-index.vercel.app/" class="app b-large" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-book-medical"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">فهرس الادوية</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://datakid2.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-graduation-cap"></i></div>
-                <div class="app-name">خارجي 3</div>
+            
+            <a href="https://menu2-six.vercel.app/" class="app b-wide" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-pills"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">مجموعات دوائية</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://menu2-six.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-pills"></i></div>
-                <div class="app-name">مجموعات دوائية</div>
+
+            <a href="https://datakid-github-io.vercel.app/" class="app b-std" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-briefcase-medical"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">خارجي 1</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://searchbar-five-beta.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-search"></i></div>
-                <div class="app-name">لستة الادوية</div>
+
+            <a href="https://searchbar-five-beta.vercel.app/" class="app b-tall" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-search"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">لستة الادوية</div>
+                    </div>
+                </div>
             </a>
-            <a class="app" id="dual-link-1">
-                <div class="app-icon"><i class="fas fa-dollar-sign"></i></div>
-                <div class="app-name">المنفذ والتحمل</div>
+
+            <a href="https://protocols-one.vercel.app/" class="app b-wide" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-folder-open"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">بروتوكولات التأمين</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://protocols-one.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-folder-open"></i></div>
-                <div class="app-name">بروتوكولات التأمين</div>
+
+            <a href="https://datakid2.vercel.app/" class="app b-std" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">خارجي 3</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://simpledashboard21.netlify.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-eye"></i></div>
-                <div class="app-name">بيانات الخارجي</div>
+
+            <a class="app b-wide" id="dual-link-1" style="cursor: pointer;">
+                <div class="app-link-icon"><i class="fas fa-random"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">المنفذ والتحمل</div>
+                    </div>
+                </div>
             </a>
-            <a href="https://alt-app-lanucher.vercel.app/" class="app" target="_blank" rel="noopener noreferrer">
-                <div class="app-icon"><i class="fas fa-gamepad"></i></div>
-                <div class="app-name">---</div>
+
+            <a href="https://simpledashboard21.netlify.app/" class="app b-wide" target="_blank" rel="noopener noreferrer">
+                <div class="app-link-icon"><i class="fas fa-arrow-up-right-from-square"></i></div>
+                <div class="app-content">
+                    <div class="app-icon"><i class="fas fa-eye"></i></div>
+                    <div class="app-details">
+                        <div class="app-name">بيانات الخارجي</div>
+                    </div>
+                </div>
             </a>
         </div>
-    </div>
+    </main>
 
     <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        camera.position.z = 60;
+        const themes =['dark', 'light', 'neomorph', 'matrix'];
+        const icons =['fa-moon', 'fa-sun', 'fa-shapes', 'fa-terminal'];
+        let currentTheme = 0;
 
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = themeToggle.querySelector('i');
-        const dualLink1 = document.getElementById('dual-link-1');
-        const urls1 = ['https://newlist2.vercel.app/', 'https://newlist-eta.vercel.app/'];
+        const applyTheme = () => {
+            const theme = themes[currentTheme];
+            document.body.className = `${theme}-mode`;
+            document.querySelector('#theme-toggle i').className = `fas ${icons[currentTheme]}`;
+        };
 
-        const themes = ['dark', 'light', 'matrix', 'steampunk'];
-        const themeIcons = { 'dark': 'fa-moon', 'light': 'fa-sun', 'matrix': 'fa-terminal', 'steampunk': 'fa-cogs' };
-        let currentThemeIndex = 0;
-        let matrixInterval = null;
-        
-        const darkGroup = new THREE.Group();
-        const mainMesh = new THREE.Mesh();
-        const steampunkGroup = new THREE.Group();
-        scene.add(darkGroup, mainMesh, steampunkGroup);
-
-        let animateDark = () => {}, animateMain = () => {}, animateSteampunk = () => {};
-
-        function createDarkScene() {
-            const loader = new THREE.TextureLoader();
-            const dataShardTextureSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:4px;}</style></defs><path class="cls-1" d="M216,40V216H40"/><polyline class="cls-1" points="40 128 100 128 100 188"/><line class="cls-1" x1="152" y1="104" x2="152" y2="152"/><line class="cls-1" x1="128" y1="128" x2="176" y2="128"/><text x="130" y="90" font-family="monospace" font-size="24" fill="#fff">4E 4F</text></svg>`;
-            const dataUrl = 'data:image/svg+xml;base64,' + window.btoa(dataShardTextureSVG);
-            
-            loader.load(dataUrl, (texture) => {
-                const geometry = new THREE.PlaneGeometry(5, 5);
-                for (let i = 0; i < 150; i++) {
-                    const material = new THREE.MeshBasicMaterial({
-                        map: texture,
-                        color: Math.random() > 0.5 ? 0x00eaff : 0x2d68ff,
-                        transparent: true,
-                        opacity: 0.2 + Math.random() * 0.4,
-                        blending: THREE.AdditiveBlending,
-                        depthWrite: false,
-                        side: THREE.DoubleSide
-                    });
-                    const shard = new THREE.Mesh(geometry, material);
-                    shard.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 120, (Math.random() - 0.5) * 50);
-                    shard.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-                    shard.scale.setScalar(Math.random() * 1.5 + 0.5);
-                    shard.userData.speed = 0.02 + Math.random() * 0.03;
-                    darkGroup.add(shard);
-                }
-            });
-
-            animateDark = () => {
-                darkGroup.rotation.y += 0.0002;
-                darkGroup.children.forEach(shard => {
-                    shard.position.y += shard.userData.speed;
-                    shard.rotation.z += 0.001;
-                    if (shard.position.y > 60) {
-                        shard.position.y = -60;
-                    }
-                });
-            };
-        }
-
-        const lightGeometry = new THREE.DodecahedronGeometry(20, 1);
-        const lightMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0xff4d8d,                     
-            wireframe: true,                     
-            wireframeLinewidth: 3.0,             
-            transparent: true,                   
-            opacity: 0.4,                        
-            emissive: 0xff4d8d,                  
-            emissiveIntensity: 0.5,              
-            depthWrite: false,                   
-            depthTest: true,                     
-            side: THREE.DoubleSide,              
-            alphaTest: 0.1,                      
-            polygonOffset: true,                 
-            polygonOffsetFactor: 1.0,            
-            polygonOffsetUnits: 1.0               
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            currentTheme = (currentTheme + 1) % themes.length;
+            applyTheme();
         });
 
-        animateMain = () => { mainMesh.rotation.x += 0.001; mainMesh.rotation.y += 0.002; };
-        
-        function createSteampunkScene() {
-            const createGearShape = (outerRadius, innerRadius, teeth, toothDepth) => {
-                const shape = new THREE.Shape();
-                const PI2 = Math.PI * 2;
-                shape.moveTo(outerRadius, 0);
-                for (let i = 0; i < teeth; i++) {
-                    const angle = (i / teeth) * PI2;
-                    const nextAngle = ((i + 1) / teeth) * PI2;
-                    shape.lineTo(Math.cos(angle) * outerRadius, Math.sin(angle) * outerRadius);
-                    shape.lineTo(Math.cos(angle + PI2 / (4 * teeth)) * (outerRadius - toothDepth), Math.sin(angle + PI2 / (4 * teeth)) * (outerRadius - toothDepth));
-                    shape.lineTo(Math.cos(nextAngle - PI2 / (4 * teeth)) * (outerRadius - toothDepth), Math.sin(nextAngle - PI2 / (4 * teeth)) * (outerRadius - toothDepth));
-                    shape.lineTo(Math.cos(nextAngle) * outerRadius, Math.sin(nextAngle) * outerRadius);
-                }
-                shape.lineTo(outerRadius, 0);
-                const holePath = new THREE.Path();
-                holePath.absarc(0, 0, innerRadius, 0, PI2, true);
-                shape.holes.push(holePath);
-                return shape;
-            };
-
-            const extrudeSettings = { depth: 1, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.2, bevelSegments: 2 };
-            const material = new THREE.MeshPhongMaterial({ color: 0xe6e7ee, shininess: 5, flatShading: false });
-            
-            const gearConfigs = [
-                { shape: createGearShape(8, 2, 20, 1.2), pos: { x: 0, y: 0, z: 0 }, rotSpeed: 0.002 },
-                { shape: createGearShape(4, 1, 10, 1), pos: { x: 10, y: 5, z: 1 }, rotSpeed: -0.004 },
-                { shape: createGearShape(5, 1.5, 12, 1.1), pos: { x: -9, y: -7, z: -1 }, rotSpeed: 0.003 }
-            ];
-
-            gearConfigs.forEach(c => {
-                const geometry = new THREE.ExtrudeGeometry(c.shape, extrudeSettings);
-                const mesh = new THREE.Mesh(geometry, material);
-                mesh.position.set(c.pos.x, c.pos.y, c.pos.z);
-                mesh.userData.rotSpeed = c.rotSpeed;
-                steampunkGroup.add(mesh);
+        document.querySelectorAll('.app').forEach(app => {
+            app.addEventListener('mousemove', e => {
+                if(document.body.classList.contains('neomorph-mode') || document.body.classList.contains('matrix-mode')) return;
+                const rect = app.getBoundingClientRect();
+                app.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                app.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
+        });
 
-            steampunkGroup.add(new THREE.AmbientLight(0xffffff, 0.5));
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(-10, 10, 10);
-            steampunkGroup.add(directionalLight);
-            const fillLight = new THREE.PointLight(0xffe0b3, 0.3);
-            fillLight.position.set(0, -15, 5);
-            steampunkGroup.add(fillLight);
+        const dualUrls =['https://newlist2.vercel.app/', 'https://newlist-eta.vercel.app/'];
+        document.getElementById('dual-link-1').addEventListener('click', () => {
+            window.open(dualUrls[Math.floor(Math.random() * dualUrls.length)], '_blank', 'noopener,noreferrer');
+        });
 
-            animateSteampunk = () => steampunkGroup.children.forEach(c => { if(c.isMesh) c.rotation.z += c.userData.rotSpeed; });
-        }
-
-        function createMatrixRain() {
-            const canvas = document.createElement('canvas');
-            canvas.className = 'matrix-rain-canvas';
-            canvas.style.position = 'fixed';
-            canvas.style.top = '0';
-            canvas.style.left = '0';
-            canvas.style.zIndex = '-1';
-            canvas.style.opacity = '0.3';
-            document.body.appendChild(canvas);
-
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const nums = '0123456789';
-            const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-            const alphabet = katakana + latin + nums + symbols;
-
-            const fontSize = 16;
-            const columns = canvas.width / fontSize;
-            const rainDrops = [];
-            for (let x = 0; x < columns; x++) rainDrops[x] = 1;
-            const colors = ['#0F0', '#00FF00', '#32CD32', '#98FB98'];
-
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                for (let i = 0; i < rainDrops.length; i++) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                    ctx.font = `${fontSize}px monospace`;
-                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        rainDrops[i] = 0;
-                    }
-                    rainDrops[i]++;
-                }
-
-                if (Math.random() > 0.95) {
-                    ctx.fillStyle = '#FFFFFF';
-                    const streakColumn = Math.floor(Math.random() * columns);
-                    for (let j = 0; j < 5; j++) {
-                        const streakChar = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                        ctx.fillText(streakChar, streakColumn * fontSize, (rainDrops[streakColumn] + j) * fontSize);
-                    }
-                }
-            }
-            return setInterval(draw, 33);
-        }
-        
-        function updateSceneForTheme(theme) {
-            document.body.className = `${theme}-mode`;
-            themeIcon.className = `fas ${themeIcons[theme]}`;
-            
-            darkGroup.visible = mainMesh.visible = steampunkGroup.visible = false;
-            
-            if (matrixInterval) {
-                clearInterval(matrixInterval);
-                const canvas = document.querySelector('.matrix-rain-canvas');
-                if (canvas) canvas.remove();
-                matrixInterval = null;
-            }
-            
-            switch (theme) {
-                case 'dark':
-                    if (darkGroup.children.length === 0) createDarkScene();
-                    darkGroup.visible = true;
-                    break;
-                case 'light':
-                    mainMesh.geometry = lightGeometry;
-                    mainMesh.material = lightMaterial;
-                    mainMesh.visible = true;
-                    break;
-                case 'matrix':
-                    matrixInterval = createMatrixRain();
-                    break;
-                case 'steampunk':
-                    if (steampunkGroup.children.length === 0) createSteampunkScene();
-                    steampunkGroup.visible = true;
-                    break;
-            }
-        }
-
-        themeToggle.addEventListener('click', () => { currentThemeIndex = (currentThemeIndex + 1) % themes.length; updateSceneForTheme(themes[currentThemeIndex]); });
-        dualLink1.addEventListener('click', (e) => { if (document.body.classList.contains('steampunk-mode')) { e.currentTarget.classList.add('active'); setTimeout(() => e.currentTarget.classList.remove('active'), 200); } const randomUrl = urls1[Math.floor(Math.random() * urls1.length)]; window.open(randomUrl, '_blank', 'noopener,noreferrer'); });
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            if(darkGroup.visible) animateDark();
-            if(mainMesh.visible) animateMain();
-            if(steampunkGroup.visible) animateSteampunk();
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-             camera.aspect = window.innerWidth / window.innerHeight;
-             camera.updateProjectionMatrix();
-             renderer.setSize(window.innerWidth, window.innerHeight);
-             if (matrixInterval) {
-                clearInterval(matrixInterval);
-                const canvas = document.querySelector('.matrix-rain-canvas');
-                if (canvas) canvas.remove();
-                matrixInterval = createMatrixRain();
-             }
-        }, false);
-        
-        updateSceneForTheme(themes[currentThemeIndex]);
-        animate();
+        applyTheme();
     </script>
 </body>
 </html>
