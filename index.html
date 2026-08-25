@@ -466,10 +466,14 @@ var DATA = [
     desc_ar: 'مساحة عمل المجموعات الدوائية', desc_en: 'Drug-group workspace',
     aliases: ['majmoat dawaeya', 'drug groups', 'workspace', 'majmoaat'] },
   { id: 'drug-list', group: 'core', folio: 4, pigment: '--p-lapis',
-    url: 'https://lx-search-kappa.vercel.app/', host: 'lx-search-kappa.vercel.app',
     title_ar: 'لستة الادوية', title_en: 'Drug List',
     desc_ar: 'قائمة الأدوية القابلة للبحث', desc_en: 'Searchable master drug list',
-    aliases: ['listet el-adwia', 'drug list', 'adwia', 'list'] },
+    aliases: ['listet el-adwia', 'drug list', 'adwia', 'list'],
+    defaultVariant: 0,
+    variants: [
+      { key: 'free', label_ar: 'مجاني', label_en: 'Free', url: 'https://searchbar-five-beta.vercel.app/', host: 'searchbar-five-beta.vercel.app', aliases: ['free', 'majani'] },
+      { key: 'full', label_ar: 'الكامل', label_en: 'Full', url: 'https://lx-search-kappa.vercel.app/',      host: 'lx-search-kappa.vercel.app',      aliases: ['full', 'kamel'] }
+    ] },
   { id: 'paid-calculator', group: 'core', folio: 5, pigment: '--p-madder',
     url: 'https://newlist-eta.vercel.app/', host: 'newlist-eta.vercel.app',
     title_ar: 'المنفذ والتحمل', title_en: 'Paid Calculator',
@@ -527,7 +531,12 @@ var DATA = [
     variants: [
       { key: 'mizan', label_ar: 'ميزان', label_en: 'Mizan', url: 'https://m-izan.vercel.app/', host: 'm-izan.vercel.app', aliases: ['mizan'] },
       { key: 'qisma', label_ar: 'قسمة', label_en: 'Qisma', url: 'https://shareholders-coral.vercel.app/', host: 'shareholders-coral.vercel.app', aliases: ['qisma'] }
-    ] }
+    ] },
+  { id: 'survival-mirror', group: 'tools', folio: 15, pigment: '--p-malachite',
+    url: 'https://survival-mirror.vercel.app/', host: 'survival-mirror.vercel.app',
+    title_ar: 'منحنى البقاء', title_en: 'Survival Mirror',
+    desc_ar: 'تقدير منحنى البقاء الشخصي', desc_en: 'Personal survival-curve estimate',
+    aliases: ['monhna el-baqaa', 'survival mirror', 'life expectancy', 'baqaa'], isNew: true }
 ];
 
 var BY_ID = {};
