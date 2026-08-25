@@ -282,13 +282,13 @@ body {
   position: absolute; top: 50%; inset-inline-end: calc(-1 * var(--sp-8) - 0.6em);
   transform: translateY(-52%);
   font-family: var(--font-display-arabic); font-size: 7rem; line-height: 1;
-  color: var(--pigment); opacity: 0.045;
+  color: var(--pigment); opacity: 0;
   pointer-events: none; user-select: none; z-index: -1;
-  transition: transform 900ms linear;
+  transition: transform 900ms linear, opacity var(--dur-med) var(--ease-spring);
 }
 :root[dir="ltr"] .ghost { font-family: var(--font-display-latin); font-variation-settings: 'WONK' 1; }
-.row.is-active .ghost { transform: translateY(-52%) translateX(6px); }
-:root[dir="ltr"] .row.is-active .ghost { transform: translateY(-52%) translateX(-6px); }
+.row.is-active > .row-link .ghost, .row-link:hover .ghost { opacity: 0.16; transform: translateY(-52%) translateX(6px); }
+:root[dir="ltr"] .row.is-active > .row-link .ghost, :root[dir="ltr"] .row-link:hover .ghost { transform: translateY(-52%) translateX(-6px); }
 @media (max-width: 920px) { .ghost { display: none; } }
 
 /* variants: recto / verso */
