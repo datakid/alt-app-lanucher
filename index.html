@@ -1244,7 +1244,6 @@ function remember(info) {
 
 function openNewTab(a) {
   var info = infoFor(a);
-  if (info.closed) { showToast(STR[store.lang].closed); return; }
   remember(info);
   window.open(info.url, '_blank', 'noopener');
 }
@@ -1252,7 +1251,6 @@ function openNewTab(a) {
 function commit(a) {
   if (committing) return;
   var info = infoFor(a);
-  if (info.closed) { showToast(STR[store.lang].closed); return; }
   committing = true;
   remember(info);
 
