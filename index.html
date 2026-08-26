@@ -108,7 +108,6 @@ body {
 :focus { outline: none; }
 :focus-visible { outline: none; box-shadow: inset 0 -0.14em 0 0 var(--pigment, var(--p-indigo-a)); border-radius: 1px; }
 
-/* paper */
 .grain {
   position: fixed; inset: 0; z-index: 2; pointer-events: none;
   opacity: 0.042;
@@ -121,7 +120,6 @@ body {
   background: radial-gradient(ellipse 72% 56% at 50% 34%, transparent 0%, color-mix(in oklch, var(--ink) 6%, transparent) 100%);
 }
 
-/* masthead */
 .head {
   position: relative; z-index: 3;
   max-width: var(--measure); margin-inline: auto;
@@ -187,7 +185,6 @@ body {
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 
-/* index */
 .index {
   position: relative; z-index: 3;
   max-width: var(--measure); margin-inline: auto;
@@ -291,7 +288,6 @@ body {
 :root[dir="ltr"] .row.is-active > .row-link .ghost, :root[dir="ltr"] .row-link:hover .ghost { transform: translateY(-52%) translateX(-6px); }
 @media (max-width: 920px) { .ghost { display: none; } }
 
-/* variants: recto / verso */
 .variants {
   padding-inline-start: 2.25rem;
   max-height: 0; opacity: 0; overflow: clip;
@@ -307,7 +303,6 @@ body {
 .variant.is-closed .row-link { opacity: 0.45; }
 .variant.is-closed .title { text-decoration: line-through; text-decoration-color: var(--muted); }
 
-/* caret */
 .caret {
   position: absolute; top: 0; inset-inline-start: -2px; width: 2px;
   border-radius: 2px; background: var(--caret-pigment, var(--p-indigo-a));
@@ -327,7 +322,6 @@ body {
 }
 @media (max-width: 700px) { .legend { display: none; } }
 
-/* toast */
 .toast { position: fixed; inset-inline: 0; bottom: var(--sp-5); display: flex; justify-content: center; z-index: 20; pointer-events: none; }
 .toast__body {
   font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em;
@@ -338,7 +332,6 @@ body {
 }
 .toast.is-visible .toast__body { opacity: 1; transform: translateY(0); }
 
-/* the plate */
 .plate {
   position: fixed; inset: 0; z-index: 50;
   display: flex; align-items: center; justify-content: center;
@@ -363,7 +356,6 @@ body {
   transform: translateY(14px); opacity: 0;
 }
 
-/* match highlighting */
 ::highlight(seek-match) {
   background-color: color-mix(in oklch, var(--p-orpiment) 46%, transparent);
   color: light-dark(oklch(20% 0.02 164), oklch(97% 0.01 94));
@@ -1147,7 +1139,7 @@ function bindHandlers() {
   listEl.querySelectorAll('.row-link').forEach(function (a) {
     a.addEventListener('pointerenter', function () { setActive(a, { noScroll: true }); preconnect(a.href); });
     a.addEventListener('click', function (ev) {
-      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return; // let the browser do its thing
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
       ev.preventDefault();
       setActive(a, { noScroll: true });
       commit(a);
@@ -1232,9 +1224,9 @@ addEventListener('keydown', function (e) {
   if (document.activeElement === seekEl) return;
   if (e.target && e.target.closest && e.target.closest('.controls')) return;
   if (e.altKey && /^[0-9]$/.test(e.key)) { e.preventDefault(); jumpFolio(e.key === '0' ? 10 : Number(e.key)); seekEl.focus({ preventScroll: true }); return; }
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); seekEl.focus(); return; }
+  if ((e.metaKey || e.ctrlKey) && (e.code === 'KeyK' || e.key.toLowerCase() === 'k')) { e.preventDefault(); seekEl.focus(); return; }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === '/') { e.preventDefault(); seekEl.focus(); return; }
+  if (e.code === 'Slash' || e.key === '/') { e.preventDefault(); seekEl.focus(); return; }
   if (e.key.length === 1) seekEl.focus();
 });
 
