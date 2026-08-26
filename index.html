@@ -151,7 +151,7 @@ body {
 .ctrl-btn:hover, .ctrl-btn:focus-visible { color: var(--ink); }
 :root[dir="rtl"] .ctrl-btn { font-family: var(--font-text-arabic); letter-spacing: 0.02em; }
 
-].seek-wrap {
+.seek-wrap {
   position: sticky; top: 0; z-index: 5;
   background: var(--canvas);
   transition: background-color var(--dur-med) var(--ease-spring);
@@ -440,7 +440,7 @@ mark.hl {
 var DATA = [
   { id: 'ledger-form', group: 'core', folio: 1, pigment: '--p-bone',
     title_ar: 'خارجي 2', title_en: 'Ledger Form',
-    desc_ar: 'نموذج قيد الدفتر', desc_en: 'Ledger entry form',
+    desc_ar: 'تسجيل خارجي الصيدلية', desc_en: 'Ledger entry form',
     aliases: ['kharegy 2', 'external 2', 'ledger form', 'khargy'],
     defaultVariant: 0,
     variants: [
@@ -450,7 +450,7 @@ var DATA = [
   { id: 'parser', group: 'core', folio: 2, pigment: '--p-verdigris',
     url: 'https://lx-parser.vercel.app/', host: 'lx-parser.vercel.app',
     title_ar: 'خارجي 0', title_en: 'Parser',
-    desc_ar: 'تحليل بيانات المطالبات الخام', desc_en: 'Parses raw claim data',
+    desc_ar: 'متابعة بيان الخارجي', desc_en: 'Parses raw claim data',
     aliases: ['kharegy 0', 'external 0', 'parser', 'khargy 0'] },
   { id: 'workspace', group: 'core', folio: 3, pigment: '--p-tyrian',
     url: 'https://desktop-ru4x.vercel.app/', host: 'desktop-ru4x.vercel.app',
@@ -513,11 +513,11 @@ var DATA = [
   { id: 'dafter', group: 'experimental', folio: 13, pigment: '--p-lapis',
     url: 'https://daftar-psi-two.vercel.app/', host: 'daftar-psi-two.vercel.app',
     title_ar: 'دفتر الحركة', title_en: 'Dafter',
-    desc_ar: 'دفتر الحركة اليومي', desc_en: 'Daily movement ledger',
+    desc_ar: 'تسجيل المنصرف الشهري للصيدلية', desc_en: 'Daily movement ledger',
     aliases: ['daftar el-haraka', 'dafter', 'movement log', 'daftar'], isNew: true },
   { id: 'qisma-mizan', group: 'experimental', folio: 14, pigment: '--p-orpiment',
     title_ar: 'قسمة العوائد', title_en: 'Qisma / Mizan',
-    desc_ar: 'قسمة العوائد وميزان الشركاء', desc_en: 'Shareholder split and balance sheet',
+    desc_ar: 'قسمة ايرادات هيئة التأمين', desc_en: 'Shareholder split and balance sheet',
     aliases: ['qisma el-awaed', 'qisma', 'mizan', 'shareholders'], isNew: true,
     defaultVariant: 0,
     variants: [
