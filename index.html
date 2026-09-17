@@ -560,7 +560,8 @@ var DATA = [
     defaultVariant: 0,
     variants: [
       { key: 'free', label_ar: 'مجاني', label_en: 'Free', url: 'https://searchbar-five-beta.vercel.app/', host: 'searchbar-five-beta.vercel.app', aliases: ['free', 'majani'] },
-      { key: 'full', label_ar: 'الكامل', label_en: 'Full', url: 'https://lx-search-kappa.vercel.app/',      host: 'lx-search-kappa.vercel.app',      aliases: ['full', 'kamel'] }
+      { key: 'full', label_ar: 'الكامل', label_en: 'Full', url: 'https://lx-search-kappa.vercel.app/',      host: 'lx-search-kappa.vercel.app',      aliases: ['full', 'kamel'] },
+      { key: 'alt',  label_ar: 'بديل',   label_en: 'Alt',  url: 'https://ag-search.vercel.app/',            host: 'ag-search.vercel.app',            aliases: ['alt', 'badil'] }
     ] },
   { id: 'paid-calculator', group: 'core', folio: 5, pigment: '--p-madder',
     url: 'https://newlist-eta.vercel.app/', host: 'newlist-eta.vercel.app',
@@ -615,11 +616,16 @@ var DATA = [
     title_ar: 'دفتر الحركة', title_en: 'Dafter',
     desc_ar: 'تسجيل المنصرف الشهري للصيدلية', desc_en: 'Daily movement ledger',
     aliases: ['daftar el-haraka', 'dafter', 'movement log', 'daftar'], isNew: true },
-  { id: 'plan-maker', group: 'experimental', folio: 14, pigment: '--p-indigo',
-    url: 'https://plan-maker-tan.vercel.app/', host: 'plan-maker-tan.vercel.app',
+  { id: 'plan-maker', group: 'tools', folio: 14, pigment: '--p-indigo',
     title_ar: 'الخطة', title_en: 'Plan Maker',
     desc_ar: 'توليد خطة مرور دورية', desc_en: 'Generates a recurring visit schedule',
-    aliases: ['el-khetta', 'khetta', 'plan maker', 'kheta'], isNew: true },
+    aliases: ['el-khetta', 'khetta', 'plan maker', 'kheta'], isNew: true,
+    defaultVariant: 0,
+    variants: [
+      { key: 'express', label_ar: 'السريع', label_en: 'Express', url: 'https://rushed-plan.vercel.app/', host: 'rushed-plan.vercel.app', aliases: ['express', 'saree'] },
+      { key: 'full',    label_ar: 'الكامل', label_en: 'Full',    url: 'https://plan-maker-tan.vercel.app/', host: 'plan-maker-tan.vercel.app', aliases: ['full', 'kamel'] },
+      { key: 'alt',     label_ar: 'بديل',   label_en: 'Alt',     url: 'https://alt-plan-maker.vercel.app/', host: 'alt-plan-maker.vercel.app', aliases: ['alt', 'badil'] }
+    ] },
   { id: 'entity-tracker', group: 'experimental', folio: 15, pigment: '--p-madder',
     url: 'https://entity-tracker-pi.vercel.app/', host: 'entity-tracker-pi.vercel.app',
     title_ar: 'بيان جهات متعاقدة', title_en: 'Entity Tracker',
