@@ -544,10 +544,14 @@ var DATA = [
       { key: 'current', label_ar: 'الحالي', label_en: 'Current', url: 'https://slippery-form.vercel.app/',      host: 'slippery-form.vercel.app',      aliases: ['current', 'hali'], closed: true }
     ] },
   { id: 'parser', group: 'core', folio: 2, pigment: '--p-verdigris',
-    url: 'https://lx-parser.vercel.app/', host: 'lx-parser.vercel.app',
     title_ar: 'خارجي 0', title_en: 'Parser',
     desc_ar: 'متابعة بيان الخارجي', desc_en: 'Parses raw claim data',
-    aliases: ['kharegy 0', 'external 0', 'parser', 'khargy 0'] },
+    aliases: ['kharegy 0', 'external 0', 'parser', 'khargy 0'],
+    defaultVariant: 0,
+    variants: [
+      { key: 'main', label_ar: 'الرئيسي', label_en: 'Main', url: 'https://lx-parser.vercel.app/', host: 'lx-parser.vercel.app', aliases: ['main', 'raeesy'] },
+      { key: 'alt',  label_ar: 'بديل',    label_en: 'Alt',  url: 'https://simpledashboard21.netlify.app/', host: 'simpledashboard21.netlify.app', aliases: ['alt', 'badil'] }
+    ] },
   { id: 'workspace', group: 'core', folio: 3, pigment: '--p-tyrian',
     url: 'https://desktop-ru4x.vercel.app/', host: 'desktop-ru4x.vercel.app',
     title_ar: 'مجموعات دوائية', title_en: 'Workspace',
@@ -640,17 +644,32 @@ var DATA = [
     url: 'https://draw-gold.vercel.app/', host: 'draw-gold.vercel.app',
     title_ar: 'رسم البيان', title_en: 'Draw Bayan',
     desc_ar: 'أداة رسم بياني', desc_en: 'Diagram and drawing tool',
-    aliases: ['rasm bayan', 'draw bayan', 'rasm', 'bayan'], isNew: true }
+    aliases: ['rasm bayan', 'draw bayan', 'rasm', 'bayan'], isNew: true },
+  { id: 'gitlink', group: 'experimental', folio: 18, pigment: '--p-indigo',
+    url: 'https://gitlink-gilt.vercel.app/', host: 'gitlink-gilt.vercel.app',
+    title_ar: 'إحصائيات جيتهب', title_en: 'GitLink',
+    desc_ar: 'متابعين وزوار وإحصائيات جيتهب', desc_en: 'GitHub followers, viewers, and profile stats',
+    aliases: ['gitlink', 'github', 'jithub', 'followers'], isNew: true },
+  { id: 'paper', group: 'print', folio: 19, pigment: '--p-bone',
+    url: 'https://el-messiry.netlify.app/', host: 'el-messiry.netlify.app',
+    title_ar: 'ورقة', title_en: 'Paper',
+    desc_ar: 'جزء من أدوات الطباعة', desc_en: 'Part of the print toolset',
+    aliases: ['waraqa', 'paper', 'warqa'], isNew: true },
+  { id: 'thread', group: 'print', folio: 20, pigment: '--p-madder',
+    url: 'https://willowy-centaur-417620.netlify.app/', host: 'willowy-centaur-417620.netlify.app',
+    title_ar: 'خيط', title_en: 'Thread',
+    desc_ar: 'جزء من أدوات الطباعة', desc_en: 'Part of the print toolset',
+    aliases: ['khait', 'thread', 'kheit'], isNew: true }
 ];
 
 var BY_ID = {};
 DATA.forEach(function (d) { BY_ID[d.id] = d; });
 
-var GROUPS = ['core', 'tools', 'experimental'];
+var GROUPS = ['core', 'tools', 'experimental', 'print'];
 
 var STR = {
   ar: {
-    group: { core: 'الأساسية', tools: 'الأدوات', experimental: 'التجريبية' },
+    group: { core: 'الأساسية', tools: 'الأدوات', experimental: 'التجريبية', print: 'طباعة' },
     placeholder: 'ابحث في الفهرس… (/ أو ⌘K)',
     empty: 'لا نتائج — Esc للمسح',
     copied: 'تم نسخ الرابط',
@@ -660,7 +679,7 @@ var STR = {
     legend: '↑↓ تنقّل — →← نُسَخ بديلة — Enter فتح — ⌘Enter تبويب جديد — Alt+Enter نسخ الرابط'
   },
   en: {
-    group: { core: 'Core', tools: 'Tools', experimental: 'Experimental' },
+    group: { core: 'Core', tools: 'Tools', experimental: 'Experimental', print: 'Print' },
     placeholder: 'Search the index… (/ or ⌘K)',
     empty: 'No matches — Esc to clear',
     copied: 'Link copied',
