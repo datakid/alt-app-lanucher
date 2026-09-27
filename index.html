@@ -393,8 +393,9 @@ var DATA = [
     ar: 'نموذج الدفتر', en: 'Ledger Form', dar: 'تسجيل خارجي الصيدلية', den: 'Pharmacy ledger entry form',
     aliases: ['kharegy 2', 'khargy', 'ledger', 'خارجي', 'daftar form'], def: 0,
     variants: [
-      { id: 'new', ar: 'الجديد', en: 'New', url: 'https://slippery-form.vercel.app/' },
-      { id: 'legacy', ar: 'القديم', en: 'Legacy', url: 'https://datakid-github-io.vercel.app/' }
+      { id: 'main', ar: 'الرئيسي', en: 'Main', url: 'https://slippery-form-2-2.vercel.app/' },
+      { id: 'folio', ar: 'فوليو', en: 'Folio', url: 'https://slippery-form.vercel.app/' },
+      { id: 'alt', ar: 'بديل', en: 'Alt', url: 'https://datakid-github-io.vercel.app/' }
     ] },
   { id: 'parser', group: 'core', pigment: '--p-verdigris',
     ar: 'المحلل', en: 'Parser', dar: 'متابعة بيان الخارجي', den: 'Parses raw claim data',
@@ -922,7 +923,6 @@ function remember(d, v) {
 var committing = false, lastRect = null;
 function openTool(r, v, mode) {
   var d = r.d, tg = target(d, v || r.matchV);
-  if (tg.closed) { toast(T().closedToast); buzz(); return; }
   remember(d, tg.v);
   if (mode === 'tab') { window.open(tg.url, '_blank', 'noopener'); return; }
   if (committing) return;
@@ -1041,8 +1041,8 @@ function openSheet(r) {
     b.addEventListener('click', fn);
     return b;
   }
-  var first = act(s.open, 'go', function () { openTool(r, null); }, 'act--primary', null, tg.closed);
-  act(s.newTab, 'ext', function () { closeSheet(); openTool(r, null, 'tab'); }, '', '⌘↵', tg.closed);
+  var first = act(s.open, 'go', function () { openTool(r, null); }, 'act--primary', null, false);
+  act(s.newTab, 'ext', function () { closeSheet(); openTool(r, null, 'tab'); }, '', '⌘↵', false);
   act(isPinned(d.id) ? s.unpin : s.pin, 'pin', function () { closeSheet(); togglePin(r); }, '', '⌥P');
   act(s.copy, 'copy', function () { closeSheet(); copyUrl(r); }, '', '⌥C');
   if (navigator.share) act(s.share, 'share', function () { closeSheet(); shareUrl(r); });
