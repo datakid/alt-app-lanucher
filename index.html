@@ -472,9 +472,13 @@ var DATA = [
   { id: 'entity-tracker', group: 'experimental', pigment: '--p-madder', url: 'https://entity-tracker-pi.vercel.app/', since: '2026-08-11',
     ar: 'بيان جهات متعاقدة', en: 'Entity Tracker', dar: 'تتبع الجهات المتعاقدة', den: 'Tracks contracted entities',
     aliases: ['bayan gehat', 'gehat', 'contracted entities'] },
-  { id: 'pillbug', group: 'experimental', pigment: '--p-lapis', url: 'https://pillbug.vercel.app/', since: '2026-09-27',
-    ar: 'إدارة القوائم', en: 'Pillbug', dar: 'إدارة القوائم والمهام', den: 'List and task management',
-    aliases: ['edarat qawaem', 'pillbug', 'lists', 'قوائم'] },
+  { id: 'pillbug', group: 'experimental', pigment: '--p-lapis', since: '2026-10-02',
+    ar: 'أدوات الصيدلية', en: 'Pharmacy Tools', dar: 'إدارة القوائم ومحول الوحدات والأسعار', den: 'Lists, tasks and unit and price converter',
+    aliases: ['adawat saydaliya', 'pharmacy tools', 'edarat qawaem', 'pillbug', 'pillbugs', 'lists', 'قوائم', 'bugvert', 'converter', 'unit converter', 'mohawel wahda', 'محول', 'وحدة', 'وحدات', 'صيدلية'], def: 0,
+    variants: [
+      { id: 'pillbug', ar: 'إدارة القوائم', en: 'Pillbug', url: 'https://pillbug.vercel.app/' },
+      { id: 'bugvert', ar: 'محول الوحدة', en: 'Bugvert', url: 'https://bugvert.vercel.app/' }
+    ] },
   { id: 'prep', group: 'experimental', pigment: '--p-verdigris', since: '2026-09-18',
     ar: 'تجهيز البيانات', en: 'Data Prep', dar: 'تجهيز البيانات وتنقيتها', den: 'Prepare and sift datasets',
     aliases: ['tagheez', 'duckbench', 'prep', 'floe', 'data'], def: 0,
