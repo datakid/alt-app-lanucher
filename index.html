@@ -415,9 +415,13 @@ var DATA = [
       { id: 'full', ar: 'الكامل', en: 'Full', url: 'https://lx-search-kappa.vercel.app/' },
       { id: 'alt', ar: 'بديل', en: 'Alt', url: 'https://ag-search.vercel.app/' }
     ] },
-  { id: 'paid-calculator', group: 'core', pigment: '--p-madder', url: 'https://newlist-eta.vercel.app/',
+  { id: 'paid-calculator', group: 'core', pigment: '--p-madder',
     ar: 'المنفذ والتحمل', en: 'Paid Calculator', dar: 'حساب المنفذ ونسبة التحمل', den: 'Paid amount and co-pay',
-    aliases: ['monfaz wal tahamol', 'monfaz', 'tahamol', 'copay'] },
+    aliases: ['monfaz wal tahamol', 'monfaz', 'tahamol', 'copay'], def: 0,
+    variants: [
+      { id: 'main', ar: 'الرئيسي', en: 'Main', url: 'https://newlist-eta.vercel.app/' },
+      { id: 'alt', ar: 'دليل قرار 460', en: 'Daleel 460', dar: 'بيان باسعار الخدمات بقرار 460', den: 'Service price statement under Decision 460', url: 'https://460-prices.vercel.app/' }
+    ] },
   { id: 'protocols', group: 'core', pigment: '--p-orpiment', url: 'https://strong-snickerdoodle-02a92f.netlify.app/',
     ar: 'بروتوكولات الصرف', en: 'Protocols', dar: 'مرجع بروتوكولات الصرف', den: 'Dispensing protocol reference',
     aliases: ['brotokolat el-sarf', 'sarf', 'dispensing'] },
@@ -661,6 +665,7 @@ function buildIdx(d) {
   if (d.host) push('host', null, d.host, [.5, .5]);
   (d.variants || []).forEach(function (v) {
     push('variant', 'ar', v.ar, [.7, .7], v.id); push('variant', 'en', v.en, [.7, .7], v.id); push('host', null, v.host, [.5, .5], v.id);
+    push('desc', 'ar', v.dar, [.45, .4], v.id); push('desc', 'en', v.den, [.4, .45], v.id);
   });
   return f;
 }
@@ -753,7 +758,7 @@ function paintRow(r) {
   var d = r.d, s = T(), tg = target(d);
   r.folio.textContent = num(d.folio, 2);
   r.title.textContent = L(d);
-  r.desc.textContent = store.lang === 'ar' ? d.dar : d.den;
+  r.desc.textContent = store.lang === 'ar' ? (tg.v && tg.v.dar) || d.dar : (tg.v && tg.v.den) || d.den;
   r.host.textContent = tg.closed ? s.closed : tg.host;
   r.flag.hidden = !(d.isNew && !tg.closed); r.flag.textContent = s.isNew;
   r.li.classList.toggle('is-closed', tg.closed);
@@ -861,11 +866,12 @@ function render(opts) {
 function annotate(d, m) {
   var r = rows[d.id], f = m.f, rg = ranges(m.hits, m.fr ? f.b.map : f.a.map), lang = store.lang;
   if (f.kind === 'title' && f.lang === lang) paintHL(r.title, f.raw, rg);
-  else if (f.kind === 'desc' && f.lang === lang) paintHL(r.desc, f.raw, rg);
+  else if (f.kind === 'desc' && f.lang === lang && !f.vid && r.desc.textContent === f.raw) paintHL(r.desc, f.raw, rg);
   else if (f.kind === 'host' && !f.vid) paintHL(r.host, f.raw, rg);
   else if (f.vid) {
     var v = d.variants.filter(function (x) { return x.id === f.vid; })[0];
     if (f.kind === 'variant' && f.lang === lang) paintHL(r.chips[f.vid], f.raw, rg);
+    if (f.kind === 'desc' && f.lang === lang && r.desc.textContent === f.raw) paintHL(r.desc, f.raw, rg);
     if (v && !v.closed && m.w > 40) { r.chips[f.vid].setAttribute('aria-current', 'true'); Object.keys(r.chips).forEach(function (k) { if (k !== f.vid) r.chips[k].setAttribute('aria-current', 'false'); }); r.matchV = v; return; }
   }
   r.matchV = null;
