@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "فهرست · Fihrist",
+  "description": "Fihrist data file — the index of pharmacy and insurance tools.",
+  "markdownDescription": "## فهرست · Fihrist\n\nThe index of pharmacy and insurance tools.\n\n| Key | Role |\n|:--|:--|\n| `groups` | Tabs shown across the top |\n| `tools` | One row per tool, with a single `url` or a set of `variants` |\n\n> Bump **`revision`** after every edit so open copies pick up the change.",
+  "type": "object",
+  "required": ["format", "revision", "updated", "groups", "tools"],
+  "additionalProperties": false,
+  "defaultSnippets": [
+    {
+      "label": "New Fihrist file",
+      "markdownDescription": "A complete starter file with one group and one tool.",
+      "body": {
+        "\\$schema": "./fihrist.schema.json",
+        "format": "fihrist/4",
+        "revision": 1,
+        "updated": "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+        "groups": [
+          { "id": "${1:core}", "ar": "${2:الأساسية}", "en": "${3:Core}", "icon": "${4|layers,calc,flask,printer,star,box|}" }
+        ],
+        "tools": [
+          { "id": "${5:tool-id}", "group": "${1:core}", "pigment": "${6|indigo,verdigris,madder,orpiment,lapis,malachite,tyrian,bone|}", "url": "https://${7:example.vercel.app}/", "ar": "${8:الاسم}", "en": "${9:Name}", "dar": "${10:الوصف}", "den": "${11:Description}", "aliases": ["${12:alias}"] }
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "doNotSuggest": true,
+      "markdownDescription": "Links this file to its schema for editor completion, hovers and validation."
+    },
+    "format": {
+      "const": "fihrist/4",
+      "title": "Format",
+      "markdownDescription": "Data format tag. Always **`fihrist/4`**.",
+      "errorMessage": "This app reads \"fihrist/4\" only.",
+      "default": "fihrist/4"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "title": "Revision · المراجعة",
+      "markdownDescription": "### Revision · المراجعة\n\nWhole number that **must go up** with every edit.\n\nWhen the app finds a served `fihrist.json` with a higher revision than the copy it holds, it shows **Update available · Apply**.\n\n---\nرقم يزيد مع كل تعديل.",
+      "errorMessage": "Revision must be a whole number, 1 or higher.",
+      "examples": [1, 2, 3]
+    },
+    "updated": {
+      "$ref": "#/$defs/date",
+      "title": "Updated · آخر تحديث",
+      "markdownDescription": "### Updated · آخر تحديث\n\nDate of the last edit, `YYYY-MM-DD`."
+    },
+    "groups": {
+      "type": "array",
+      "title": "Groups · التصنيفات",
+      "markdownDescription": "### Groups · التصنيفات\n\nOne tab per group, in this order. Every tool points at a group through its `group` key.",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/group" },
+      "defaultSnippets": [
+        { "label": "[ group ]", "body": [{ "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box|}" }] }
+      ]
+    },
+    "tools": {
+      "type": "array",
+      "title": "Tools · الأدوات",
+      "markdownDescription": "### Tools · الأدوات\n\nOne row per tool, in this order. Each tool has **either** a single `url` **or** a list of `variants`.\n\nType `{` inside the array to pick a ready-made tool.",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/tool" }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 48,
+      "patternErrorMessage": "Use lowercase letters, digits and single hyphens, for example \"drug-list\"."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])$",
+      "patternErrorMessage": "Write the date as YYYY-MM-DD, for example \"2026-10-07\".",
+      "defaultSnippets": [{ "label": "Today", "body": "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}" }]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://[^\\s]+$",
+      "patternErrorMessage": "Must be a full http(s) link with no spaces, for example \"https://tool.vercel.app/\".",
+      "examples": ["https://example.vercel.app/", "https://example.netlify.app/"],
+      "defaultSnippets": [
+        { "label": "Vercel", "body": "https://${1:name}.vercel.app/" },
+        { "label": "Netlify", "body": "https://${1:name}.netlify.app/" }
+      ]
+    },
+    "arText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "patternErrorMessage": "Text cannot be empty."
+    },
+    "enText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "patternErrorMessage": "Text cannot be empty."
+    },
+    "pigment": {
+      "type": "string",
+      "title": "Pigment · اللون",
+      "markdownDescription": "### Pigment · اللون\n\nColour of the row's mark, caret and folio number.\n\n| Pigment | Light | Dark |\n|:--|:--|:--|\n| `indigo` | `#33427e` | `#8492c8` |\n| `verdigris` | `#2a7a69` | `#82c0b0` |\n| `madder` | `#a8382c` | `#e08071` |\n| `orpiment` | `#855400` | `#e8b86a` |\n| `lapis` | `#2c4fa0` | `#7598e0` |\n| `malachite` | `#2b7757` | `#7cbc9c` |\n| `tyrian` | `#6c3a6e` | `#b98aba` |\n| `bone` | `#5a564d` | `#a7a39a` |",
+      "enum": ["indigo", "verdigris", "madder", "orpiment", "lapis", "malachite", "tyrian", "bone"],
+      "enumDescriptions": [
+        "Indigo · #33427e",
+        "Verdigris · #2a7a69",
+        "Madder · #a8382c",
+        "Orpiment · #855400",
+        "Lapis · #2c4fa0",
+        "Malachite · #2b7757",
+        "Tyrian · #6c3a6e",
+        "Bone · #5a564d"
+      ],
+      "markdownEnumDescriptions": [
+        "**Indigo** — deep blue-violet · `#33427e` / `#8492c8`",
+        "**Verdigris** — copper green · `#2a7a69` / `#82c0b0`",
+        "**Madder** — brick red · `#a8382c` / `#e08071`",
+        "**Orpiment** — amber gold · `#855400` / `#e8b86a`",
+        "**Lapis** — ultramarine · `#2c4fa0` / `#7598e0`",
+        "**Malachite** — leaf green · `#2b7757` / `#7cbc9c`",
+        "**Tyrian** — royal purple · `#6c3a6e` / `#b98aba`",
+        "**Bone** — warm grey · `#5a564d` / `#a7a39a`"
+      ],
+      "default": "indigo",
+      "errorMessage": "Pick one of: indigo, verdigris, madder, orpiment, lapis, malachite, tyrian, bone."
+    },
+    "icon": {
+      "type": "string",
+      "title": "Icon · الأيقونة",
+      "markdownDescription": "### Icon · الأيقونة\n\nGlyph shown on the group's tab.",
+      "enum": ["layers", "calc", "flask", "printer", "star", "box"],
+      "enumDescriptions": ["Stacked layers", "Calculator", "Lab flask", "Printer", "Star", "Plain square"],
+      "markdownEnumDescriptions": [
+        "**layers** — stacked sheets, for core tools",
+        "**calc** — calculator, for utilities",
+        "**flask** — lab flask, for experiments",
+        "**printer** — printer, for print tools",
+        "**star** — star, for highlights",
+        "**box** — plain square, the fallback"
+      ],
+      "default": "box",
+      "errorMessage": "Pick one of: layers, calc, flask, printer, star, box."
+    },
+    "group": {
+      "type": "object",
+      "title": "Group · تصنيف",
+      "required": ["id", "ar", "en", "icon"],
+      "additionalProperties": false,
+      "defaultSnippets": [
+        {
+          "label": "Group",
+          "markdownDescription": "A new tab.",
+          "body": { "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box|}" }
+        }
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug",
+          "markdownDescription": "### Group id\n\nUnique key. Tools point here through `group`.",
+          "examples": ["core", "tools", "experimental", "print"]
+        },
+        "ar": { "$ref": "#/$defs/arText", "markdownDescription": "Tab label in **Arabic** · اسم التصنيف", "examples": ["الأساسية"] },
+        "en": { "$ref": "#/$defs/enText", "markdownDescription": "Tab label in **English**", "examples": ["Core"] },
+        "icon": { "$ref": "#/$defs/icon" }
+      }
+    },
+    "aliases": {
+      "type": "array",
+      "title": "Aliases · أسماء بديلة",
+      "markdownDescription": "### Aliases · أسماء بديلة\n\nExtra words that should find this tool: Franco-Arabic spellings, old names, abbreviations, Arabic synonyms.\n\nSearch already ignores tashkeel, hamza forms and taa marbuta, so `أنماط` and `انماط` match each other.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "patternErrorMessage": "An alias cannot be empty."
+      },
+      "examples": [["khargy", "ledger", "خارجي"]]
+    },
+    "variant": {
+      "type": "object",
+      "title": "Variant · نسخة",
+      "required": ["id", "ar", "en", "url"],
+      "additionalProperties": false,
+      "defaultSnippets": [
+        {
+          "label": "Variant",
+          "markdownDescription": "Another version of the same tool.",
+          "body": { "id": "${1:main}", "ar": "${2:الرئيسي}", "en": "${3:Main}", "url": "https://${4:example.vercel.app}/" }
+        },
+        {
+          "label": "Variant · with description",
+          "body": { "id": "${1:alt}", "ar": "${2:بديل}", "en": "${3:Alt}", "dar": "${4:الوصف}", "den": "${5:Description}", "url": "https://${6:example.vercel.app}/" }
+        }
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug",
+          "markdownDescription": "### Variant id\n\nUnique inside this tool. The app remembers the last variant you opened by this id.",
+          "examples": ["main", "alt", "full", "express", "free"]
+        },
+        "ar": { "$ref": "#/$defs/arText", "markdownDescription": "Variant label in **Arabic**", "examples": ["الرئيسي", "بديل", "الكامل", "السريع"] },
+        "en": { "$ref": "#/$defs/enText", "markdownDescription": "Variant label in **English**", "examples": ["Main", "Alt", "Full", "Express"] },
+        "url": { "$ref": "#/$defs/url", "markdownDescription": "### Link · الرابط\n\nWhere this variant opens." },
+        "dar": { "$ref": "#/$defs/arText", "markdownDescription": "Optional **Arabic** description shown when this variant is selected." },
+        "den": { "$ref": "#/$defs/enText", "markdownDescription": "Optional **English** description shown when this variant is selected." },
+        "closed": { "type": "boolean", "default": false, "markdownDescription": "Mark this variant as closed. It stays listed but dimmed." }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "title": "Tool · أداة",
+      "required": ["id", "group", "ar", "en"],
+      "additionalProperties": false,
+      "defaultSnippets": [
+        {
+          "label": "Tool · single link",
+          "markdownDescription": "A tool that opens one link.",
+          "body": {
+            "id": "${1:tool-id}",
+            "group": "${2|core,tools,experimental,print|}",
+            "pigment": "${3|indigo,verdigris,madder,orpiment,lapis,malachite,tyrian,bone|}",
+            "url": "https://${4:example.vercel.app}/",
+            "since": "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+            "ar": "${5:الاسم}",
+            "en": "${6:Name}",
+            "dar": "${7:الوصف}",
+            "den": "${8:Description}",
+            "aliases": ["${9:alias}"]
+          }
+        },
+        {
+          "label": "Tool · with variants",
+          "markdownDescription": "A tool with several versions. `def` picks the one that opens by default.",
+          "body": {
+            "id": "${1:tool-id}",
+            "group": "${2|core,tools,experimental,print|}",
+            "pigment": "${3|indigo,verdigris,madder,orpiment,lapis,malachite,tyrian,bone|}",
+            "since": "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+            "ar": "${4:الاسم}",
+            "en": "${5:Name}",
+            "dar": "${6:الوصف}",
+            "den": "${7:Description}",
+            "aliases": ["${8:alias}"],
+            "def": 0,
+            "variants": [
+              { "id": "main", "ar": "الرئيسي", "en": "Main", "url": "https://${9:main.vercel.app}/" },
+              { "id": "alt", "ar": "بديل", "en": "Alt", "url": "https://${10:alt.vercel.app}/" }
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug",
+          "markdownDescription": "### Tool id\n\nUnique key. Used for pins, history and the deep link `index.html#tool-id`.",
+          "examples": ["drug-list", "paid-calculator"]
+        },
+        "group": {
+          "$ref": "#/$defs/slug",
+          "markdownDescription": "### Group · التصنيف\n\nThe `id` of one of the entries in `groups`.",
+          "examples": ["core", "tools", "experimental", "print"]
+        },
+        "pigment": { "$ref": "#/$defs/pigment" },
+        "ar": { "$ref": "#/$defs/arText", "markdownDescription": "### Name · الاسم\n\nTool name in **Arabic**.", "examples": ["قائمة الأدوية"] },
+        "en": { "$ref": "#/$defs/enText", "markdownDescription": "### Name\n\nTool name in **English**.", "examples": ["Drug List"] },
+        "dar": { "$ref": "#/$defs/arText", "markdownDescription": "### Description · الوصف\n\nOne short line in **Arabic**.", "examples": ["قائمة الأدوية القابلة للبحث"] },
+        "den": { "$ref": "#/$defs/enText", "markdownDescription": "### Description\n\nOne short line in **English**.", "examples": ["Searchable master drug list"] },
+        "aliases": { "$ref": "#/$defs/aliases" },
+        "since": {
+          "$ref": "#/$defs/date",
+          "markdownDescription": "### Since · تاريخ الإضافة\n\nDate the tool was added. Shows a **New · جديد** flag for 21 days."
+        },
+        "closed": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "### Closed · مغلق\n\nKeeps the tool listed with a **Closed** pill and a dimmed title."
+        },
+        "url": {
+          "$ref": "#/$defs/url",
+          "markdownDescription": "### Link · الرابط\n\nWhere the tool opens. Use this **or** `variants`, not both."
+        },
+        "def": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "markdownDescription": "### Default variant · النسخة الافتراضية\n\nZero-based position in `variants` of the version that opens by default.",
+          "errorMessage": "def is a position in variants: 0, 1, 2…"
+        },
+        "variants": {
+          "type": "array",
+          "title": "Variants · النسخ",
+          "markdownDescription": "### Variants · النسخ\n\nVersions of the same tool. Use this **or** `url`, not both.",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/variant" }
+        }
+      },
+      "if": { "required": ["variants"] },
+      "then": {
+        "properties": {
+          "url": { "not": {}, "errorMessage": "This tool has variants, so the link belongs on each variant. Remove \"url\"." }
+        }
+      },
+      "else": {
+        "required": ["url"],
+        "properties": {
+          "def": { "not": {}, "errorMessage": "\"def\" only applies to tools with variants." }
+        }
+      }
+    }
+  }
+}

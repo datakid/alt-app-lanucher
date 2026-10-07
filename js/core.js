@@ -76,6 +76,29 @@ F.validate = function (doc) {
   return out;
 };
 
+F.SCHEMA_REF = './fihrist.schema.json';
+F.serialize = function (doc) {
+  function has(v) { return v !== '' && v != null && v !== false && !(Array.isArray(v) && !v.length); }
+  function pick(o, keys) { var r = {}; keys.forEach(function (k) { if (has(o[k])) r[k] = o[k]; }); return r; }
+  function val(v) { return Array.isArray(v) ? '[' + v.map(function (x) { return JSON.stringify(x); }).join(', ') + ']' : JSON.stringify(v); }
+  function line(o) { return '{ ' + Object.keys(o).map(function (k) { return JSON.stringify(k) + ': ' + val(o[k]); }).join(', ') + ' }'; }
+  var groups = doc.groups.map(function (g) { return '    ' + line(pick(g, ['id', 'ar', 'en', 'icon'])); });
+  var tools = doc.tools.map(function (t) {
+    var o = pick(t, ['id', 'group', 'pigment', 'closed', 'url', 'since', 'ar', 'en', 'dar', 'den', 'aliases']);
+    if (!t.variants) return '    ' + line(o);
+    o.def = t.def || 0;
+    var vs = t.variants.map(function (v) { return '        ' + line(pick(v, ['id', 'ar', 'en', 'dar', 'den', 'closed', 'url'])); });
+    return '    ' + line(o).slice(0, -2) + ',\n      "variants": [\n' + vs.join(',\n') + '\n      ] }';
+  });
+  return '{\n' +
+    '  "$schema": ' + JSON.stringify(F.SCHEMA_REF) + ',\n' +
+    '  "format": "fihrist/4",\n' +
+    '  "revision": ' + Math.max(1, doc.revision | 0) + ',\n' +
+    '  "updated": ' + JSON.stringify(doc.updated) + ',\n' +
+    '  "groups": [\n' + groups.join(',\n') + '\n  ],\n' +
+    '  "tools": [\n' + tools.join(',\n') + '\n  ]\n}\n';
+};
+
 F.loadInitial = function () {
   var seed = F.validate(window.FIHRIST_SEED), pick = { doc: seed, src: 'seed' };
   try {

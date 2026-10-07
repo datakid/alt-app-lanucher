@@ -102,7 +102,7 @@ F.openSettings = function () {
   var a = el('div', 'actions', sheetBody); a.style.marginBlockStart = '0';
   act(a, s.checkUpdate, 'sync', function () { F.checkUpdate(true); }, 'act--wide', null, !F.canFetch);
   act(a, s.importFile, 'up', function () { pickFile(importDoc); });
-  act(a, s.exportData, 'down', function () { download('fihrist.json', F.doc); });
+  act(a, s.exportData, 'down', function () { download('fihrist.json', F.serialize(F.doc)); });
   act(a, s.resetData, 'reset', function () { F.dropDoc(); applyDoc(F.seed, 'seed'); F.toast(s.reset); F.closeSheet(); }, 'act--wide', null, F.docSrc === 'seed');
   var b = el('div', 'actions', sheetBody);
   act(b, s.exportPrefs, 'down', function () { download('fihrist-prefs.json', { format: 'fihrist-prefs/1', prefs: store }); F.toast(s.prefsSaved); });
@@ -116,7 +116,7 @@ F.openSettings = function () {
 };
 
 function download(name, obj) {
-  var blob = new Blob([JSON.stringify(obj, null, 2) + '\n'], { type: 'application/json' });
+  var blob = new Blob([typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2) + '\n'], { type: 'application/json' });
   var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
 }

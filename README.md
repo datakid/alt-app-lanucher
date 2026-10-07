@@ -14,6 +14,15 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 | `js/app.js` | Rendering, rows, tabs, caret, open/pin/copy, toasts |
 | `js/ui.js` | Sheets (tool, settings, shortcuts), input, drag-and-drop import, boot |
 | `css/app.css` | All styles |
+| `fihrist.schema.json` | JSON Schema for `fihrist.json`: completion, hovers (bilingual, with colour tables), snippets, and plain-language error messages in VS Code and any editor that supports JSON Schema |
+| `.vscode/settings.json` | Links the schema, smooth scrolling and caret, bracket and token colours from the Fihrist pigments (separate light and dark sets) |
+
+## Editing in VS Code
+- Open the folder. `fihrist.json` picks up the schema through `"$schema": "./fihrist.schema.json"` and `.vscode/settings.json`.
+- Inside `tools`, type `{` and choose **Tool · single link** or **Tool · with variants**. Inside `variants`, choose **Variant**. Tab moves through the fields; `pigment`, `group` and `icon` show drop-down choices.
+- Hover any key to see what it does. Hover `pigment` to see every colour with its light and dark hex.
+- Errors explain the fix in plain words, for example *"This tool has variants, so the link belongs on each variant. Remove "url"."*
+- **Export data** writes a file that passes the schema: the `$schema` line first, empty fields dropped, one line per tool and one line per variant. It matches the hand-written layout, so git diffs stay small.
 
 ## How data updates
 1. On load the app uses the built-in data (`js/data.js`). If a cached copy has a **higher `revision`** (or was imported by hand), it uses that instead.
