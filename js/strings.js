@@ -1,0 +1,42 @@
+window.F.STR = {
+  ar: {
+    wordmark: 'فهرست', placeholder: 'ابحث عن أداة…', all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
+    empty: 'لا نتائج', emptyHint: 'جرّب كلمة أخرى أو امسح البحث', swapTry: 'هل تقصد', clearAll: 'مسح البحث والتصنيف',
+    copied: 'تم نسخ الرابط', copiedAll: 'تم نسخ الروابط', closed: 'مغلق', isNew: 'جديد',
+    theme: { system: 'تلقائي', light: 'فاتح', dark: 'داكن' }, lang: 'EN', langAria: 'Switch to English',
+    open: 'فتح', newTab: 'تبويب جديد', copy: 'نسخ الرابط', share: 'مشاركة', pin: 'تثبيت', unpin: 'إلغاء التثبيت', deep: 'رابط مباشر للفهرست',
+    versions: 'النسخة', pinned: 'تم التثبيت', unpinned: 'أُلغي التثبيت', undo: 'تراجع', closedToast: 'هذه الأداة مغلقة حاليًا',
+    more: 'إجراءات', clear: 'مسح البحث', of: 'من', tools: 'أداة', opened: 'فُتحت', times: 'مرة', lastUsed: 'آخر استخدام', never: 'لم تُفتح بعد',
+    settings: 'الإعدادات', keys: 'الاختصارات', appearance: 'المظهر', density: 'الكثافة', cozy: 'مريح', compact: 'مضغوط',
+    openIn: 'فتح الأدوات في', sameTab: 'نفس التبويب', otherTab: 'تبويب جديد',
+    data: 'البيانات', source: { seed: 'مدمجة', remote: 'fihrist.json', file: 'ملف مستورد', cache: 'محفوظة' }, revision: 'المراجعة',
+    checkUpdate: 'البحث عن تحديث', importFile: 'استيراد ملف JSON', exportData: 'تصدير البيانات', resetData: 'العودة للبيانات المدمجة',
+    exportPrefs: 'نسخ احتياطي للتفضيلات', importPrefs: 'استعادة التفضيلات', clearHistory: 'مسح سجل الاستخدام',
+    upToDate: 'البيانات محدثة', updated: 'تم التحديث إلى المراجعة', noHttp: 'التحديث التلقائي يحتاج خادمًا — استورد الملف يدويًا',
+    fetchFail: 'تعذّر جلب fihrist.json', badFile: 'ملف غير صالح', imported: 'تم استيراد البيانات', reset: 'تمت العودة للبيانات المدمجة',
+    prefsSaved: 'تم حفظ النسخة الاحتياطية', prefsLoaded: 'تمت استعادة التفضيلات', historyCleared: 'تم مسح السجل', dropHere: 'أفلت ملف fihrist.json هنا',
+    newData: 'تحديث متاح', apply: 'تطبيق', offline: 'غير متصل', online: 'عاد الاتصال',
+    k: [['/', '⌘K', 'بحث'], ['↑', '↓', 'تنقّل'], ['←', '→', 'تبديل النسخة'], ['↵', '', 'فتح'], ['⌘', '↵', 'تبويب جديد'], ['⇧', '↵', 'الإجراءات'],
+      ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Esc', '', 'مسح / إغلاق']]
+  },
+  en: {
+    wordmark: 'Fihrist', placeholder: 'Search tools…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
+    empty: 'No matches', emptyHint: 'Try another word or clear the search', swapTry: 'Did you mean', clearAll: 'Clear search and filter',
+    copied: 'Link copied', copiedAll: 'Links copied', closed: 'Closed', isNew: 'New',
+    theme: { system: 'Auto', light: 'Light', dark: 'Dark' }, lang: 'ع', langAria: 'التبديل إلى العربية',
+    open: 'Open', newTab: 'New tab', copy: 'Copy link', share: 'Share', pin: 'Pin', unpin: 'Unpin', deep: 'Fihrist deep link',
+    versions: 'Version', pinned: 'Pinned', unpinned: 'Unpinned', undo: 'Undo', closedToast: 'This tool is closed for now',
+    more: 'Actions', clear: 'Clear search', of: 'of', tools: 'tools', opened: 'Opened', times: '×', lastUsed: 'Last used', never: 'Not opened yet',
+    settings: 'Settings', keys: 'Shortcuts', appearance: 'Appearance', density: 'Density', cozy: 'Cozy', compact: 'Compact',
+    openIn: 'Open tools in', sameTab: 'Same tab', otherTab: 'New tab',
+    data: 'Data', source: { seed: 'Built-in', remote: 'fihrist.json', file: 'Imported file', cache: 'Cached' }, revision: 'Revision',
+    checkUpdate: 'Check for update', importFile: 'Import JSON file', exportData: 'Export data', resetData: 'Revert to built-in data',
+    exportPrefs: 'Back up preferences', importPrefs: 'Restore preferences', clearHistory: 'Clear usage history',
+    upToDate: 'Data is up to date', updated: 'Updated to revision', noHttp: 'Auto-update needs a server — import the file instead',
+    fetchFail: 'Could not fetch fihrist.json', badFile: 'Invalid file', imported: 'Data imported', reset: 'Reverted to built-in data',
+    prefsSaved: 'Backup saved', prefsLoaded: 'Preferences restored', historyCleared: 'History cleared', dropHere: 'Drop fihrist.json here',
+    newData: 'Update available', apply: 'Apply', offline: 'Offline', online: 'Back online',
+    k: [['/', '⌘K', 'Search'], ['↑', '↓', 'Browse'], ['←', '→', 'Switch version'], ['↵', '', 'Open'], ['⌘', '↵', 'New tab'], ['⇧', '↵', 'Actions'],
+      ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Esc', '', 'Clear / close']]
+  }
+};
