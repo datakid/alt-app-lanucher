@@ -1,8 +1,8 @@
 {
   "$schema": "./fihrist.schema.json",
   "format": "fihrist/4",
-  "revision": 1,
-  "updated": "2026-10-06",
+  "revision": 2,
+  "updated": "2026-10-09",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -53,9 +53,13 @@
       "ar": "دفتر الحركة", "en": "Dafter", "dar": "تسجيل المنصرف الشهري للصيدلية", "den": "Monthly movement ledger",
       "aliases": ["daftar el-haraka", "daftar", "movement"] },
 
-    { "id": "id-dates", "group": "tools", "pigment": "lapis", "url": "https://lx-id.vercel.app/", "since": "2026-08-11",
-      "ar": "الرقم القومي والتاريخ", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities",
-      "aliases": ["raqm qawmy", "national id", "raqm", "dates"] },
+    { "id": "id-dates", "group": "tools", "pigment": "lapis", "since": "2026-10-09",
+      "ar": "أدوات الهوية", "en": "ID Tools", "dar": "الرقم القومي والتواريخ وجهات الاتصال", "den": "National ID, dates and contacts",
+      "aliases": ["raqm qawmy", "national id", "raqm", "dates", "contact flow", "contacts", "phone numbers", "arqam el-hatef", "hatef", "vcard", "أرقام", "ارقام الهاتف", "هاتف", "جهات اتصال"], "def": 0,
+      "variants": [
+        { "id": "id", "ar": "الرقم القومي", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities", "url": "https://lx-id.vercel.app/" },
+        { "id": "contacts", "ar": "أرقام الهاتف", "en": "Contact Flow", "dar": "استيراد جهات الاتصال وتنظيفها وتصديرها", "den": "Import, clean up and export contacts", "url": "https://contact-flow-web-orpin.vercel.app/" }
+      ] },
     { "id": "roi", "group": "tools", "pigment": "verdigris", "since": "2026-08-11",
       "ar": "عائد الاستثمار", "en": "ROI Calculator", "dar": "حاسبة عائد الاستثمار", "den": "Return-on-investment calculator",
       "aliases": ["roi", "aid al-istithmar", "return on investment"], "def": 0,
@@ -94,6 +98,9 @@
         { "id": "meridian", "ar": "ميريديان", "en": "Meridian", "url": "https://facilities-demo-tau.vercel.app/" },
         { "id": "rubric", "ar": "سلّم التقييم", "en": "Rubric", "url": "https://ranking-builder-demo.vercel.app/" }
       ] },
+    { "id": "tacit", "group": "tools", "pigment": "bone", "url": "https://tacit-web-lake.vercel.app/", "since": "2026-10-09",
+      "ar": "المشغّل", "en": "Tacit", "dar": "مشغّل الروابط بلوحة المفاتيح", "den": "Keyboard-first web launcher",
+      "aliases": ["tacit", "launcher", "app launcher", "mushaghel", "mashghal", "تاسيت", "مشغل", "مشغّل"] },
 
     { "id": "to-do", "group": "experimental", "pigment": "malachite", "url": "https://to-do-cyan-theta.vercel.app/", "since": "2026-08-11",
       "ar": "المهام", "en": "To Do", "dar": "متابعة المهام والتقارير", "den": "Task and report tracker",
@@ -130,15 +137,15 @@
     { "id": "gitlink", "group": "experimental", "pigment": "indigo", "url": "https://gitlink-gilt.vercel.app/",
       "ar": "إحصائيات جيتهب", "en": "GitLink", "dar": "متابعين وزوار وإحصائيات جيتهب", "den": "GitHub followers, viewers and profile stats",
       "aliases": ["gitlink", "github", "jithub", "followers", "جيتهب"] },
-    { "id": "adad", "group": "experimental", "pigment": "malachite", "url": "https://visit-tracker-xi.vercel.app/", "since": "2026-10-07",
-      "ar": "عدّاد", "en": "Adad", "dar": "حساب بدلات المرور وإصدار كشوف PDF", "den": "Visit allowances from Excel, with PDF statements",
-      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] },
 
     { "id": "paper", "group": "print", "pigment": "bone", "url": "https://el-messiry.netlify.app/",
       "ar": "ورقة", "en": "Paper", "dar": "جزء من أدوات الطباعة", "den": "Part of the print toolset",
       "aliases": ["waraqa", "paper", "warqa", "print", "tebaa"] },
     { "id": "thread", "group": "print", "pigment": "madder", "url": "https://willowy-centaur-417620.netlify.app/",
       "ar": "خيط", "en": "Thread", "dar": "جزء من أدوات الطباعة", "den": "Part of the print toolset",
-      "aliases": ["khait", "thread", "kheit", "print", "tebaa"] }
+      "aliases": ["khait", "thread", "kheit", "print", "tebaa"] },
+    { "id": "adad", "group": "print", "pigment": "malachite", "url": "https://visit-tracker-xi.vercel.app/", "since": "2026-10-07",
+      "ar": "عدّاد", "en": "Adad", "dar": "حساب بدلات المرور وإصدار كشوف PDF", "den": "Visit allowances from Excel, with PDF statements",
+      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] }
   ]
 }
