@@ -53,11 +53,11 @@ window.FIHRIST_SEED = {
       "aliases": ["daftar el-haraka", "daftar", "movement"] },
 
     { "id": "id-dates", "group": "tools", "pigment": "lapis", "since": "2026-10-09",
-      "ar": "أدوات الهوية", "en": "ID Tools", "dar": "الرقم القومي والتواريخ وجهات الاتصال", "den": "National ID, dates and contacts",
-      "aliases": ["adawat el-hawia", "hawia", "id tools", "هوية"], "def": 0,
+      "ar": "أدوات الأرقام", "en": "Number Tools", "dar": "الرقم القومي والتواريخ وجهات الاتصال", "den": "National ID, dates and contacts",
+      "aliases": ["adawat el-arqam", "number tools", "arqam", "raqm", "ارقام"], "def": 0,
       "variants": [
-        { "id": "id", "ar": "الرقم القومي", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities", "aliases": ["raqm qawmy", "national id", "raqm", "dates", "tarikh", "رقم قومي", "تواريخ"], "url": "https://lx-id.vercel.app/" },
-        { "id": "contacts", "ar": "أرقام الهاتف", "en": "Contact Flow", "dar": "استيراد جهات الاتصال وتنظيفها وتصديرها", "den": "Import, clean up and export contacts", "aliases": ["contact flow", "contacts", "phone numbers", "arqam el-hatef", "arqam", "hatef", "vcard", "أرقام", "ارقام الهاتف", "هاتف", "جهات اتصال"], "url": "https://contact-flow-web-orpin.vercel.app/" }
+        { "id": "id", "ar": "الرقم القومي", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities", "aliases": ["raqm qawmy", "national id", "dates", "tarikh", "id tools", "hawia", "adawat el-hawia", "رقم قومي", "تواريخ", "هوية"], "url": "https://lx-id.vercel.app/" },
+        { "id": "contacts", "ar": "أدوات جهات الاتصال", "en": "Contact Tools", "dar": "استيراد جهات الاتصال وتنظيفها وتصديرها", "den": "Import, clean up and export contacts", "aliases": ["contact flow", "contacts", "phone numbers", "arqam el-hatef", "hatef", "vcard", "ارقام الهاتف", "هاتف", "جهات اتصال"], "url": "https://contact-flow-web-orpin.vercel.app/" }
       ] },
     { "id": "roi", "group": "tools", "pigment": "verdigris", "since": "2026-08-11",
       "ar": "عائد الاستثمار", "en": "ROI Calculator", "dar": "حاسبة عائد الاستثمار", "den": "Return-on-investment calculator",
