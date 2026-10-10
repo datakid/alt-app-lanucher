@@ -1,7 +1,7 @@
 window.FIHRIST_SEED = {
   "format": "fihrist/4",
-  "revision": 1,
-  "updated": "2026-10-06",
+  "revision": 3,
+  "updated": "2026-10-10",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -31,8 +31,8 @@ window.FIHRIST_SEED = {
       "ar": "قائمة الأدوية", "en": "Drug List", "dar": "قائمة الأدوية القابلة للبحث", "den": "Searchable master drug list",
       "aliases": ["listet el-adwia", "لستة الادوية", "adwia", "list"], "def": 0,
       "variants": [
-        { "id": "free", "ar": "مجاني", "en": "Free", "url": "https://searchbar-five-beta.vercel.app/" },
-        { "id": "full", "ar": "الكامل", "en": "Full", "url": "https://lx-search-kappa.vercel.app/" },
+        { "id": "free", "ar": "مجاني", "en": "Free", "aliases": ["magany", "majani"], "url": "https://searchbar-five-beta.vercel.app/" },
+        { "id": "full", "ar": "الكامل", "en": "Full", "aliases": ["kamel", "complete"], "url": "https://lx-search-kappa.vercel.app/" },
         { "id": "alt", "ar": "بديل", "en": "Alt", "url": "https://ag-search.vercel.app/" }
       ] },
     { "id": "paid-calculator", "group": "core", "pigment": "madder",
@@ -40,7 +40,7 @@ window.FIHRIST_SEED = {
       "aliases": ["monfaz wal tahamol", "monfaz", "tahamol", "copay"], "def": 0,
       "variants": [
         { "id": "main", "ar": "الرئيسي", "en": "Main", "url": "https://newlist-eta.vercel.app/" },
-        { "id": "alt", "ar": "دليل قرار 460", "en": "Daleel 460", "dar": "بيان باسعار الخدمات بقرار 460", "den": "Service price statement under Decision 460", "url": "https://460-prices.vercel.app/" }
+        { "id": "alt", "ar": "دليل قرار 460", "en": "Daleel 460", "dar": "بيان باسعار الخدمات بقرار 460", "den": "Service price statement under Decision 460", "aliases": ["dalil", "qarar 460", "decision 460", "asaar", "اسعار الخدمات"], "url": "https://460-prices.vercel.app/" }
       ] },
     { "id": "protocols", "group": "core", "pigment": "orpiment", "url": "https://strong-snickerdoodle-02a92f.netlify.app/",
       "ar": "بروتوكولات الصرف", "en": "Protocols", "dar": "مرجع بروتوكولات الصرف", "den": "Dispensing protocol reference",
@@ -52,25 +52,29 @@ window.FIHRIST_SEED = {
       "ar": "دفتر الحركة", "en": "Dafter", "dar": "تسجيل المنصرف الشهري للصيدلية", "den": "Monthly movement ledger",
       "aliases": ["daftar el-haraka", "daftar", "movement"] },
 
-    { "id": "id-dates", "group": "tools", "pigment": "lapis", "url": "https://lx-id.vercel.app/", "since": "2026-08-11",
-      "ar": "الرقم القومي والتاريخ", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities",
-      "aliases": ["raqm qawmy", "national id", "raqm", "dates"] },
+    { "id": "id-dates", "group": "tools", "pigment": "lapis", "since": "2026-10-09",
+      "ar": "أدوات الهوية", "en": "ID Tools", "dar": "الرقم القومي والتواريخ وجهات الاتصال", "den": "National ID, dates and contacts",
+      "aliases": ["adawat el-hawia", "hawia", "id tools", "هوية"], "def": 0,
+      "variants": [
+        { "id": "id", "ar": "الرقم القومي", "en": "ID and Dates", "dar": "أدوات الرقم القومي والتواريخ", "den": "National ID and date utilities", "aliases": ["raqm qawmy", "national id", "raqm", "dates", "tarikh", "رقم قومي", "تواريخ"], "url": "https://lx-id.vercel.app/" },
+        { "id": "contacts", "ar": "أرقام الهاتف", "en": "Contact Flow", "dar": "استيراد جهات الاتصال وتنظيفها وتصديرها", "den": "Import, clean up and export contacts", "aliases": ["contact flow", "contacts", "phone numbers", "arqam el-hatef", "arqam", "hatef", "vcard", "أرقام", "ارقام الهاتف", "هاتف", "جهات اتصال"], "url": "https://contact-flow-web-orpin.vercel.app/" }
+      ] },
     { "id": "roi", "group": "tools", "pigment": "verdigris", "since": "2026-08-11",
       "ar": "عائد الاستثمار", "en": "ROI Calculator", "dar": "حاسبة عائد الاستثمار", "den": "Return-on-investment calculator",
       "aliases": ["roi", "aid al-istithmar", "return on investment"], "def": 0,
       "variants": [
-        { "id": "express", "ar": "السريع", "en": "Express", "url": "https://roi-calc-express.vercel.app/" },
-        { "id": "full", "ar": "الكامل", "en": "Full", "url": "https://roi-calculator-eight-omega.vercel.app/" }
+        { "id": "express", "ar": "السريع", "en": "Express", "aliases": ["sare3", "saree3", "quick"], "url": "https://roi-calc-express.vercel.app/" },
+        { "id": "full", "ar": "الكامل", "en": "Full", "aliases": ["kamel", "complete"], "url": "https://roi-calculator-eight-omega.vercel.app/" }
       ] },
     { "id": "survival-mirror", "group": "tools", "pigment": "malachite", "url": "https://survival-mirror.vercel.app/", "since": "2026-08-25",
       "ar": "منحنى البقاء", "en": "Survival Mirror", "dar": "تقدير منحنى البقاء الشخصي", "den": "Personal survival-curve estimate",
       "aliases": ["monhna el-baqaa", "life expectancy", "baqaa"] },
     { "id": "qisma-mizan", "group": "tools", "pigment": "orpiment", "since": "2026-08-11",
       "ar": "قسمة العوائد", "en": "Qisma / Mizan", "dar": "قسمة إيرادات هيئة التأمين", "den": "Shareholder split and balance",
-      "aliases": ["qisma el-awaed", "qisma", "mizan", "shareholders"], "def": 0,
+      "aliases": ["qisma el-awaed"], "def": 0,
       "variants": [
         { "id": "mizan", "ar": "ميزان", "en": "Mizan", "url": "https://m-izan.vercel.app/" },
-        { "id": "qisma", "ar": "قسمة", "en": "Qisma", "url": "https://shareholders-coral.vercel.app/" }
+        { "id": "qisma", "ar": "قسمة", "en": "Qisma", "aliases": ["shareholders"], "url": "https://shareholders-coral.vercel.app/" }
       ] },
     { "id": "solver", "group": "tools", "pigment": "indigo", "url": "https://solver-clone.vercel.app/", "since": "2026-09-26",
       "ar": "حل المعادلات", "en": "Solver", "dar": "حل المعادلات والمسائل الحسابية", "den": "Equation solver",
@@ -82,17 +86,20 @@ window.FIHRIST_SEED = {
       "ar": "الخطة", "en": "Planner", "dar": "توليد خطة مرور دورية", "den": "Recurring visit schedule",
       "aliases": ["el-khetta", "khetta", "plan", "kheta"], "def": 0,
       "variants": [
-        { "id": "express", "ar": "السريع", "en": "Express", "url": "https://rushed-plan.vercel.app/" },
-        { "id": "full", "ar": "الكامل", "en": "Full", "url": "https://plan-maker-tan.vercel.app/" },
+        { "id": "express", "ar": "السريع", "en": "Express", "aliases": ["sare3", "saree3", "quick", "rushed"], "url": "https://rushed-plan.vercel.app/" },
+        { "id": "full", "ar": "الكامل", "en": "Full", "aliases": ["kamel", "complete"], "url": "https://plan-maker-tan.vercel.app/" },
         { "id": "alt", "ar": "بديل", "en": "Alt", "url": "https://alt-plan-maker.vercel.app/" }
       ] },
     { "id": "criteria-builder", "group": "tools", "pigment": "madder", "since": "2026-09-26",
       "ar": "بناء المعايير", "en": "Criteria Builder", "dar": "بناء معايير التقييم والترتيب", "den": "Scoring and ranking criteria",
-      "aliases": ["maayir", "criteria", "ranking", "rubric", "meridian"], "def": 0,
+      "aliases": ["maayir", "criteria", "معايير"], "def": 0,
       "variants": [
-        { "id": "meridian", "ar": "ميريديان", "en": "Meridian", "url": "https://facilities-demo-tau.vercel.app/" },
-        { "id": "rubric", "ar": "سلّم التقييم", "en": "Rubric", "url": "https://ranking-builder-demo.vercel.app/" }
+        { "id": "meridian", "ar": "ميريديان", "en": "Meridian", "aliases": ["facilities"], "url": "https://facilities-demo-tau.vercel.app/" },
+        { "id": "rubric", "ar": "سلّم التقييم", "en": "Rubric", "aliases": ["ranking", "ranking builder", "sollam"], "url": "https://ranking-builder-demo.vercel.app/" }
       ] },
+    { "id": "tacit", "group": "tools", "pigment": "bone", "url": "https://tacit-web-lake.vercel.app/", "since": "2026-10-09",
+      "ar": "المشغّل", "en": "Tacit", "dar": "مشغّل الروابط بلوحة المفاتيح", "den": "Keyboard-first web launcher",
+      "aliases": ["tacit", "launcher", "app launcher", "mushaghel", "mashghal", "تاسيت", "مشغل", "مشغّل"] },
 
     { "id": "to-do", "group": "experimental", "pigment": "malachite", "url": "https://to-do-cyan-theta.vercel.app/", "since": "2026-08-11",
       "ar": "المهام", "en": "To Do", "dar": "متابعة المهام والتقارير", "den": "Task and report tracker",
@@ -102,26 +109,26 @@ window.FIHRIST_SEED = {
       "aliases": ["bayan gehat", "gehat", "contracted entities"] },
     { "id": "pillbug", "group": "experimental", "pigment": "lapis", "since": "2026-10-02",
       "ar": "أدوات الصيدلية", "en": "Pharmacy Tools", "dar": "إدارة القوائم ومحول الوحدات والأسعار", "den": "Lists, tasks and unit and price converter",
-      "aliases": ["adawat saydaliya", "pharmacy tools", "edarat qawaem", "pillbug", "pillbugs", "lists", "قوائم", "bugvert", "converter", "unit converter", "mohawel wahda", "محول", "وحدة", "وحدات", "صيدلية"], "def": 0,
+      "aliases": ["adawat saydaliya", "pharmacy tools", "صيدلية"], "def": 0,
       "variants": [
-        { "id": "pillbug", "ar": "إدارة القوائم", "en": "Pillbug", "url": "https://pillbug.vercel.app/" },
-        { "id": "bugvert", "ar": "محول الوحدة", "en": "Bugvert", "url": "https://bugvert.vercel.app/" }
+        { "id": "pillbug", "ar": "إدارة القوائم", "en": "Pillbug", "aliases": ["pillbugs", "lists", "edarat qawaem", "قوائم"], "url": "https://pillbug.vercel.app/" },
+        { "id": "bugvert", "ar": "محول الوحدة", "en": "Bugvert", "aliases": ["converter", "unit converter", "price converter", "mohawel", "mohawel wahda", "محول", "وحدة", "وحدات"], "url": "https://bugvert.vercel.app/" }
       ] },
     { "id": "prep", "group": "experimental", "pigment": "verdigris", "since": "2026-09-18",
       "ar": "تجهيز البيانات", "en": "Data Prep", "dar": "تجهيز البيانات وتنقيتها", "den": "Prepare and sift datasets",
-      "aliases": ["tagheez", "duckbench", "prep", "floe", "data"], "def": 0,
+      "aliases": ["tagheez", "tagheez el-bayanat", "data"], "def": 0,
       "variants": [
         { "id": "prep", "ar": "تجهيز", "en": "Prep", "url": "https://duckbench2.vercel.app/" },
-        { "id": "floe", "ar": "فلو", "en": "Floe", "url": "https://polars-desktop-demo.vercel.app/" },
-        { "id": "duckbench", "ar": "قديم", "en": "Legacy", "url": "https://duckbench.vercel.app/" }
+        { "id": "floe", "ar": "فلو", "en": "Floe", "aliases": ["polars"], "url": "https://polars-desktop-demo.vercel.app/" },
+        { "id": "duckbench", "ar": "قديم", "en": "Legacy", "aliases": ["duckbench", "adeem"], "url": "https://duckbench.vercel.app/" }
       ] },
     { "id": "text-tools", "group": "experimental", "pigment": "orpiment", "since": "2026-09-27",
       "ar": "أدوات النصوص", "en": "Text Tools", "dar": "تنظيف النصوص والجداول", "den": "Clean and reshape text and tables",
-      "aliases": ["adawat nosos", "text tools", "tanqya", "icleaner", "cleaner", "monazef", "نصوص", "تنظيف"], "def": 0,
+      "aliases": ["adawat nosos", "text tools", "تنظيف"], "def": 0,
       "variants": [
-        { "id": "weft", "ar": "تنقية", "en": "Weft", "url": "https://data-cleaner-coral.vercel.app/" },
-        { "id": "text", "ar": "نصوص", "en": "Text", "url": "https://text-tools-kohl.vercel.app/" },
-        { "id": "icleaner", "ar": "منظّف", "en": "iCleaner", "url": "https://icleaner-woad.vercel.app/" }
+        { "id": "weft", "ar": "تنقية", "en": "Weft", "aliases": ["tanqya", "data cleaner"], "url": "https://data-cleaner-coral.vercel.app/" },
+        { "id": "text", "ar": "نصوص", "en": "Text", "aliases": ["nosos"], "url": "https://text-tools-kohl.vercel.app/" },
+        { "id": "icleaner", "ar": "منظّف", "en": "iCleaner", "aliases": ["cleaner", "monazef"], "url": "https://icleaner-woad.vercel.app/" }
       ] },
     { "id": "draw", "group": "experimental", "pigment": "tyrian", "url": "https://draw-gold.vercel.app/", "since": "2026-09-18",
       "ar": "الرسم البياني", "en": "Draw", "dar": "أداة رسم المخططات", "den": "Charts and diagram tool",
@@ -129,15 +136,15 @@ window.FIHRIST_SEED = {
     { "id": "gitlink", "group": "experimental", "pigment": "indigo", "url": "https://gitlink-gilt.vercel.app/",
       "ar": "إحصائيات جيتهب", "en": "GitLink", "dar": "متابعين وزوار وإحصائيات جيتهب", "den": "GitHub followers, viewers and profile stats",
       "aliases": ["gitlink", "github", "jithub", "followers", "جيتهب"] },
-    { "id": "adad", "group": "experimental", "pigment": "malachite", "url": "https://visit-tracker-xi.vercel.app/", "since": "2026-10-07",
-      "ar": "عدّاد", "en": "Adad", "dar": "حساب بدلات المرور وإصدار كشوف PDF", "den": "Visit allowances from Excel, with PDF statements",
-      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] },
 
     { "id": "paper", "group": "print", "pigment": "bone", "url": "https://el-messiry.netlify.app/",
       "ar": "ورقة", "en": "Paper", "dar": "جزء من أدوات الطباعة", "den": "Part of the print toolset",
       "aliases": ["waraqa", "paper", "warqa", "print", "tebaa"] },
     { "id": "thread", "group": "print", "pigment": "madder", "url": "https://willowy-centaur-417620.netlify.app/",
       "ar": "خيط", "en": "Thread", "dar": "جزء من أدوات الطباعة", "den": "Part of the print toolset",
-      "aliases": ["khait", "thread", "kheit", "print", "tebaa"] }
+      "aliases": ["khait", "thread", "kheit", "print", "tebaa"] },
+    { "id": "adad", "group": "print", "pigment": "malachite", "url": "https://visit-tracker-xi.vercel.app/", "since": "2026-10-07",
+      "ar": "عدّاد", "en": "Adad", "dar": "حساب بدلات المرور وإصدار كشوف PDF", "den": "Visit allowances from Excel, with PDF statements",
+      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] }
   ]
 };

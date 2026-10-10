@@ -35,10 +35,13 @@ Validation errors name the exact tool and field, for example `Tool #3 (parser): 
 
 ### Schema (`fihrist/4`)
 - `groups[]`: `id`, `ar`, `en`, `icon` (`layers|calc|flask|printer|star|box`)
-- `tools[]`: `id`, `group`, `pigment` (`indigo|verdigris|madder|orpiment|lapis|malachite|tyrian|bone`), `ar`, `en`, `dar`, `den`, `aliases[]`, `since` (YYYY-MM-DD; shows a "New" flag for 21 days), `closed`, then **either** `url` **or** `variants[]` (`id`, `ar`, `en`, `url`, optional `dar`, `den`, `closed`) plus `def` (index of the default variant).
+- `tools[]`: `id`, `group`, `pigment` (`indigo|verdigris|madder|orpiment|lapis|malachite|tyrian|bone`), `ar`, `en`, `dar`, `den`, `aliases[]`, `since` (YYYY-MM-DD; shows a "New" flag for 21 days), `closed`, then **either** `url` **or** `variants[]` (`id`, `ar`, `en`, `url`, optional `dar`, `den`, `aliases[]`, `closed`) plus `def` (index of the default variant).
+
+Rule for aliases: a word that points at ONE version goes in that variant's `aliases`; a word for the tool in general stays in the tool's `aliases`. Never put the same word in both.
 
 ## Features
 - Fuzzy search in Arabic, English and Franco-Arabic: ignores tashkeel, unifies alef/yaa/taa-marbuta, handles Persian letters and Arabic-Indic digits.
+- **Variant search:** typing a version's name, alias, id or site name switches that row to the version: its chip lights up, its name shows next to the title, and Enter opens it. `⌥←/→` changes the version while searching.
 - **Wrong keyboard layout fix:** if typing gives no results, the app suggests the same keys on the other layout (`lhv` → `مار`).
 - Tabs: All, Pinned, **Recent** (new), then each group. `⌥1–9` jumps to a tab; arrow keys move between focused tabs; Esc goes back to All.
 - Pins with **Undo**. Reorder pins with `⌥↑/↓` in the Pinned tab.

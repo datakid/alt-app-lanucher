@@ -1,6 +1,6 @@
 window.F.STR = {
   ar: {
-    wordmark: 'فهرست', placeholder: 'ابحث عن أداة…', all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
+    wordmark: 'فهرست', placeholder: 'ابحث عن أداة أو نسخة…', all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
     empty: 'لا نتائج', emptyHint: 'جرّب كلمة أخرى أو امسح البحث', swapTry: 'هل تقصد', clearAll: 'مسح البحث والتصنيف',
     copied: 'تم نسخ الرابط', copiedAll: 'تم نسخ الروابط', closed: 'مغلق', isNew: 'جديد',
     theme: { system: 'تلقائي', light: 'فاتح', dark: 'داكن' }, lang: 'EN', langAria: 'Switch to English',
@@ -16,11 +16,11 @@ window.F.STR = {
     fetchFail: 'تعذّر جلب fihrist.json', badFile: 'ملف غير صالح', imported: 'تم استيراد البيانات', reset: 'تمت العودة للبيانات المدمجة',
     prefsSaved: 'تم حفظ النسخة الاحتياطية', prefsLoaded: 'تمت استعادة التفضيلات', historyCleared: 'تم مسح السجل', dropHere: 'أفلت ملف fihrist.json هنا',
     newData: 'تحديث متاح', apply: 'تطبيق', offline: 'غير متصل', online: 'عاد الاتصال',
-    k: [['/', '⌘K', 'بحث'], ['↑', '↓', 'تنقّل'], ['←', '→', 'تبديل النسخة'], ['↵', '', 'فتح'], ['⌘', '↵', 'تبويب جديد'], ['⇧', '↵', 'الإجراءات'],
+    k: [['/', '⌘K', 'بحث'], ['↑', '↓', 'تنقّل'], ['←', '→', 'تبديل النسخة'], ['⌥', '← →', 'تبديل النسخة أثناء البحث'], ['↵', '', 'فتح'], ['⌘', '↵', 'تبويب جديد'], ['⇧', '↵', 'الإجراءات'],
       ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Esc', '', 'مسح / إغلاق']]
   },
   en: {
-    wordmark: 'Fihrist', placeholder: 'Search tools…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
+    wordmark: 'Fihrist', placeholder: 'Search tools or versions…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
     empty: 'No matches', emptyHint: 'Try another word or clear the search', swapTry: 'Did you mean', clearAll: 'Clear search and filter',
     copied: 'Link copied', copiedAll: 'Links copied', closed: 'Closed', isNew: 'New',
     theme: { system: 'Auto', light: 'Light', dark: 'Dark' }, lang: 'ع', langAria: 'التبديل إلى العربية',
@@ -36,7 +36,7 @@ window.F.STR = {
     fetchFail: 'Could not fetch fihrist.json', badFile: 'Invalid file', imported: 'Data imported', reset: 'Reverted to built-in data',
     prefsSaved: 'Backup saved', prefsLoaded: 'Preferences restored', historyCleared: 'History cleared', dropHere: 'Drop fihrist.json here',
     newData: 'Update available', apply: 'Apply', offline: 'Offline', online: 'Back online',
-    k: [['/', '⌘K', 'Search'], ['↑', '↓', 'Browse'], ['←', '→', 'Switch version'], ['↵', '', 'Open'], ['⌘', '↵', 'New tab'], ['⇧', '↵', 'Actions'],
+    k: [['/', '⌘K', 'Search'], ['↑', '↓', 'Browse'], ['←', '→', 'Switch version'], ['⌥', '← →', 'Switch version while searching'], ['↵', '', 'Open'], ['⌘', '↵', 'New tab'], ['⇧', '↵', 'Actions'],
       ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Esc', '', 'Clear / close']]
   }
 };

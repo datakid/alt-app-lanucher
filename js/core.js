@@ -64,7 +64,8 @@ F.validate = function (doc) {
         if (vids[vid]) throw new Error(where + ': duplicate variant id "' + vid + '"');
         if (!isUrl(str(v.url))) throw new Error(where + ': variant "' + vid + '" has an invalid url');
         vids[vid] = 1;
-        return { id: vid, ar: str(v.ar) || str(v.en) || vid, en: str(v.en) || str(v.ar) || vid, url: str(v.url), dar: str(v.dar), den: str(v.den), closed: !!v.closed };
+        return { id: vid, ar: str(v.ar) || str(v.en) || vid, en: str(v.en) || str(v.ar) || vid, url: str(v.url), dar: str(v.dar), den: str(v.den),
+          aliases: Array.isArray(v.aliases) ? v.aliases.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [], closed: !!v.closed };
       });
       o.def = Math.min(Math.max(0, Number(t.def) || 0), o.variants.length - 1);
     } else {
@@ -87,7 +88,7 @@ F.serialize = function (doc) {
     var o = pick(t, ['id', 'group', 'pigment', 'closed', 'url', 'since', 'ar', 'en', 'dar', 'den', 'aliases']);
     if (!t.variants) return '    ' + line(o);
     o.def = t.def || 0;
-    var vs = t.variants.map(function (v) { return '        ' + line(pick(v, ['id', 'ar', 'en', 'dar', 'den', 'closed', 'url'])); });
+    var vs = t.variants.map(function (v) { return '        ' + line(pick(v, ['id', 'ar', 'en', 'dar', 'den', 'aliases', 'closed', 'url'])); });
     return '    ' + line(o).slice(0, -2) + ',\n      "variants": [\n' + vs.join(',\n') + '\n      ] }';
   });
   return '{\n' +
@@ -162,7 +163,7 @@ function fuzzy(q, s) {
     var sc = 100 + q.length * 6;
     if (sub === 0) sc += 60; else if (s[sub - 1] === ' ' || s[sub - 1] === '.') sc += 40;
     if (s === q) sc += 100;
-    return { score: sc - Math.min(sub, 12), hits: hits };
+    return { score: sc - Math.min(sub, 12), hits: hits, sub: true };
   }
   var qi = 0, hits2 = [], score = 0, last = -1;
   for (var ti = 0; ti < s.length && qi < q.length; ti++) {
@@ -175,7 +176,7 @@ function fuzzy(q, s) {
   }
   if (qi < q.length || !hits2.length) return null;
   score -= Math.min(hits2[0], 10);
-  return score > -8 ? { score: 20 + score, hits: hits2 } : null;
+  return score > -8 ? { score: 20 + score, hits: hits2, sub: false } : null;
 }
 F.buildIdx = function (d) {
   var f = [];
@@ -185,20 +186,32 @@ F.buildIdx = function (d) {
   d.aliases.forEach(function (a) { push('alias', null, a, [.8, .8]); });
   if (d.host) push('host', null, d.host, [.5, .5]);
   (d.variants || []).forEach(function (v) {
-    push('variant', 'ar', v.ar, [.7, .7], v.id); push('variant', 'en', v.en, [.7, .7], v.id); push('host', null, v.host, [.5, .5], v.id);
+    push('variant', 'ar', v.ar, [.7, .7], v.id); push('variant', 'en', v.en, [.7, .7], v.id);
+    (v.aliases || []).forEach(function (a) { push('valias', null, a, [.8, .8], v.id); });
+    if (!/^v\d+$/.test(v.id) && v.id.replace(/-/g, ' ') !== v.en.toLowerCase()) push('vid', null, v.id, [.6, .6], v.id);
+    push('host', null, String(v.host || '').split('.')[0], [.5, .5], v.id);
     push('desc', 'ar', v.dar, [.45, .4], v.id); push('desc', 'en', v.den, [.4, .45], v.id);
   });
   return f;
 };
 F.query = function (q) { return { a: norm(q, false).text.trim(), b: norm(q, true).text.trim() || norm(q, false).text.trim() }; };
+var STRONG_V = { variant: 1, valias: 1, vid: 1 };
 F.match = function (d, qq) {
-  var best = null, li = store.lang === 'ar' ? 0 : 1;
+  var best = null, tBest = null, vBest = null, li = store.lang === 'ar' ? 0 : 1;
   for (var i = 0; i < d.idx.length; i++) {
     var f = d.idx[i], x = fuzzy(qq.a, f.a.text), y = fuzzy(qq.b, f.b.text), pick = x, fr = false;
     if (y && (!x || y.score > x.score)) { pick = y; fr = true; }
     if (!pick) continue;
-    var w = pick.score * f.w[li];
-    if (!best || w > best.w) best = { w: w, f: f, hits: pick.hits, fr: fr };
+    var hit = { w: pick.score * f.w[li], raw: pick.score, sub: pick.sub, f: f, hits: pick.hits, fr: fr };
+    if (!best || hit.w > best.w) best = hit;
+    if (f.vid) { if (pick.sub && (!vBest || hit.raw > vBest.raw || (hit.raw === vBest.raw && hit.w > vBest.w))) vBest = hit; }
+    else if (!tBest || hit.raw > tBest.raw) tBest = hit;
+  }
+  if (!best) return null;
+  best.vhit = null;
+  if (vBest && d.variants && d.variants.length > 1 && qq.a.length >= 2) {
+    var t = tBest ? tBest.raw : -Infinity;
+    if (STRONG_V[vBest.f.kind] ? vBest.raw >= t : vBest.raw > t) best.vhit = vBest;
   }
   return best;
 };

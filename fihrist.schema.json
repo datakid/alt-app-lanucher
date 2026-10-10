@@ -201,6 +201,10 @@
         {
           "label": "Variant · with description",
           "body": { "id": "${1:alt}", "ar": "${2:بديل}", "en": "${3:Alt}", "dar": "${4:الوصف}", "den": "${5:Description}", "url": "https://${6:example.vercel.app}/" }
+        },
+        {
+          "label": "Variant · with aliases",
+          "body": { "id": "${1:alt}", "ar": "${2:بديل}", "en": "${3:Alt}", "aliases": ["${4:alias}"], "url": "https://${5:example.vercel.app}/" }
         }
       ],
       "properties": {
@@ -214,6 +218,10 @@
         "url": { "$ref": "#/$defs/url", "markdownDescription": "### Link · الرابط\n\nWhere this variant opens." },
         "dar": { "$ref": "#/$defs/arText", "markdownDescription": "Optional **Arabic** description shown when this variant is selected." },
         "den": { "$ref": "#/$defs/enText", "markdownDescription": "Optional **English** description shown when this variant is selected." },
+        "aliases": {
+          "$ref": "#/$defs/aliases",
+          "markdownDescription": "### Variant aliases · أسماء بديلة للنسخة\n\nWords that should find **this version** directly. When a search hits one of these, the row switches to this version, shows its name next to the title, and Enter opens it.\n\nPut words that belong to one version here, not on the tool."
+        },
         "closed": { "type": "boolean", "default": false, "markdownDescription": "Mark this variant as closed. It stays listed but dimmed." }
       }
     },

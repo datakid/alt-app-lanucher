@@ -45,7 +45,7 @@ F.openSheet = function (r) {
       b.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
       el('b', '', b).textContent = L(v); el('small', '', b).textContent = v.host;
       b.addEventListener('click', function () {
-        store.lastVariant[d.id] = v.id; r.matchV = null; F.persist(); F.paintRow(r); F.buzz();
+        store.lastVariant[d.id] = v.id; r.matchV = seekEl.value.trim() ? v : null; F.persist(); F.paintRow(r); F.buzz();
         vl.querySelectorAll('.sv').forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
         $('sheet-host').textContent = v.host;
       });
