@@ -1,6 +1,7 @@
 window.F.STR = {
   ar: {
     wordmark: 'فهرست', placeholder: 'ابحث عن أداة أو نسخة…', all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
+    elsewhere: 'في أقسام أخرى', partial: 'نتائج جزئية · لا تطابق لـ',
     empty: 'لا نتائج', emptyHint: 'جرّب كلمة أخرى أو امسح البحث', swapTry: 'هل تقصد', clearAll: 'مسح البحث والتصنيف',
     copied: 'تم نسخ الرابط', copiedAll: 'تم نسخ الروابط', closed: 'مغلق', isNew: 'جديد',
     theme: { system: 'تلقائي', light: 'فاتح', dark: 'داكن' }, lang: 'EN', langAria: 'Switch to English',
@@ -21,6 +22,7 @@ window.F.STR = {
   },
   en: {
     wordmark: 'Fihrist', placeholder: 'Search tools or versions…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
+    elsewhere: 'In other sections', partial: 'Partial matches · no match for',
     empty: 'No matches', emptyHint: 'Try another word or clear the search', swapTry: 'Did you mean', clearAll: 'Clear search and filter',
     copied: 'Link copied', copiedAll: 'Links copied', closed: 'Closed', isNew: 'New',
     theme: { system: 'Auto', light: 'Light', dark: 'Dark' }, lang: 'ع', langAria: 'التبديل إلى العربية',

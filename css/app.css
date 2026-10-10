@@ -166,6 +166,8 @@ input:focus-visible{outline:none}
 .desc{flex:1;min-width:0;font-size:.82rem;color:var(--muted);line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .host{flex:none;max-width:42%;font-family:var(--f-mono);direction:ltr;unicode-bidi:isolate;font-size:.66rem;letter-spacing:.01em;color:var(--muted);opacity:.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity var(--fast)}
 .row.is-active .host,.row-link:hover .host{opacity:.9}
+.why{flex:none;max-width:48%;font-family:var(--f-mono);unicode-bidi:isolate;font-size:.66rem;letter-spacing:.01em;color:var(--muted);opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity var(--fast)}
+.row.is-active .why,.row-link:hover .why{opacity:1}
 .chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-block-start:.7rem}
 .chip{min-height:32px;padding:0 .8rem;border-radius:999px;font-size:.76rem;color:var(--muted);border:1px solid var(--rule);display:inline-flex;align-items:center;gap:.45em;background:color-mix(in srgb,var(--sheet) 70%,transparent);
   transition:color var(--fast),border-color var(--fast),background-color var(--fast),transform 140ms var(--ease)}
@@ -296,5 +298,5 @@ mark.hl{background:color-mix(in srgb,var(--p-orpiment) 28%,transparent);color:in
   .seek__count{min-width:2rem}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;transition-duration:1ms!important}}
-@media (forced-colors:active){.mark,.caret{forced-color-adjust:none}.paper{display:none}.seek__field:focus-within{outline:2px solid Highlight}.vtag{border:1px solid CanvasText}}
-@media print{.paper,.caret,.controls,.seek-wrap,.toast,.plate,.foot,.more,.sheet,.drop{display:none!important}.host{display:block!important;opacity:1}}
+@media (forced-colors:active){mark.hl{background:Highlight;color:HighlightText;forced-color-adjust:none}::highlight(seek){background-color:Highlight;color:HighlightText}.why{opacity:1;color:GrayText}.mark,.caret{forced-color-adjust:none}.paper{display:none}.seek__field:focus-within{outline:2px solid Highlight}.vtag{border:1px solid CanvasText}}
+@media print{.why,.paper,.caret,.controls,.seek-wrap,.toast,.plate,.foot,.more,.sheet,.drop{display:none!important}.host{display:block!important;opacity:1}}

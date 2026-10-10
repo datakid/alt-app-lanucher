@@ -244,11 +244,11 @@ function folioKey(k) {
 }
 var composing = false, inputRaf = null;
 seekEl.addEventListener('compositionstart', function () { composing = true; });
-seekEl.addEventListener('compositionend', function () { composing = false; F.render({}); });
+seekEl.addEventListener('compositionend', function () { composing = false; F.render({ resetActive: true }); });
 seekEl.addEventListener('input', function () {
   if (composing) return;
   if (inputRaf) cancelAnimationFrame(inputRaf);
-  inputRaf = requestAnimationFrame(function () { inputRaf = null; F.render({}); });
+  inputRaf = requestAnimationFrame(function () { inputRaf = null; F.render({ resetActive: true }); });
 });
 $('seek-clear').addEventListener('click', function (e) { e.preventDefault(); seekEl.value = ''; F.render({ animate: true }); seekEl.focus(); });
 

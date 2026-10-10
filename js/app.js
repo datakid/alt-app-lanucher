@@ -24,16 +24,15 @@ F.rows = rows; F.byId = BY_ID;
 F.setDoc = function (doc, src) {
   F.doc = doc; F.docSrc = src;
   DATA = F.DATA = doc.tools; GROUPS = doc.groups.map(function (g) { return g.id; });
-  GMETA = { pinned: { ar: F.STR.ar.pinnedG, en: F.STR.en.pinnedG, icon: 'pinF' }, recent: { ar: F.STR.ar.recent, en: F.STR.en.recent, icon: 'clock' } };
+  GMETA = { pinned: { ar: F.STR.ar.pinnedG, en: F.STR.en.pinnedG, icon: 'pinF' }, recent: { ar: F.STR.ar.recent, en: F.STR.en.recent, icon: 'clock' },
+    elsewhere: { ar: F.STR.ar.elsewhere, en: F.STR.en.elsewhere, icon: 'ext' }, partial: { ar: F.STR.ar.partial, en: F.STR.en.partial, icon: 'search' } };
   doc.groups.forEach(function (g) { GMETA[g.id] = g; });
   Object.keys(BY_ID).forEach(function (k) { delete BY_ID[k]; });
   var now = Date.now();
+  F.prepare(DATA, doc.groups);
   DATA.forEach(function (d, i) {
     d.folio = i + 1; BY_ID[d.id] = d; d.pig = 'var(--p-' + d.pigment + ')';
     d.isNew = !!d.since && (now - Date.parse(d.since)) < NEW_WINDOW;
-    (d.variants || []).forEach(function (v) { v.host = F.hostOf(v.url); });
-    if (d.url) d.host = F.hostOf(d.url);
-    d.idx = F.buildIdx(d);
   });
   store.pins = store.pins.filter(function (id) { return BY_ID[id]; });
   buildAll();
@@ -66,8 +65,9 @@ function buildRow(d) {
   var title = el('span', 'title', tl), vtag = d.variants ? el('span', 'vtag', tl) : null, flag = el('span', 'flag', tl);
   if (vtag) { vtag.hidden = true; vtag.setAttribute('aria-hidden', 'true'); }
   tl.insertAdjacentHTML('beforeend', svg('pinF', 'pinmark'));
-  var meta = el('span', 'meta', body), desc = el('span', 'desc', meta), host = el('span', 'host', meta);
-  var r = { d: d, li: li, link: a, folio: folio, title: title, vtag: vtag, flag: flag, desc: desc, host: host, chips: {} };
+  var meta = el('span', 'meta', body), why = el('span', 'why', meta), desc = el('span', 'desc', meta), host = el('span', 'host', meta);
+  why.hidden = true;
+  var r = { d: d, li: li, link: a, folio: folio, title: title, vtag: vtag, flag: flag, why: why, desc: desc, host: host, chips: {} };
   if (d.variants) {
     var chips = el('span', 'chips', body); chips.setAttribute('role', 'group');
     d.variants.forEach(function (v) { var c = el('button', 'chip', chips); c.type = 'button'; c.tabIndex = -1; c.dataset.v = v.id; r.chips[v.id] = c; });
@@ -78,7 +78,7 @@ function buildRow(d) {
 function buildAll() {
   Object.keys(rows).forEach(function (k) { delete rows[k]; });
   Object.keys(bands).forEach(function (k) { delete bands[k]; });
-  ['pinned', 'recent'].concat(GROUPS).forEach(function (g) {
+  ['pinned', 'recent', 'elsewhere', 'partial'].concat(GROUPS).forEach(function (g) {
     var b = el('li', 'band'); b.setAttribute('role', 'presentation'); b.dataset.g = g;
     b.innerHTML = svg(GMETA[g].icon, 'band__icon');
     bands[g] = { li: b, text: el('span', 'band__text', b), count: el('span', 'band__count', b) };
@@ -90,6 +90,7 @@ F.paintRow = paintRow;
 function paintRow(r) {
   var d = r.d, s = T(), tg = target(d, r.matchV);
   r.folio.textContent = num(d.folio, 2);
+  r.why.hidden = true; r.why.textContent = '';
   r.title.textContent = L(d);
   r.desc.textContent = store.lang === 'ar' ? (tg.v && tg.v.dar) || d.dar : (tg.v && tg.v.den) || d.den;
   r.host.textContent = tg.closed ? '' : tg.host; r.host.hidden = tg.closed;
@@ -155,12 +156,13 @@ F.render = function (opts) {
   var inTab = function (d) { return tab === 'all' || (tab === 'pinned' ? isPinned(d.id) : tab === 'recent' ? rec.indexOf(d.id) !== -1 : d.group === tab); };
   DATA.forEach(function (d) { rows[d.id].matchV = null; paintRow(rows[d.id]); });
   var seq = [];
+  jobs = [];
   if (hasQ) {
-    var qq = F.query(q), res = [];
-    DATA.forEach(function (d) { if (!inTab(d)) return; var m = F.match(d, qq); if (m) res.push({ d: d, m: m }); });
-    var sc = function (x) { var hv = x.m.vhit ? F.vOf(x.d, x.m.vhit.f.vid) : null; return x.m.w + (isPinned(x.d.id) ? 12 : 0) + F.frecency(x.d.id) * 3 - (target(x.d, hv).closed ? 30 : 0); };
-    res.sort(function (x, y) { return (sc(y) - sc(x)) || x.d.folio - y.d.folio; });
-    res.forEach(function (x) { seq.push({ row: rows[x.d.id] }); annotate(x.d, x.m); });
+    var out = F.search(seekEl.value, DATA, searchCtx()), list = out.full.length ? out.full : out.partial, here = [], away = [];
+    list.forEach(function (x) { (inTab(x.d) ? here : away).push(x); });
+    if (!out.full.length && list.length) seq.push({ band: 'partial', n: list.length, label: s.partial + ' ' + out.missed.map(function (m) { return '«' + m + '»'; }).join(' ') });
+    here.forEach(function (x) { seq.push({ row: rows[x.d.id] }); annotate(x); });
+    if (away.length) { seq.push({ band: 'elsewhere', n: away.length }); away.forEach(function (x) { seq.push({ row: rows[x.d.id] }); annotate(x); }); }
   } else if (tab === 'pinned' || tab === 'recent') {
     (tab === 'pinned' ? store.pins : rec).forEach(function (id) { if (BY_ID[id]) seq.push({ row: rows[id] }); });
   } else {
@@ -176,11 +178,12 @@ F.render = function (opts) {
   var frag = document.createDocumentFragment(), shown = {}, i = 0, anim = opts.animate && !reduceMotion;
   frag.appendChild(caretEl);
   seq.forEach(function (x) {
-    if (x.band) { var b = bands[x.band]; b.text.textContent = L(GMETA[x.band]); b.count.textContent = num(x.n); frag.appendChild(b.li); return; }
+    if (x.band) { var b = bands[x.band]; b.text.textContent = x.label || L(GMETA[x.band]); b.count.textContent = num(x.n); frag.appendChild(b.li); return; }
     if (anim) { x.row.li.classList.remove('is-entering'); x.row.li.style.setProperty('--i', Math.min(i, 14)); }
     frag.appendChild(x.row.li); shown[x.row.d.id] = 1; i++;
   });
   listEl.textContent = ''; listEl.appendChild(frag);
+  jobs.forEach(function (j) { paintHL(j.node, j.text, j.rg); });
   if (anim) {
     void listEl.offsetWidth;
     listEl.querySelectorAll('.row').forEach(function (r) { r.classList.add('is-entering'); });
@@ -191,7 +194,8 @@ F.render = function (opts) {
   document.body.classList.toggle('is-empty', n === 0);
   if (n === 0) F.paintEmpty(q);
   countEl.textContent = hasQ || tab !== 'all' ? num(n) + ' / ' + num(DATA.length) : num(DATA.length);
-  liveEl.textContent = hasQ ? n + ' ' + s.of + ' ' + DATA.length : '';
+  var lead = order[0];
+  liveEl.textContent = hasQ ? n + ' ' + s.of + ' ' + DATA.length + (lead ? ' · ' + L(lead.d) + (lead.matchV && lead.d.variants.length > 1 ? ' — ' + L(lead.matchV) : '') : '') : '';
   var keep = !opts.resetActive && active && shown[active.d.id] ? active : null;
   setActive(keep || (hasQ ? order[0] : null), { noScroll: true, instant: !!opts.instant });
   syncURL();
@@ -208,25 +212,31 @@ function paintHL(node, text, rg) {
   if (c < text.length) frag.appendChild(document.createTextNode(text.slice(c)));
   node.textContent = ''; node.appendChild(frag);
 }
-function annotate(d, m) {
-  var r = rows[d.id], lang = store.lang, vh = m.vhit;
-  if (vh) {
-    var v = F.vOf(d, vh.f.vid); if (!v) return;
-    r.matchV = v; paintRow(r);
-    var vf = vh.f, vrg = F.ranges(vh.hits, vh.fr ? vf.b.map : vf.a.map);
-    if (vf.kind === 'variant' && vf.lang === lang) { paintHL(r.chips[v.id], vf.raw, vrg); if (r.vtag) paintHL(r.vtag, vf.raw, vrg); }
-    else if (vf.kind === 'desc' && vf.lang === lang && r.desc.textContent === vf.raw) paintHL(r.desc, vf.raw, vrg);
-    else if (vf.kind === 'host' && r.host.textContent.indexOf(vf.raw) === 0) paintHL(r.host, r.host.textContent, vrg);
-    return;
+var jobs = [];
+function annotate(res) {
+  var d = res.d, r = rows[d.id], lang = store.lang, v = res.vid ? F.vOf(d, res.vid) : null, nodes = [], acc = [], painted = 0, hid = null, i;
+  r.matchV = v; paintRow(r);
+  function put(node, text, rg) {
+    var k = nodes.indexOf(node), j;
+    if (k === -1) { k = nodes.push(node) - 1; acc[k] = { text: text, rg: [] }; }
+    for (j = 0; j < rg.length; j++) acc[k].rg.push(rg[j]);
   }
-  var f = m.f, rg = F.ranges(m.hits, m.fr ? f.b.map : f.a.map);
-  if (f.vid) {
-    if (f.kind === 'variant' && f.lang === lang && r.chips[f.vid]) paintHL(r.chips[f.vid], f.raw, rg);
-    return;
-  }
-  if (f.kind === 'title' && f.lang === lang) paintHL(r.title, f.raw, rg);
-  else if (f.kind === 'desc' && f.lang === lang && r.desc.textContent === f.raw) paintHL(r.desc, f.raw, rg);
-  else if (f.kind === 'host' && r.host.textContent === f.raw) paintHL(r.host, f.raw, rg);
+  res.marks.forEach(function (m) {
+    if (!m.ranges.length) return;
+    if (m.kind === 'title') { if (m.lang === lang) put(r.title, m.raw, m.ranges); }
+    else if (m.kind === 'variant') { if (v && m.vid === v.id && m.lang === lang) { put(r.chips[v.id], m.raw, m.ranges); if (r.vtag && !r.vtag.hidden) put(r.vtag, m.raw, m.ranges); } }
+    else if (m.kind === 'desc') { if (m.lang === lang && r.desc.textContent === m.raw) put(r.desc, m.raw, m.ranges); }
+    else if (m.kind === 'host') { if (!r.host.hidden && r.host.textContent.indexOf(m.raw) === 0) put(r.host, r.host.textContent, m.ranges); }
+    else if (res.why && m.raw === res.why && !hid) hid = m;
+  });
+  for (i = 0; i < acc.length; i++) painted += acc[i].rg.length;
+  if (!painted && hid) { r.why.hidden = false; put(r.why, hid.raw, hid.ranges); }
+  for (i = 0; i < nodes.length; i++) jobs.push({ node: nodes[i], text: acc[i].text, rg: F.mergeRanges(acc[i].rg) });
+}
+function searchCtx() {
+  return { lang: store.lang, isPinned: isPinned, frecency: F.frecency,
+    isClosed: function (d, v) { return target(d, v).closed; },
+    curVariantId: function (d) { var v = F.curVariant(d); return v ? v.id : null; } };
 }
 
 function setActive(r, opts) {
@@ -366,7 +376,7 @@ F.paintEmpty = function (q) {
   if (q) {
     var alt = F.swapLayout(q);
     if (alt !== q) {
-      var qq = F.query(alt), hit = DATA.some(function (d) { return F.match(d, qq); });
+      var o = F.search(alt, DATA, searchCtx()), hit = o.full.length || o.partial.length;
       if (hit) { var b = el('button', 'empty__btn', box); b.type = 'button'; b.textContent = s.swapTry + ' «' + alt + '»'; b.addEventListener('click', function () { seekEl.value = alt; F.render({ animate: true }); seekEl.focus(); }); return; }
     }
   }

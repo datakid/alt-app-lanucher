@@ -9,7 +9,7 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 | `favicon.svg` | The seal: a drawn ف (filled shape with an open loop) in bone on an ink squircle, with a madder diamond dot. The same shape is inlined in the header and in the empty state |
 | `fihrist.json` | **Editable data source.** Edit this file and bump `revision` |
 | `js/data.js` | Built-in copy of the data (`window.FIHRIST_SEED`), so the app works offline / from `file://` |
-| `js/core.js` | Store, schema validator, data loading, Arabic/Franco normalisation, fuzzy search, icons |
+| `js/core.js` | Store, schema validator, data loading, Arabic/Franco normalisation, search index and ranking, icons |
 | `js/strings.js` | AR / EN UI strings |
 | `js/app.js` | Rendering, rows, tabs, caret, open/pin/copy, toasts |
 | `js/ui.js` | Sheets (tool, settings, shortcuts), input, drag-and-drop import, boot |
@@ -40,7 +40,9 @@ Validation errors name the exact tool and field, for example `Tool #3 (parser): 
 Rule for aliases: a word that points at ONE version goes in that variant's `aliases`; a word for the tool in general stays in the tool's `aliases`. Never put the same word in both.
 
 ## Features
-- Fuzzy search in Arabic, English and Franco-Arabic: ignores tashkeel, unifies alef/yaa/taa-marbuta, handles Persian letters and Arabic-Indic digits.
+- Search in Arabic, English and Franco-Arabic: ignores tashkeel, unifies alef/yaa/taa-marbuta, handles Persian letters and Arabic-Indic digits.
+- **Multi-word, cross-field search:** words can come from different fields (`parser alt`, `drug list full`, `qarar 460`), in any order. Typos are tolerated, the Arabic article (ال) is ignored, and a digit can pick a version (`paid 2`).
+- **In other sections / partial matches:** search always covers every tool. On a tab, other sections' hits follow under their own band; if no tool matches every word, the closest ones show under a "Partial matches" band.
 - **Variant search:** typing a version's name, alias, id or site name switches that row to the version: its chip lights up, its name shows next to the title, and Enter opens it. `⌥←/→` changes the version while searching.
 - **Wrong keyboard layout fix:** if typing gives no results, the app suggests the same keys on the other layout (`lhv` → `مار`).
 - Tabs: All, Pinned, **Recent** (new), then each group. `⌥1–9` jumps to a tab; arrow keys move between focused tabs; Esc goes back to All.
