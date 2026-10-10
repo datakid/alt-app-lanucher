@@ -215,6 +215,7 @@ mark.hl{background:color-mix(in srgb,var(--p-orpiment) 28%,transparent);color:in
 .sheet__panel{--pigment:var(--seal);position:relative;width:min(540px,100%);max-height:88vh;overflow:auto;overscroll-behavior:contain;background:var(--sheet);border:1px solid var(--rule);border-block-end:0;border-radius:26px 26px 0 0;
   padding:.65rem 1.25rem calc(1.2rem + env(safe-area-inset-bottom,0px));box-shadow:var(--deep);transform:translateY(100%);transition:transform 440ms var(--spring);touch-action:pan-y;scrollbar-width:thin}
 .sheet__panel::before{content:'';position:absolute;inset-inline:0;top:0;height:3px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--pigment) 70%,transparent),transparent);opacity:.7;pointer-events:none}
+.sheet__panel:focus{outline:none}
 .sheet.is-open .sheet__panel{transform:translateY(var(--drag,0px))}
 .sheet.is-dragging .sheet__panel{transition:none}
 @media (min-width:700px){.sheet{align-items:center}.sheet__panel{border-radius:22px;border-block-end:1px solid var(--rule);padding:1.2rem 1.5rem 1.4rem;transform:translateY(14px) scale(.97);opacity:0;transition:transform 360ms var(--spring),opacity 200ms var(--ease)}

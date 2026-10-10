@@ -4,6 +4,7 @@ var F = window.F, store = F.store, svg = F.svg, el = F.el, $ = F.$, T = F.T, L =
 var root = document.documentElement, seekEl = $('seek'), listEl = $('listbox');
 var sheetEl = $('sheet'), sheetPanel = $('sheet-panel'), sheetBody = $('sheet-body');
 var sheetRow = null, sheetReturn = null;
+sheetPanel.tabIndex = -1;
 
 function act(parent, label, icon, fn, cls, kbd, disabled) {
   var b = el('button', 'act' + (cls ? ' ' + cls : ''), parent, svg(icon, icon === 'go' && root.dir === 'rtl' ? 'flip' : '')); b.type = 'button';
@@ -23,7 +24,7 @@ function show(focusEl) {
   sheetReturn = sheetReturn || document.activeElement;
   sheetEl.setAttribute('aria-hidden', 'false'); sheetPanel.style.removeProperty('--drag'); sheetPanel.scrollTop = 0;
   sheetEl.classList.add('is-open'); document.body.style.overflow = 'hidden';
-  if (F.canHover) setTimeout(function () { var f = focusEl || sheetBody.querySelector('button:not([disabled])'); if (f) f.focus({ preventScroll: true }); }, 30);
+  if (F.canHover) setTimeout(function () { var f = focusEl || sheetBody.querySelector('button:not([disabled])') || sheetPanel; f.focus({ preventScroll: true }); }, 30);
 }
 function relTime(t) {
   var d = Math.round((Date.now() - t) / 6e4), rtf;
