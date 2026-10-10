@@ -267,6 +267,17 @@ mark.hl{background:color-mix(in srgb,var(--p-orpiment) 28%,transparent);color:in
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--canvas);box-shadow:0 4px 10px -6px color-mix(in srgb,var(--ink) 70%,transparent)}
 .seg button:focus-visible{outline-offset:1px}
+:root[dir="rtl"] .tab{padding-block-end:.17em}
+:root[dir="rtl"] .empty__btn{padding-block-end:.32em}
+:root[dir="rtl"] :is(.chip,.vtag,.flag){--ar-p:.4em;padding-block-end:var(--ar-p)}
+:root[dir="rtl"] .vtag{line-height:calc(1.75em - var(--ar-p))}
+:root[dir="rtl"] .flag{line-height:calc(1.7em - var(--ar-p))}
+:root[dir="rtl"] :is(.chip,.vtag,.flag)::before{translate:0 calc(var(--ar-p)/2)}
+:root[dir="rtl"] .act{padding-block-end:.27rem}
+:root[dir="rtl"] .act svg,:root[dir="rtl"] .act .kbd{translate:0 .135rem}
+:root[dir="rtl"] .toast__body{padding-block:calc(.55rem - .16rem) calc(.55rem + .16rem)}
+:root[dir="rtl"] .toast__body button{padding-block:calc(.25rem - .2em) calc(.25rem + .2em)}
+:root[dir="ltr"] #lang-btn{padding-block-end:.55em}
 
 .toast{position:fixed;inset-inline:0;bottom:calc(2rem + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:60;pointer-events:none;padding-inline:1rem}
 .toast__body{display:flex;align-items:center;gap:.9rem;font-size:.82rem;background:var(--ink);color:var(--canvas);padding:.55rem .6rem .55rem 1.1rem;border-radius:999px;
