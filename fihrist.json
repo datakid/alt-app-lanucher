@@ -80,9 +80,13 @@
     { "id": "solver", "group": "tools", "pigment": "indigo", "url": "https://solver-clone.vercel.app/", "since": "2026-09-26",
       "ar": "حل المعادلات", "en": "Solver", "dar": "حل المعادلات والمسائل الحسابية", "den": "Equation solver",
       "aliases": ["hal el-moadalat", "solver", "equations", "moadla"] },
-    { "id": "pattern-recognition", "group": "tools", "pigment": "verdigris", "url": "https://pattern-recognition-sooty.vercel.app/", "since": "2026-10-06",
-      "ar": "فحص الأصالة", "en": "Veritas Lens", "dar": "كشف الصور والنصوص المولّدة وتحليل الأنماط", "den": "Provenance and pattern analysis, on-device",
-      "aliases": ["fahs el-asala", "asala", "pattern recognition", "pattern", "veritas lens", "veritas", "ai detector", "authenticity", "c2pa", "forensics", "انماط", "أنماط", "كشف", "ذكاء اصطناعي", "تزييف"] },
+    { "id": "pattern-recognition", "group": "tools", "pigment": "verdigris", "since": "2026-10-06",
+      "ar": "التعرف على أنماط النصوص", "en": "Text Pattern Recognition", "dar": "كشف الصور والنصوص المولّدة وتحليل الأنماط", "den": "Provenance and pattern analysis, on-device",
+      "aliases": ["taaruf anmat", "pattern recognition", "text pattern", "pattern", "انماط", "أنماط"], "def": 0,
+      "variants": [
+        { "id": "lens", "ar": "فحص الأصالة", "en": "Veritas Lens", "aliases": ["fahs el-asala", "asala", "ai detector", "authenticity", "c2pa", "forensics", "كشف", "ذكاء اصطناعي", "تزييف"], "url": "https://pattern-recognition-sooty.vercel.app/" },
+        { "id": "alt", "ar": "منظّف", "en": "iCleaner", "aliases": ["cleaner", "monazef"], "url": "https://icleaner-woad.vercel.app/" }
+      ] },
     { "id": "plan-maker", "group": "tools", "pigment": "tyrian", "since": "2026-08-30",
       "ar": "الخطة", "en": "Planner", "dar": "توليد خطة مرور دورية", "den": "Recurring visit schedule",
       "aliases": ["el-khetta", "khetta", "plan", "kheta"], "def": 0,
@@ -128,8 +132,7 @@
       "aliases": ["adawat nosos", "text tools", "تنظيف"], "def": 0,
       "variants": [
         { "id": "weft", "ar": "تنقية", "en": "Weft", "aliases": ["tanqya", "data cleaner"], "url": "https://data-cleaner-coral.vercel.app/" },
-        { "id": "text", "ar": "نصوص", "en": "Text", "aliases": ["nosos"], "url": "https://text-tools-kohl.vercel.app/" },
-        { "id": "icleaner", "ar": "منظّف", "en": "iCleaner", "aliases": ["cleaner", "monazef"], "url": "https://icleaner-woad.vercel.app/" }
+        { "id": "text", "ar": "نصوص", "en": "Text", "aliases": ["nosos"], "url": "https://text-tools-kohl.vercel.app/" }
       ] },
     { "id": "draw", "group": "experimental", "pigment": "tyrian", "url": "https://draw-gold.vercel.app/", "since": "2026-09-18",
       "ar": "الرسم البياني", "en": "Draw", "dar": "أداة رسم المخططات", "den": "Charts and diagram tool",
