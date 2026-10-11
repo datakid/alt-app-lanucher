@@ -11,7 +11,7 @@ window.F.STR = {
     settings: 'الإعدادات', keys: 'الاختصارات', appearance: 'المظهر', density: 'الكثافة', cozy: 'مريح', compact: 'مضغوط',
     openIn: 'فتح الأدوات في', sameTab: 'نفس التبويب', otherTab: 'تبويب جديد',
     data: 'البيانات', source: { seed: 'مدمجة', remote: 'fihrist.json', file: 'ملف مستورد', cache: 'محفوظة' }, revision: 'المراجعة',
-    checkUpdate: 'البحث عن تحديث', importFile: 'استيراد ملف JSON', exportData: 'تصدير البيانات', resetData: 'العودة للبيانات المدمجة',
+    checkUpdate: 'البحث عن تحديث', importFile: 'استيراد ملف', exportData: 'تصدير البيانات', resetData: 'العودة للبيانات المدمجة',
     exportPrefs: 'نسخ احتياطي للتفضيلات', importPrefs: 'استعادة التفضيلات', clearHistory: 'مسح سجل الاستخدام',
     upToDate: 'البيانات محدثة', updated: 'تم التحديث إلى المراجعة', noHttp: 'التحديث التلقائي يحتاج خادمًا — استورد الملف يدويًا',
     fetchFail: 'تعذّر جلب fihrist.json', badFile: 'ملف غير صالح', imported: 'تم استيراد البيانات', reset: 'تمت العودة للبيانات المدمجة',
