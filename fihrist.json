@@ -1,8 +1,8 @@
 {
   "$schema": "./fihrist.schema.json",
   "format": "fihrist/4",
-  "revision": 3,
-  "updated": "2026-10-10",
+  "revision": 4,
+  "updated": "2026-10-17",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -105,6 +105,9 @@
     { "id": "tacit", "group": "tools", "pigment": "bone", "url": "https://tacit-web-lake.vercel.app/", "since": "2026-10-09",
       "ar": "المشغّل", "en": "Tacit", "dar": "مشغّل الروابط بلوحة المفاتيح", "den": "Keyboard-first web launcher",
       "aliases": ["tacit", "launcher", "app launcher", "mushaghel", "mashghal", "تاسيت", "مشغل", "مشغّل"] },
+    { "id": "typing-practice", "group": "tools", "pigment": "orpiment", "url": "https://typing-practice-wine-eta.vercel.app/", "since": "2026-10-17",
+      "ar": "تمرين الكتابة", "en": "Typing Practice", "dar": "تدريب على الكتابة بلوحة المفاتيح", "den": "Keyboard typing practice",
+      "aliases": ["tamreen el-kitaba", "tadreeb", "tadreeb kitaba", "typing", "typing practice", "typing test", "tarq", "keyboard", "kitaba", "تدريب", "تدريب كتابة", "كتابة", "تمرين", "طرق"] },
 
     { "id": "to-do", "group": "experimental", "pigment": "malachite", "url": "https://to-do-cyan-theta.vercel.app/", "since": "2026-08-11",
       "ar": "المهام", "en": "To Do", "dar": "متابعة المهام والتقارير", "den": "Task and report tracker",
@@ -149,6 +152,9 @@
       "aliases": ["khait", "thread", "kheit", "print", "tebaa"] },
     { "id": "adad", "group": "print", "pigment": "malachite", "url": "https://visit-tracker-xi.vercel.app/", "since": "2026-10-07",
       "ar": "عدّاد", "en": "Adad", "dar": "حساب بدلات المرور وإصدار كشوف PDF", "den": "Visit allowances from Excel, with PDF statements",
-      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] }
+      "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] },
+    { "id": "font-maker", "group": "print", "pigment": "tyrian", "url": "https://simple-font-maker.vercel.app/", "since": "2026-10-17",
+      "ar": "صانع الخطوط", "en": "Font Maker", "dar": "تحويل خط اليد إلى خط", "den": "Turn your handwriting into a font",
+      "aliases": ["sane3 el-khotot", "font", "fonts", "font maker", "handwriting", "handwriting font", "khat", "khat yad", "khotot", "خط", "خط يد", "خط اليد", "خطوط"] }
   ]
 }
