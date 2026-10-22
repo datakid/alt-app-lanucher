@@ -1,7 +1,7 @@
 window.FIHRIST_SEED = {
   "format": "fihrist/4",
-  "revision": 4,
-  "updated": "2026-10-17",
+  "revision": 5,
+  "updated": "2026-10-22",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -107,6 +107,9 @@ window.FIHRIST_SEED = {
     { "id": "typing-practice", "group": "tools", "pigment": "orpiment", "url": "https://typing-practice-wine-eta.vercel.app/", "since": "2026-10-17",
       "ar": "تمرين الكتابة", "en": "Typing Practice", "dar": "تدريب على الكتابة بلوحة المفاتيح", "den": "Keyboard typing practice",
       "aliases": ["tamreen el-kitaba", "tadreeb", "tadreeb kitaba", "typing", "typing practice", "typing test", "tarq", "keyboard", "kitaba", "تدريب", "تدريب كتابة", "كتابة", "تمرين", "طرق"] },
+    { "id": "harvest-studio", "group": "tools", "pigment": "malachite", "url": "https://harvest-studio-phi.vercel.app/", "since": "2026-10-22",
+      "ar": "الحصاد", "en": "Harvest Studio", "dar": "أيقونات التطبيقات وتلوين المجموعة", "den": "App favicons, glyph tracing and set colouring",
+      "aliases": ["harvest", "harvest studio", "alhasad", "hasad", "favicon", "favicons", "icons", "icon", "ayqunat", "ayqonat", "الحصاد", "حصاد", "ايقونات", "أيقونات", "ايقونة"] },
 
     { "id": "to-do", "group": "experimental", "pigment": "malachite", "url": "https://to-do-cyan-theta.vercel.app/", "since": "2026-08-11",
       "ar": "المهام", "en": "To Do", "dar": "متابعة المهام والتقارير", "den": "Task and report tracker",
@@ -154,6 +157,12 @@ window.FIHRIST_SEED = {
       "aliases": ["adad", "addad", "aadad", "visit tracker", "visit allowance", "allowances", "badalat", "badalat el-moror", "intiqalat", "moror", "kashf", "عداد", "بدلات", "انتقالات", "مرور", "كشوف"] },
     { "id": "font-maker", "group": "print", "pigment": "tyrian", "url": "https://simple-font-maker.vercel.app/", "since": "2026-10-17",
       "ar": "صانع الخطوط", "en": "Font Maker", "dar": "تحويل خط اليد إلى خط", "den": "Turn your handwriting into a font",
-      "aliases": ["sane3 el-khotot", "font", "fonts", "font maker", "handwriting", "handwriting font", "khat", "khat yad", "khotot", "خط", "خط يد", "خط اليد", "خطوط"] }
+      "aliases": ["sane3 el-khotot", "font", "fonts", "font maker", "handwriting", "handwriting font", "khat", "khat yad", "khotot", "خط", "خط يد", "خط اليد", "خطوط"] },
+    { "id": "letters", "group": "print", "pigment": "orpiment", "url": "https://letters-kohl.vercel.app/", "since": "2026-10-22",
+      "ar": "خطابات", "en": "Letters", "dar": "تحليل بيانات الخطابات حسب الجهة والمستخدم", "den": "Letters analysis by entity and user",
+      "aliases": ["khetabat", "khitabat", "khetab", "letters", "letter", "gawabat", "jawabat", "print", "tebaa", "خطابات", "خطاب", "جوابات"] },
+    { "id": "masar", "group": "print", "pigment": "indigo", "url": "https://msar-seven.vercel.app/", "since": "2026-10-22",
+      "ar": "مسار", "en": "Masar", "dar": "تحليل زيارات المرور حسب العضو والجهة والمنطقة", "den": "Visit analysis by member, entity and area",
+      "aliases": ["masar", "msar", "masaar", "moror", "visits", "visit analysis", "print", "tebaa", "مسار", "مرور", "زيارات"] }
   ]
 };
