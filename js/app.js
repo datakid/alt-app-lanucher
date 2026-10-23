@@ -59,7 +59,7 @@ var target = F.target;
 
 function buildRow(d) {
   var li = el('li', 'row'); li.setAttribute('role', 'presentation'); li.dataset.id = d.id; li.style.setProperty('--pigment', d.pig);
-  var a = el('div', 'row-link', li); a.id = 'opt-' + d.id; a.setAttribute('role', 'option'); a.setAttribute('aria-selected', 'false');
+  var a = el('a', 'row-link', li); a.id = 'opt-' + d.id; a.tabIndex = -1; a.draggable = false; a.rel = 'noopener'; a.setAttribute('role', 'option'); a.setAttribute('aria-selected', 'false');
   var folio = el('span', 'folio', a); el('span', 'mark', a).setAttribute('aria-hidden', 'true');
   var body = el('span', 'body', a), tl = el('span', 'title-line', body);
   var title = el('span', 'title', tl), vtag = d.variants ? el('span', 'vtag', tl) : null, flag = el('span', 'flag', tl);
@@ -100,6 +100,7 @@ function paintRow(r) {
   r.li.classList.toggle('is-pinned', isPinned(d.id));
   r.more.setAttribute('aria-label', L(d) + ' — ' + s.more);
   r.link.setAttribute('aria-label', L(d) + (tg.v ? ' — ' + L(tg.v) : '') + ' — ' + (tg.closed ? s.closed : tg.host));
+  if (tg.closed) r.link.removeAttribute('href'); else r.link.setAttribute('href', tg.url);
   if (d.variants) d.variants.forEach(function (v) {
     var c = r.chips[v.id]; c.textContent = L(v);
     c.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
@@ -290,10 +291,14 @@ function remember(d, v) {
   try { localStorage.setItem('fihrist:v4', JSON.stringify(store)); } catch (e) {}
 }
 var committing = false, lastRect = null;
+F.noteVisit = function (r) {
+  var tg = target(r.d, r.matchV);
+  remember(r.d, tg.v); F.renderTabs(); F.toast(T().newTabToast);
+};
 F.openTool = function (r, v, mode) {
   var d = r.d, tg = target(d, v || r.matchV);
   if (tg.closed) { F.toast(T().closedToast); return; }
-  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); window.open(tg.url, '_blank', 'noopener'); F.renderTabs(); return; }
+  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); window.open(tg.url, '_blank', 'noopener'); F.renderTabs(); F.toast(T().newTabToast); return; }
   if (committing) return;
   remember(d, tg.v); committing = true;
   F.closeSheet(true);

@@ -222,13 +222,16 @@ listEl.addEventListener('contextmenu', function (e) {
 listEl.addEventListener('click', function (e) {
   if (suppressClick) { suppressClick = false; e.preventDefault(); return; }
   var r = rowOf(e.target); if (!r) return;
+  var mod = e.metaKey || e.ctrlKey || e.shiftKey, plain = !e.target.closest('.more, .chip');
+  if (mod && plain && r.link.getAttribute('href')) { F.setActive(r, { noScroll: true }); F.noteVisit(r); return; }
+  e.preventDefault();
   F.setActive(r, { noScroll: true });
   if (e.target.closest('.more')) { F.openSheet(r); return; }
   var chip = e.target.closest('.chip'), v = null;
   if (chip) v = r.d.variants.filter(function (x) { return x.id === chip.dataset.v; })[0];
-  F.openTool(r, v, (e.metaKey || e.ctrlKey || e.shiftKey) ? 'tab' : null);
+  F.openTool(r, v, mod ? 'tab' : null);
 });
-listEl.addEventListener('auxclick', function (e) { if (e.button !== 1) return; var r = rowOf(e.target); if (!r) return; e.preventDefault(); F.openTool(r, null, 'tab'); });
+listEl.addEventListener('auxclick', function (e) { if (e.button !== 1) return; var r = rowOf(e.target); if (!r) return; if (!e.target.closest('.more, .chip') && r.link.getAttribute('href')) { F.noteVisit(r); return; } e.preventDefault(); var ch = e.target.closest('.chip'); F.openTool(r, ch ? r.d.variants.filter(function (x) { return x.id === ch.dataset.v; })[0] : null, 'tab'); });
 
 function step(dir) {
   var order = F.order(), a = F.getActive(); if (!order.length) return;
