@@ -1,7 +1,7 @@
 window.FIHRIST_SEED = {
   "format": "fihrist/4",
-  "revision": 5,
-  "updated": "2026-10-22",
+  "revision": 6,
+  "updated": "2026-10-25",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -163,6 +163,9 @@ window.FIHRIST_SEED = {
       "aliases": ["khetabat", "khitabat", "khetab", "letters", "letter", "gawabat", "jawabat", "print", "tebaa", "خطابات", "خطاب", "جوابات"] },
     { "id": "masar", "group": "print", "pigment": "indigo", "url": "https://msar-seven.vercel.app/", "since": "2026-10-22",
       "ar": "مسار", "en": "Masar", "dar": "تحليل زيارات المرور حسب العضو والجهة والمنطقة", "den": "Visit analysis by member, entity and area",
-      "aliases": ["masar", "msar", "masaar", "moror", "visits", "visit analysis", "print", "tebaa", "مسار", "مرور", "زيارات"] }
+      "aliases": ["masar", "msar", "masaar", "moror", "visits", "visit analysis", "print", "tebaa", "مسار", "مرور", "زيارات"] },
+    { "id": "bayan", "group": "print", "pigment": "verdigris", "url": "https://bayan-mauve.vercel.app/", "since": "2026-10-25",
+      "ar": "بيان", "en": "Bayan", "dar": "استخراج بيانات الروشتات من ملفات xlsx الخاصة", "den": "Extract prescription data from special xlsx files",
+      "aliases": ["bayan", "bayaan", "bayyan", "roshetta", "roshetat", "rosheta", "prescription", "prescriptions", "extract", "xlsx", "print", "tebaa", "بيان", "روشتة", "روشتات", "وصفة", "وصفات", "استخراج"] }
   ]
 };
