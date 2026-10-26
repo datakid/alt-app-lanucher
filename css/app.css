@@ -116,6 +116,7 @@ input:focus-visible{outline:none}
 .tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--canvas);box-shadow:0 6px 14px -8px color-mix(in srgb,var(--ink) 60%,transparent)}
 .tab__n{font-family:var(--f-mono);font-size:.62rem;opacity:.55;font-variant-numeric:tabular-nums}
 :root[dir="rtl"] .tab__n{font-family:var(--f-ar-d);font-size:.82rem}
+.tab[aria-selected="true"] .tab__n{opacity:.74}
 :root[dir="ltr"] .tab{font-variant-caps:all-small-caps;letter-spacing:.06em;font-size:.9rem}
 
 .index{position:relative;z-index:3;max-width:var(--measure);margin-inline:auto;padding:.4rem var(--pad) calc(6rem + env(safe-area-inset-bottom,0px))}

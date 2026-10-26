@@ -10,6 +10,7 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 | `fihrist.json` | **Editable data source.** Edit this file and bump `revision` |
 | `js/data.js` | Built-in copy of the data (`window.FIHRIST_SEED`), so the app works offline / from `file://`. **Generated** from `fihrist.json`, do not edit by hand |
 | `tools/build.js` | Validates `fihrist.json` with the app's own validator and regenerates `js/data.js`. `node tools/build.js --check` fails if they differ |
+| `sw.js` | Service worker (http/https only). Precaches the app shell and caches Google Fonts after their first load, so the app and its fonts work offline. `VERSION` is stamped by `tools/build.js`, do not edit it by hand |
 | `js/core.js` | Store, schema validator, data loading, Arabic/Franco normalisation, search index and ranking, icons |
 | `js/strings.js` | AR / EN UI strings |
 | `js/app.js` | Rendering, rows, tabs, caret, open/pin/copy, toasts |
@@ -30,7 +31,7 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 2. When the browser is idle on http(s), it fetches `fihrist.json`. If `revision` is higher, it shows an **"Update available · Apply"** toast and caches the new data.
 3. Under `file://`, use **Settings → Import JSON file**, or drag and drop `fihrist.json` onto the page.
 4. **Settings → Revert to built-in data** drops the cached copy.
-5. To ship a new built-in copy, edit `fihrist.json`, bump `revision`, then run `node tools/build.js`. It stops with the tool and field name if the data is invalid. Run `node tools/build.js --check` before committing to confirm `js/data.js` is in sync.
+5. To ship a new built-in copy, edit `fihrist.json`, bump `revision`, then run `node tools/build.js`. It stops with the tool and field name if the data is invalid. Run `node tools/build.js --check` before committing to confirm `js/data.js` and `sw.js` are in sync. The same command also re-stamps the service worker cache version whenever any shell file changes, so deployed copies pick up updates on the next reload.
 
 Validation errors name the exact tool and field, for example `Tool #3 (parser): variant "alt" has an invalid url`.
 
@@ -65,10 +66,6 @@ Rule for aliases: a word that points at ONE version goes in that variant's `alia
 ## URIs
 - `index.html?q=<query>`: start with a search
 - `index.html#<tool-id>`: start with that tool selected
-
-## Not yet implemented / next steps
-- Service worker for full offline caching of fonts (fonts currently fall back to local metrics-matched faces).
-- A visual editor for `fihrist.json` inside the app.
 
 ## Storage
 `localStorage`: `fihrist:v4` (prefs, pins, visits, last variant) and `fihrist:data:v4` (cached or imported data). No backend or tables.

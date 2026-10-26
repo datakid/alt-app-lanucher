@@ -366,4 +366,5 @@ if (location.hash) { try { var h = F.rows[decodeURIComponent(location.hash.slice
 if (F.canHover && !location.hash) seekEl.focus({ preventScroll: true });
 var idle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1200); };
 idle(function () { F.checkUpdate(false); });
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 })();
