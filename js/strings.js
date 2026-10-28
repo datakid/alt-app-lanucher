@@ -18,7 +18,23 @@ window.F.STR = {
     prefsSaved: 'تم حفظ النسخة الاحتياطية', prefsLoaded: 'تمت استعادة التفضيلات', historyCleared: 'تم مسح السجل', dropHere: 'أفلت ملف fihrist.json هنا',
     newData: 'تحديث متاح', apply: 'تطبيق', offline: 'غير متصل', online: 'عاد الاتصال',
     k: [['/', '⌘K', 'بحث'], ['↑', '↓', 'تنقّل'], ['←', '→', 'تبديل النسخة'], ['⌥', '← →', 'تبديل النسخة أثناء البحث'], ['↵', '', 'فتح'], ['⌘', '↵', 'تبويب جديد'], ['⇧', '↵', 'الإجراءات'],
-      ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Esc', '', 'مسح / إغلاق']]
+      ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Esc', '', 'مسح / إغلاق'],
+      ['>', '', 'الأوامر'], ['g', 'حرف', 'فتح الأداة بالاختصار'], ['⌥', 'S', 'إظهار أو إخفاء «اليوم»'], ['⌥', 'T', 'تبديل المظهر'], ['⌥', 'L', 'تبديل اللغة']],
+    shelfTitle: 'اليوم', shelfHide: 'إخفاء', shelfHidden: 'تم إخفاء «اليوم»', shelfShow: 'إظهار «اليوم»',
+    behaviour: 'السلوك', prefs: 'التفضيلات', motion: 'الحركة', motionAuto: 'تلقائي', motionReduced: 'مخففة',
+    commands: 'الأوامر', cmdHint: 'اكتب ‎>‎ للأوامر', cmdDone: 'تم',
+    qr: 'رمز QR', back: 'رجوع', scopeAll: 'كل الأقسام', swNew: 'نسخة جديدة من فهرست', reload: 'إعادة التحميل',
+    whatsNewTitle: 'الجديد في الإصدار ٥', whatsNewToast: 'فهرست ٥ · أسرع وأنعم', see: 'عرض', last14: 'آخر ١٤ يومًا',
+    gHint: 'g… اضغط حرف الأداة', current: 'الحالي', on: 'مفعّل', off: 'متوقف', langName: { ar: 'العربية', en: 'الإنجليزية' },
+    qrScan: 'امسح الرمز لفتح الرابط على هاتفك', qrLong: 'الرابط أطول من أن يُرمَّز', openedToday: 'اليوم', more2: 'المزيد',
+    whatsNew: ['«اليوم»: أدواتك المثبّتة والأكثر استخدامًا في مكان واحد', 'قائمة أنعم تتحرك دون وميض أثناء الكتابة', 'اكتب ‎>‎ لتغيير الإعدادات بسرعة', 'ورقة أداة جديدة مع إحصاء آخر ١٤ يومًا', 'يمكن تثبيت فهرست كتطبيق ويعمل دون اتصال'],
+    cmd: {
+      'theme.system': 'المظهر: تلقائي', 'theme.light': 'المظهر: فاتح', 'theme.dark': 'المظهر: داكن', 'lang.toggle': 'اللغة: تبديل',
+      'density.cozy': 'الكثافة: مريح', 'density.compact': 'الكثافة: مضغوط', 'open.same': 'الفتح: نفس التبويب', 'open.new': 'الفتح: تبويب جديد',
+      'shelf.toggle': 'إظهار أو إخفاء «اليوم»', 'motion.auto': 'الحركة: تلقائي', 'motion.reduced': 'الحركة: مخففة',
+      'data.check': 'البيانات: البحث عن تحديث', 'data.import': 'البيانات: استيراد ملف', 'data.export': 'البيانات: تصدير', 'data.revert': 'البيانات: العودة للمدمجة',
+      'prefs.export': 'التفضيلات: نسخ احتياطي', 'prefs.import': 'التفضيلات: استعادة', 'history.clear': 'السجل: مسح', 'keys.show': 'عرض الاختصارات', 'whatsnew.show': 'الجديد في الإصدار ٥'
+    }
   },
   en: {
     wordmark: 'Fihrist', placeholder: 'Search tools or versions…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
@@ -39,6 +55,22 @@ window.F.STR = {
     prefsSaved: 'Backup saved', prefsLoaded: 'Preferences restored', historyCleared: 'History cleared', dropHere: 'Drop fihrist.json here',
     newData: 'Update available', apply: 'Apply', offline: 'Offline', online: 'Back online',
     k: [['/', '⌘K', 'Search'], ['↑', '↓', 'Browse'], ['←', '→', 'Switch version'], ['⌥', '← →', 'Switch version while searching'], ['↵', '', 'Open'], ['⌘', '↵', 'New tab'], ['⇧', '↵', 'Actions'],
-      ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Esc', '', 'Clear / close']]
+      ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Esc', '', 'Clear / close'],
+      ['>', '', 'Commands'], ['g', 'key', 'Open tool by hotkey'], ['⌥', 'S', 'Show or hide Today'], ['⌥', 'T', 'Cycle theme'], ['⌥', 'L', 'Toggle language']],
+    shelfTitle: 'Today', shelfHide: 'Hide', shelfHidden: 'Today shelf hidden', shelfShow: 'Show Today shelf',
+    behaviour: 'Behaviour', prefs: 'Preferences', motion: 'Motion', motionAuto: 'Auto', motionReduced: 'Reduced',
+    commands: 'Commands', cmdHint: 'Type > for commands', cmdDone: 'Done',
+    qr: 'QR code', back: 'Back', scopeAll: 'All sections', swNew: 'New version of Fihrist', reload: 'Reload',
+    whatsNewTitle: "What's new in v5", whatsNewToast: 'Fihrist 5 · faster and smoother', see: 'See', last14: 'Last 14 days',
+    gHint: 'g… press a tool key', current: 'Current', on: 'On', off: 'Off', langName: { ar: 'Arabic', en: 'English' },
+    qrScan: 'Scan to open this link on your phone', qrLong: 'This link is too long for a QR code', openedToday: 'today', more2: 'More',
+    whatsNew: ['Today shelf: your pinned and most-used tools in one place', 'A smoother list that never flickers while you type', 'Type > to change settings fast', 'New tool sheet with a 14-day usage chart', 'Install Fihrist as an app; it works offline'],
+    cmd: {
+      'theme.system': 'Theme: Auto', 'theme.light': 'Theme: Light', 'theme.dark': 'Theme: Dark', 'lang.toggle': 'Language: Switch',
+      'density.cozy': 'Density: Cozy', 'density.compact': 'Density: Compact', 'open.same': 'Open in: Same tab', 'open.new': 'Open in: New tab',
+      'shelf.toggle': 'Show or hide Today shelf', 'motion.auto': 'Motion: Auto', 'motion.reduced': 'Motion: Reduced',
+      'data.check': 'Data: Check for update', 'data.import': 'Data: Import file', 'data.export': 'Data: Export', 'data.revert': 'Data: Revert to built-in',
+      'prefs.export': 'Preferences: Back up', 'prefs.import': 'Preferences: Restore', 'history.clear': 'History: Clear', 'keys.show': 'Show shortcuts', 'whatsnew.show': "What's new in v5"
+    }
   }
 };

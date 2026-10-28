@@ -4,24 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" id="theme-color-meta" content="#eceee6">
+<meta name="theme-color" id="theme-color-meta" content="#f1f2ec">
 <meta name="description" content="فهرست — فهرس أدوات الصيدلية والتأمين. Fihrist — an index of pharmacy and insurance tools.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="فهرست">
-<script>try{var s=JSON.parse(localStorage.getItem('fihrist:v4')||localStorage.getItem('fihrist:v3')||localStorage.getItem('fihrist:v2')||'{}'),l=s.lang||'ar',th=s.theme||'system',d=document.documentElement;d.lang=l;d.dir=l==='ar'?'rtl':'ltr';d.setAttribute('data-theme',th);d.setAttribute('data-density',s.density==='compact'?'compact':'cozy');var dk=th==='dark'||(th==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.getElementById('theme-color-meta').setAttribute('content',dk?'#0c1114':'#eceee6');}catch(e){}</script>
+<script>try{var s=JSON.parse(localStorage.getItem('fihrist:v5')||localStorage.getItem('fihrist:v4')||localStorage.getItem('fihrist:v3')||localStorage.getItem('fihrist:v2')||'{}'),l=s.lang||'ar',th=s.theme||'system',d=document.documentElement;if(s.motion==='reduced')d.setAttribute('data-motion','reduced');if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4)d.classList.add('no-glass');d.lang=l;d.dir=l==='ar'?'rtl':'ltr';d.setAttribute('data-theme',th);d.setAttribute('data-density',s.density==='compact'?'compact':'cozy');var dk=th==='dark'||(th==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.getElementById('theme-color-meta').setAttribute('content',dk?'#0d1113':'#f1f2ec');}catch(e){}</script>
 <title>فهرست — Fihrist</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="apple-touch-icon" href="favicon.svg">
-<link rel="mask-icon" href="favicon.svg" color="#1b211e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-180.png">
+<link rel="mask-icon" href="favicon.svg" color="#171c1a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Readex+Pro:wght@300..600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Readex+Pro:wght@300..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Readex+Pro:wght@300..600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap"></noscript>
+<link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-<div class="paper" aria-hidden="true"></div>
-
+<body class="is-booting">
 <header class="head" id="app-head">
   <div class="brand">
     <svg class="seal" viewBox="0 0 64 64" aria-hidden="true"><path class="bg" d="M32 0C54.4 0 64 9.6 64 32S54.4 64 32 64 0 54.4 0 32 9.6 0 32 0Z"/><path class="rim" fill="none" d="M32 .5C54 .5 63.5 10 63.5 32S54 63.5 32 63.5.5 54 .5 32 10 .5 32 .5Z"/><g transform="translate(-1.4 1.6)"><path class="ln" fill-rule="evenodd" d="M42.6 22.4A7.4 7.4 0 0 1 50 29.8V35.6C50 43.6 43.8 48.4 34 48.4 21.6 48.4 13.8 42 12.6 30.6c-.1-.9 1.1-1.2 1.4-.4C16.6 38.6 23 43 32.2 43c5.2 0 8.8-1.9 11-5.8A7.4 7.4 0 0 1 42.6 22.4ZM42.7 26.5a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Z"/><path class="dt" d="M42.6 8.2 47.4 13 42.6 17.8 37.8 13Z"/></g></svg>
@@ -43,17 +44,22 @@
     <label class="seek__field" id="seek-field">
       <svg class="seek__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
       <input id="seek" class="seek__input" type="search" role="combobox" aria-expanded="true" aria-controls="listbox" aria-autocomplete="list" aria-activedescendant="" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
+      <button class="seek__scope" id="seek-scope" type="button" hidden></button>
+      <span class="seek__count" id="seek-count" aria-hidden="true"></span>
       <kbd class="kbd" aria-hidden="true">/</kbd>
       <button class="seek__clear" id="seek-clear" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </label>
-    <span class="seek__count" id="seek-count" aria-hidden="true"></span>
   </div>
-  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <nav class="tabs" id="tabs" role="tablist"><span class="tabs__ink" id="tabs-ink" aria-hidden="true"></span></nav>
 </div>
 
 <div id="live" class="sr-only" aria-live="polite"></div>
 
 <main class="index" id="index">
+  <section class="shelf" id="shelf" aria-labelledby="shelf-title" hidden>
+    <div class="shelf__head"><h2 class="shelf__title" id="shelf-title"></h2><button class="shelf__hide" id="shelf-hide" type="button"></button></div>
+    <div class="shelf__track" id="shelf-track" role="list"></div>
+  </section>
   <ul class="rows" id="listbox" role="listbox" aria-label="Fihrist">
     <li class="caret" id="caret" role="presentation" aria-hidden="true"></li>
   </ul>
@@ -68,29 +74,34 @@
   </footer>
 </main>
 
-<div class="sheet" id="sheet" aria-hidden="true">
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
   <div class="sheet__scrim" id="sheet-scrim"></div>
-  <section class="sheet__panel" id="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <section class="sheet__panel" id="sheet-panel">
     <div class="sheet__grip"></div>
     <header class="sheet__head">
       <span class="sheet__dot"></span>
-      <div style="min-width:0">
+      <div style="min-width:0;flex:1">
         <h2 class="sheet__title" id="sheet-title"></h2>
         <div class="sheet__host" id="sheet-host"></div>
       </div>
+      <span class="sheet__flag" id="sheet-flag" hidden></span>
     </header>
     <div id="sheet-body"></div>
   </section>
-</div>
+</dialog>
 
 <div class="toast" id="toast"><div class="toast__body" id="toast-body" role="status"></div></div>
-<div class="plate" id="plate" aria-hidden="true"><span class="plate__title" id="plate-title"></span></div>
+<div class="plate" id="plate" aria-hidden="true"><div class="plate__fill" id="plate-fill"></div><span class="plate__title" id="plate-title"></span></div>
+<div class="ghint" id="ghint" aria-hidden="true" hidden></div>
 <div class="drop" id="drop" aria-hidden="true"></div>
 
-<script src="js/data.js"></script>
-<script src="js/core.js"></script>
-<script src="js/strings.js"></script>
-<script src="js/app.js"></script>
-<script src="js/ui.js"></script>
+<script defer src="js/data.js"></script>
+<script defer src="js/core.js"></script>
+<script defer src="js/strings.js"></script>
+<script defer src="js/motion.js"></script>
+<script defer src="js/app.js"></script>
+<script defer src="js/palette.js"></script>
+<script defer src="js/ui.js"></script>
+<script defer src="js/qr.js"></script>
 </body>
 </html>

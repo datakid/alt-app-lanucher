@@ -12,11 +12,11 @@
       "markdownDescription": "A complete starter file with one group and one tool.",
       "body": {
         "\\$schema": "./fihrist.schema.json",
-        "format": "fihrist/4",
+        "format": "fihrist/5",
         "revision": 1,
         "updated": "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
         "groups": [
-          { "id": "${1:core}", "ar": "${2:الأساسية}", "en": "${3:Core}", "icon": "${4|layers,calc,flask,printer,star,box|}" }
+          { "id": "${1:core}", "ar": "${2:الأساسية}", "en": "${3:Core}", "icon": "${4|layers,calc,flask,printer,star,box,pill,chart,doc|}" }
         ],
         "tools": [
           { "id": "${5:tool-id}", "group": "${1:core}", "pigment": "${6|indigo,verdigris,madder,orpiment,lapis,malachite,tyrian,bone|}", "url": "https://${7:example.vercel.app}/", "ar": "${8:الاسم}", "en": "${9:Name}", "dar": "${10:الوصف}", "den": "${11:Description}", "aliases": ["${12:alias}"] }
@@ -31,11 +31,11 @@
       "markdownDescription": "Links this file to its schema for editor completion, hovers and validation."
     },
     "format": {
-      "const": "fihrist/4",
+      "enum": ["fihrist/4", "fihrist/5"],
       "title": "Format",
-      "markdownDescription": "Data format tag. Always **`fihrist/4`**.",
-      "errorMessage": "This app reads \"fihrist/4\" only.",
-      "default": "fihrist/4"
+      "markdownDescription": "Data format tag. Use **`fihrist/5`**. Files tagged `fihrist/4` still load.\n\n---\nالصيغة. استخدم `fihrist/5`، وتبقى ملفات `fihrist/4` صالحة.",
+      "errorMessage": "This app reads \"fihrist/4\" or \"fihrist/5\".",
+      "default": "fihrist/5"
     },
     "revision": {
       "type": "integer",
@@ -57,7 +57,7 @@
       "minItems": 1,
       "items": { "$ref": "#/$defs/group" },
       "defaultSnippets": [
-        { "label": "[ group ]", "body": [{ "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box|}" }] }
+        { "label": "[ group ]", "body": [{ "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box,pill,chart,doc|}" }] }
       ]
     },
     "tools": {
@@ -138,18 +138,21 @@
       "type": "string",
       "title": "Icon · الأيقونة",
       "markdownDescription": "### Icon · الأيقونة\n\nGlyph shown on the group's tab.",
-      "enum": ["layers", "calc", "flask", "printer", "star", "box"],
-      "enumDescriptions": ["Stacked layers", "Calculator", "Lab flask", "Printer", "Star", "Plain square"],
+      "enum": ["layers", "calc", "flask", "printer", "star", "box", "pill", "chart", "doc"],
+      "enumDescriptions": ["Stacked layers", "Calculator", "Lab flask", "Printer", "Star", "Plain square", "Capsule", "Bar chart", "Document"],
       "markdownEnumDescriptions": [
         "**layers** — stacked sheets, for core tools",
         "**calc** — calculator, for utilities",
         "**flask** — lab flask, for experiments",
         "**printer** — printer, for print tools",
         "**star** — star, for highlights",
-        "**box** — plain square, the fallback"
+        "**box** — plain square, the fallback",
+        "**pill** — capsule, for drug and pharmacy tools",
+        "**chart** — bars, for reports and statistics",
+        "**doc** — page with lines, for documents and forms"
       ],
       "default": "box",
-      "errorMessage": "Pick one of: layers, calc, flask, printer, star, box."
+      "errorMessage": "Pick one of: layers, calc, flask, printer, star, box, pill, chart, doc."
     },
     "group": {
       "type": "object",
@@ -160,7 +163,7 @@
         {
           "label": "Group",
           "markdownDescription": "A new tab.",
-          "body": { "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box|}" }
+          "body": { "id": "${1:group-id}", "ar": "${2:الاسم}", "en": "${3:Name}", "icon": "${4|layers,calc,flask,printer,star,box,pill,chart,doc|}" }
         }
       ],
       "properties": {
@@ -186,6 +189,19 @@
         "patternErrorMessage": "An alias cannot be empty."
       },
       "examples": [["khargy", "ledger", "خارجي"]]
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags · وسوم",
+      "markdownDescription": "### Tags · وسوم\n\nExtra search words that are **never shown**. They work like `aliases` but rank a little lower and never appear as the \"why\" hint under a result.\n\nكلمات بحث إضافية لا تظهر في الواجهة.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "patternErrorMessage": "A tag cannot be empty."
+      },
+      "examples": [["pharmacy", "صيدلية"]]
     },
     "variant": {
       "type": "object",
@@ -285,6 +301,15 @@
         "dar": { "$ref": "#/$defs/arText", "markdownDescription": "### Description · الوصف\n\nOne short line in **Arabic**.", "examples": ["قائمة الأدوية القابلة للبحث"] },
         "den": { "$ref": "#/$defs/enText", "markdownDescription": "### Description\n\nOne short line in **English**.", "examples": ["Searchable master drug list"] },
         "aliases": { "$ref": "#/$defs/aliases" },
+        "tags": { "$ref": "#/$defs/tags" },
+        "kbd": {
+          "type": "string",
+          "pattern": "^[a-z0-9]$",
+          "title": "Hotkey · اختصار",
+          "markdownDescription": "### Hotkey · اختصار\n\nOne character, `a`–`z` or `0`–`9`. Press **`g`** then this key (with the search box empty) to open the tool. Each key can belong to one tool only; a repeated key is ignored.\n\nاضغط `g` ثم الحرف لفتح الأداة.",
+          "patternErrorMessage": "Use a single lowercase letter or digit, for example \"p\".",
+          "examples": ["p", "d", "1"]
+        },
         "since": {
           "$ref": "#/$defs/date",
           "markdownDescription": "### Since · تاريخ الإضافة\n\nDate the tool was added. Shows a **New · جديد** flag for 21 days."

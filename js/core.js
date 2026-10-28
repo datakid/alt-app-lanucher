@@ -1,36 +1,54 @@
 (function () {
 'use strict';
 var F = window.F = {};
-var KEY = 'fihrist:v4', DKEY = 'fihrist:data:v4';
+var KEY = 'fihrist:v5', DKEY = 'fihrist:data:v5', LEGACY_KEYS = ['fihrist:v4', 'fihrist:v3', 'fihrist:v2'], LEGACY_DKEY = 'fihrist:data:v4';
 var PIGMENTS = ['indigo', 'verdigris', 'madder', 'orpiment', 'lapis', 'malachite', 'tyrian', 'bone'];
-var ICONS_OK = { layers: 1, calc: 1, flask: 1, printer: 1, star: 1, box: 1 };
+var ICONS_OK = { layers: 1, calc: 1, flask: 1, printer: 1, star: 1, box: 1, pill: 1, chart: 1, doc: 1 };
 
-var store = { theme: 'system', lang: 'ar', tab: 'all', density: 'cozy', newTab: false, pins: [], visits: {}, lastVariant: {} };
+var store = { v: 5, theme: 'system', lang: 'ar', tab: 'all', density: 'cozy', newTab: false, pins: [], visits: {}, lastVariant: {}, shelf: true, motion: 'auto', seenWhatsNew: '' };
 function hydrate(src) {
   if (!src || typeof src !== 'object') return;
   Object.keys(store).forEach(function (k) {
     var a = store[k], b = src[k];
-    if (b == null || typeof a !== typeof b || Array.isArray(a) !== Array.isArray(b)) return;
+    if (k === 'v' || b == null || typeof a !== typeof b || Array.isArray(a) !== Array.isArray(b)) return;
     store[k] = b;
   });
+  if (store.motion !== 'reduced') store.motion = 'auto';
 }
+function readJSON(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
+F.fresh = false;
 try {
-  var cur = JSON.parse(localStorage.getItem(KEY) || 'null');
-  var legacy = JSON.parse(localStorage.getItem('fihrist:v3') || 'null') || JSON.parse(localStorage.getItem('fihrist:v2') || 'null');
+  var cur = readJSON(KEY), legacy = null, li;
+  if (!cur) for (li = 0; li < LEGACY_KEYS.length && !legacy; li++) legacy = readJSON(LEGACY_KEYS[li]);
   hydrate(cur || legacy);
   if (!cur && legacy && Array.isArray(legacy.recents)) legacy.recents.forEach(function (id, i) { store.visits[id] = { n: 3 - Math.min(i, 2), t: Date.now() - i * 864e5 }; });
+  if (!cur && !legacy) { F.fresh = true; store.seenWhatsNew = '5.0'; }
+  if (!cur) localStorage.setItem(KEY, JSON.stringify(store));
 } catch (e) {}
-var persistT = null;
+var persistT = null, idleH = null, dirty = false;
+function writeStore() { dirty = false; try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
 F.store = store;
+F.flush = function () {
+  clearTimeout(persistT); persistT = null;
+  if (idleH != null && window.cancelIdleCallback) window.cancelIdleCallback(idleH);
+  idleH = null;
+  if (dirty) writeStore();
+};
 F.persist = function () {
-  clearTimeout(persistT);
-  persistT = setTimeout(function () { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }, 60);
+  dirty = true; clearTimeout(persistT);
+  persistT = setTimeout(function () {
+    persistT = null;
+    if (window.requestIdleCallback) idleH = window.requestIdleCallback(function () { idleH = null; if (dirty) writeStore(); }, { timeout: 800 });
+    else if (dirty) writeStore();
+  }, 60);
 };
 F.onExternal = null;
 addEventListener('storage', function (e) {
   if (e.key !== KEY || !e.newValue) return;
   try { hydrate(JSON.parse(e.newValue)); if (F.onExternal) F.onExternal(); } catch (x) {}
 });
+addEventListener('pagehide', F.flush);
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') F.flush(); });
 
 function str(x) { return typeof x === 'string' ? x.trim() : ''; }
 function isUrl(u) { return /^https?:\/\/[^\s]+$/i.test(u); }
@@ -39,7 +57,8 @@ F.validate = function (doc) {
   if (!Array.isArray(doc.tools) || !doc.tools.length) throw new Error('"tools" must be a non-empty array');
   var groups = Array.isArray(doc.groups) && doc.groups.length ? doc.groups : null;
   if (!groups) throw new Error('"groups" must be a non-empty array');
-  var gids = {}, out = { format: 'fihrist/4', revision: Number(doc.revision) || 0, updated: str(doc.updated), groups: [], tools: [] };
+  if (doc.format != null && doc.format !== 'fihrist/4' && doc.format !== 'fihrist/5') throw new Error('Unsupported format "' + doc.format + '"');
+  var gids = {}, kbds = {}, out = { format: 'fihrist/5', revision: Number(doc.revision) || 0, updated: str(doc.updated), groups: [], tools: [] };
   groups.forEach(function (g, i) {
     var id = str(g.id); if (!id || gids[id]) throw new Error('Group #' + (i + 1) + ' has a missing or duplicate id');
     gids[id] = 1;
@@ -56,7 +75,10 @@ F.validate = function (doc) {
     var o = { id: id, group: t.group, pigment: PIGMENTS.indexOf(t.pigment) !== -1 ? t.pigment : 'indigo',
       ar: str(t.ar) || str(t.en), en: str(t.en) || str(t.ar), dar: str(t.dar) || str(t.den), den: str(t.den) || str(t.dar),
       aliases: Array.isArray(t.aliases) ? t.aliases.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [],
+      tags: Array.isArray(t.tags) ? t.tags.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [],
       closed: !!t.closed, since: /^\d{4}-\d{2}-\d{2}$/.test(t.since || '') ? t.since : '' };
+    var kb = str(t.kbd).toLowerCase();
+    if (/^[a-z0-9]$/.test(kb) && !kbds[kb]) { kbds[kb] = 1; o.kbd = kb; }
     if (Array.isArray(t.variants) && t.variants.length) {
       var vids = {};
       o.variants = t.variants.map(function (v, j) {
@@ -85,7 +107,7 @@ F.serialize = function (doc) {
   function line(o) { return '{ ' + Object.keys(o).map(function (k) { return JSON.stringify(k) + ': ' + val(o[k]); }).join(', ') + ' }'; }
   var groups = doc.groups.map(function (g) { return '    ' + line(pick(g, ['id', 'ar', 'en', 'icon'])); });
   var tools = doc.tools.map(function (t) {
-    var o = pick(t, ['id', 'group', 'pigment', 'closed', 'url', 'since', 'ar', 'en', 'dar', 'den', 'aliases']);
+    var o = pick(t, ['id', 'group', 'pigment', 'closed', 'url', 'since', 'kbd', 'ar', 'en', 'dar', 'den', 'aliases', 'tags']);
     if (!t.variants) return '    ' + line(o);
     o.def = t.def || 0;
     var vs = t.variants.map(function (v) { return '        ' + line(pick(v, ['id', 'ar', 'en', 'dar', 'den', 'aliases', 'closed', 'url'])); });
@@ -93,7 +115,7 @@ F.serialize = function (doc) {
   });
   return '{\n' +
     '  "$schema": ' + JSON.stringify(F.SCHEMA_REF) + ',\n' +
-    '  "format": "fihrist/4",\n' +
+    '  "format": "fihrist/5",\n' +
     '  "revision": ' + Math.max(1, doc.revision | 0) + ',\n' +
     '  "updated": ' + JSON.stringify(doc.updated) + ',\n' +
     '  "groups": [\n' + groups.join(',\n') + '\n  ],\n' +
@@ -103,7 +125,9 @@ F.serialize = function (doc) {
 F.loadInitial = function () {
   var seed = F.validate(window.FIHRIST_SEED), pick = { doc: seed, src: 'seed' };
   try {
-    var c = JSON.parse(localStorage.getItem(DKEY) || 'null');
+    var raw = localStorage.getItem(DKEY);
+    if (raw == null) { raw = localStorage.getItem(LEGACY_DKEY); if (raw != null) localStorage.setItem(DKEY, raw); }
+    var c = JSON.parse(raw || 'null');
     if (c && c.doc && (c.forced || c.doc.revision > seed.revision)) pick = { doc: F.validate(c.doc), src: c.src || 'cache' };
   } catch (e) {}
   F.seed = seed;
@@ -227,6 +251,7 @@ F.buildIdx = function (d, g) {
   push('title', 'ar', d.ar, [1, .88]); push('title', 'en', d.en, [.88, 1]);
   push('desc', 'ar', d.dar, [.45, .4]); push('desc', 'en', d.den, [.4, .45]);
   d.aliases.forEach(function (a) { push('alias', null, a, [.9, .9]); });
+  (d.tags || []).forEach(function (a) { push('tag', null, a, [.7, .7]); });
   if (g) { push('group', 'ar', g.ar, [.55, .55]); push('group', 'en', g.en, [.55, .55]); }
   if (d.host) push('host', null, d.host, [.5, .5]);
   (d.variants || []).forEach(function (v) {
@@ -595,7 +620,18 @@ F.ICON = {
   flask: '<path d="M9 3h6M10 3v6l-5.4 9.4A2 2 0 0 0 6.3 21.5h11.4a2 2 0 0 0 1.7-3.1L14 9V3"/><path d="M7.5 15h9"/>',
   star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
   box: '<rect x="4" y="4" width="16" height="16" rx="3"/>',
+  pill: '<g transform="rotate(-45 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></g>',
+  chart: '<path d="M4 4v16h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
   x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  dens1: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  dens2: '<path d="M4 5h16M4 9.5h16M4 14h16M4 18.5h16"/>',
+  shelf: '<rect x="3" y="4" width="18" height="7" rx="2"/><path d="M3 15h18M3 19h12"/>',
+  motion: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+  qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4"/>',
+  back: '<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/>'
 };
 F.svg = function (name, cls) {

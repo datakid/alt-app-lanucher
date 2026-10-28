@@ -1,7 +1,7 @@
 window.FIHRIST_SEED = {
-  "format": "fihrist/4",
-  "revision": 6,
-  "updated": "2026-10-25",
+  "format": "fihrist/5",
+  "revision": 7,
+  "updated": "2026-10-26",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },

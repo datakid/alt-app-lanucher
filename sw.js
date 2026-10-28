@@ -1,13 +1,17 @@
 'use strict';
-var VERSION = 'fihrist-shell-732a5f4be4';
+var VERSION = 'fihrist-shell-43651c7fa7';
 var FONTS = 'fihrist-fonts';
-var SHELL = ['index.html', 'css/app.css', 'js/data.js', 'js/core.js', 'js/strings.js', 'js/app.js', 'js/ui.js', 'favicon.svg'];
+var SHELL = ['index.html', 'manifest.webmanifest', 'css/tokens.css', 'css/app.css', 'js/data.js', 'js/core.js', 'js/strings.js', 'js/motion.js', 'js/app.js', 'js/palette.js', 'js/ui.js', 'js/qr.js', 'favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-180.png'];
 var FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSION).then(function (cache) {
     return cache.addAll(SHELL.map(function (u) { return new Request(u, { cache: 'reload' }); }));
-  }).then(function () { return self.skipWaiting(); }));
+  }));
+});
+
+self.addEventListener('message', function (e) {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', function (e) {

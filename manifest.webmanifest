@@ -1,0 +1,22 @@
+{
+  "name": "فهرست — Fihrist",
+  "short_name": "فهرست",
+  "description": "فهرس أدوات الصيدلية والتأمين",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1113",
+  "theme_color": "#f1f2ec",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "المثبّتة", "short_name": "المثبّتة", "url": "./?tab=pinned", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "الأخيرة", "short_name": "الأخيرة", "url": "./?tab=recent", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
