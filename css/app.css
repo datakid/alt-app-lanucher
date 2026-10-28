@@ -154,10 +154,10 @@ a.row-link{color:inherit;text-decoration:none;-webkit-user-drag:none}
   transition:background-color var(--d-3) var(--ease-out),transform var(--d-1) var(--ease-out)}
 .row-link::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at var(--px,50%) var(--py,50%),color-mix(in srgb,var(--pigment) 16%,transparent),transparent 70%);opacity:0;transition:opacity 420ms;pointer-events:none}
 .row.is-pressing .row-link::before{opacity:1}
-.row-link::after{content:'';position:absolute;inset-inline:var(--hpad);bottom:0;height:1px;background:var(--rule-soft);transition:opacity var(--d-2)}
-.row:last-child .row-link::after,.row:has(+ .band) .row-link::after{opacity:0}
-.row.is-active .row-link::after,.row:has(+ .row.is-active) .row-link::after{opacity:0}
-@media (hover:hover){.row-link:hover::after,.row:has(+ .row .row-link:hover) .row-link::after{opacity:0}}
+.row-link::after{content:'';position:absolute;inset-inline:var(--hpad);top:0;height:1px;background:var(--rule-soft);opacity:0;transition:opacity var(--d-2)}
+.row + .row .row-link::after{opacity:1}
+.row.is-active .row-link::after,.row.is-active + .row .row-link::after{opacity:0}
+@media (hover:hover){.row .row-link:hover::after,.row:hover + .row .row-link::after{opacity:0}}
 :root[data-density="compact"] .row-link{padding-block:.62rem;border-radius:var(--r-sm)}
 :root[data-density="compact"] .desc{-webkit-line-clamp:1}
 .row.is-active .row-link{background:color-mix(in srgb,var(--pigment) 8%,var(--surface));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pigment) 16%,transparent),0 8px 24px -16px color-mix(in srgb,var(--pigment) 40%,transparent)}

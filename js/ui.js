@@ -594,6 +594,14 @@ idle(function () {
     store.seenWhatsNew = '5.0'; F.persist();
   }
 });
+var warmQ = ['d', 'dr', 'par al', 'خا', 'roi', 'qarar 460', 'drug list', 'م'], warmN = 0;
+function warmSearch() {
+  if (warmN >= warmQ.length * 2) return;
+  var q = warmQ[warmN++ % warmQ.length];
+  var next = function () { try { F.search(q, F.DATA, F.searchCtx()); } catch (e) {} warmSearch(); };
+  if (window.requestIdleCallback) window.requestIdleCallback(next, { timeout: 1500 }); else setTimeout(next, 300);
+}
+idle(warmSearch);
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   var hadController = !!navigator.serviceWorker.controller, reloaded = false;
   navigator.serviceWorker.addEventListener('controllerchange', function () { if (!hadController || reloaded) return; reloaded = true; location.reload(); });
