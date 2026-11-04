@@ -1,5 +1,34 @@
 # Changelog
 
+## 5.0.1 — 2026-11-04
+
+### Fixed
+- Selecting a row no longer writes `#tool-id` into the address bar, so a reload or bookmark no longer re-highlights a tool for no visible reason. A `#tool-id` link selects once.
+- Typing a digit into the empty search box works, so `460` can be searched.
+- Imported or stored preferences are validated: a bad language, theme or visit entry can no longer crash the app on every load. Pins are deduplicated.
+- Importing a prefs file without `prefs` shows an invalid-file toast instead of recursing.
+- Ids such as `constructor` or `__proto__` in pins, visits or data can no longer crash the app. Id-keyed maps have no prototype.
+- Enter on a toast button or on the search clear and scope buttons no longer opens the active tool.
+- The open transition clears itself if navigation does not happen.
+- A fractional `def` falls back to a valid version.
+- Group and tool ids are format-checked, reserved group ids are rejected, and a null variant gives a readable error.
+- Pins for tools missing from imported data are hidden, not deleted, and return after a revert.
+- The background update check no longer replaces an imported file before you press Apply.
+- The tool sheet refreshes after a version switch (Open state, flag, description).
+- The sheet's Open button and Enter respect the "open in new tab" setting.
+- Rows outside the current list no longer keep a stale search version.
+- Another tab's changes no longer clear your selection or switch your tab; motion is re-applied, and changes made while a sheet is open apply when it closes.
+- `#tool-id` links work when the tool is outside the saved tab, and on `hashchange`.
+- `?` and `g` hotkeys work on the Arabic keyboard layout.
+- Settings offers Reload when an app update is waiting after the toast expired.
+- Export keeps the data as written: no invented `ar`, `en`, `dar`, `den` or group icons, and revision 0 stays 0.
+- `node tools/build.js --check` uses a frozen regression fixture, so data edits no longer fail it.
+- A future `since` date no longer shows "New".
+- Reopening the sheet during its close animation no longer closes the new sheet.
+- A full-storage save failure shows a toast instead of failing silently.
+- Clear history also clears remembered versions, and Undo restores them.
+- The shortcuts sheet shows `Ctrl` on non-Mac systems; the copy fallback no longer reports success when it fails; the search field has an accessible name; the manifest splash colours match; `build.js` handles a minified `fihrist.json`; unused strings removed; the version is defined once as `F.VERSION`.
+
 ## 5.0 — 2026-10-28
 
 ### Added

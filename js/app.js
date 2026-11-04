@@ -13,7 +13,7 @@ var HL = null;
 if (typeof Highlight !== 'undefined' && window.CSS && CSS.highlights) { HL = new Highlight(); CSS.highlights.set('seek', HL); }
 
 F.T = function () { return F.STR[store.lang]; };
-F.L = function (o) { return store.lang === 'ar' ? o.ar : o.en; };
+F.L = function (o) { return (store.lang === 'ar' ? o.ar || o.en : o.en || o.ar) || o.id; };
 var T = F.T, L = F.L;
 var AR = '٠١٢٣٤٥٦٧٨٩';
 F.num = function (n, pad) { var s = pad ? String(n).padStart(pad, '0') : String(n); return store.lang === 'ar' ? s.replace(/\d/g, function (d) { return AR[d]; }) : s; };
@@ -27,27 +27,32 @@ function setText(node, text) {
 }
 F.setText = setText;
 
-var DATA = [], BY_ID = {}, GROUPS = [], GMETA = {}, rows = {}, bands = {}, NEW_WINDOW = 21 * 864e5;
+var DATA = [], BY_ID = Object.create(null), GROUPS = [], GMETA = Object.create(null), rows = Object.create(null), bands = Object.create(null), NEW_WINDOW = 21 * 864e5;
 F.rows = rows; F.byId = BY_ID;
 F.setDoc = function (doc, src) {
   F.doc = doc; F.docSrc = src;
   DATA = F.DATA = doc.tools; GROUPS = doc.groups.map(function (g) { return g.id; });
-  GMETA = { pinned: { ar: F.STR.ar.pinnedG, en: F.STR.en.pinnedG, icon: 'pinF' }, recent: { ar: F.STR.ar.recent, en: F.STR.en.recent, icon: 'clock' },
-    elsewhere: { ar: F.STR.ar.elsewhere, en: F.STR.en.elsewhere, icon: 'ext' }, partial: { ar: F.STR.ar.partial, en: F.STR.en.partial, icon: 'search' } };
-  doc.groups.forEach(function (g) { GMETA[g.id] = g; });
+  GMETA = Object.create(null);
+  GMETA.pinned = { ar: F.STR.ar.pinnedG, en: F.STR.en.pinnedG, icon: 'pinF' };
+  GMETA.recent = { ar: F.STR.ar.recent, en: F.STR.en.recent, icon: 'clock' };
+  GMETA.elsewhere = { ar: F.STR.ar.elsewhere, en: F.STR.en.elsewhere, icon: 'ext' };
+  GMETA.partial = { ar: F.STR.ar.partial, en: F.STR.en.partial, icon: 'search' };
+  doc.groups.forEach(function (g) { GMETA[g.id] = { id: g.id, ar: g.ar, en: g.en, icon: g.icon || 'box' }; });
   F.GMETA = GMETA;
   Object.keys(BY_ID).forEach(function (k) { delete BY_ID[k]; });
   var now = Date.now();
   F.prepare(DATA, doc.groups);
   DATA.forEach(function (d, i) {
     d.folio = i + 1; BY_ID[d.id] = d; d.pig = 'var(--p-' + d.pigment + ')';
-    d.isNew = !!d.since && (now - Date.parse(d.since)) < NEW_WINDOW;
+    var age = now - Date.parse(d.since);
+    d.isNew = !!d.since && age >= 0 && age < NEW_WINDOW;
   });
-  store.pins = store.pins.filter(function (id) { return BY_ID[id]; });
   buildAll();
 };
 function isPinned(id) { return store.pins.indexOf(id) !== -1; }
 F.isPinned = isPinned;
+function livePins() { return store.pins.filter(function (id) { return BY_ID[id]; }); }
+F.livePins = livePins;
 
 F.curVariant = function (d) {
   if (!d.variants) return null;
@@ -107,7 +112,12 @@ function buildAll() {
   DATA.forEach(function (d) { rows[d.id] = buildRow(d); });
   active = null; lastKey = null; geoDirty = true; shelfSig = '';
 }
-function descOf(d, tg) { return store.lang === 'ar' ? (tg.v && tg.v.dar) || d.dar : (tg.v && tg.v.den) || d.den; }
+function descOf(d, tg) {
+  var own = tg.v && (store.lang === 'ar' ? tg.v.dar : tg.v.den);
+  return own || (store.lang === 'ar' ? d.dar || d.den : d.den || d.dar);
+}
+F.descOf = descOf;
+function shownLang(o) { return store.lang === 'ar' ? (o.ar ? 'ar' : 'en') : (o.en ? 'en' : 'ar'); }
 F.paintRow = paintRow;
 function paintRow(r) {
   var d = r.d, s = T(), tg = target(d, r.matchV);
@@ -151,7 +161,7 @@ var TAB_LIST = [];
 F.tabList = function () { return TAB_LIST; };
 F.renderTabs = function () {
   var s = T(), list = [{ id: 'all', label: s.all, n: DATA.length }];
-  if (store.pins.length) list.push({ id: 'pinned', label: L(GMETA.pinned), n: store.pins.length });
+  var pc = livePins().length; if (pc) list.push({ id: 'pinned', label: L(GMETA.pinned), n: pc });
   var rc = recentIds().length; if (rc) list.push({ id: 'recent', label: L(GMETA.recent), n: rc });
   GROUPS.forEach(function (g) { list.push({ id: g, label: L(GMETA[g]), n: DATA.filter(function (d) { return d.group === g; }).length }); });
   if (!list.some(function (x) { return x.id === store.tab; })) store.tab = 'all';
@@ -201,9 +211,9 @@ function buildSeq(q, hasQ, tab, rec) {
     here.forEach(function (x) { seq.push({ row: rows[x.d.id], res: x }); });
     if (away.length) { seq.push({ band: 'elsewhere', n: away.length }); away.forEach(function (x) { seq.push({ row: rows[x.d.id], res: x }); }); }
   } else if (tab === 'pinned' || tab === 'recent') {
-    (tab === 'pinned' ? store.pins : rec).forEach(function (id) { if (BY_ID[id]) seq.push({ row: rows[id] }); });
+    (tab === 'pinned' ? livePins() : rec).forEach(function (id) { if (BY_ID[id]) seq.push({ row: rows[id] }); });
   } else {
-    var pinned = store.pins.map(function (id) { return BY_ID[id]; }).filter(Boolean);
+    var pinned = livePins().map(function (id) { return BY_ID[id]; });
     if (tab === 'all' && pinned.length) { seq.push({ band: 'pinned', n: pinned.length }); pinned.forEach(function (d) { seq.push({ row: rows[d.id] }); }); }
     GROUPS.forEach(function (g) {
       if (tab !== 'all' && tab !== g) return;
@@ -240,6 +250,7 @@ F.render = function (opts) {
   if (cmd) {
     seq = F.palette.seq(raw.slice(1).trim());
   } else {
+    for (var rid in rows) rows[rid].matchV = null;
     seq = buildSeq(q, hasQ, tab, rec);
     for (i = 0; i < seq.length; i++) {
       x = seq[i];
@@ -299,9 +310,9 @@ function annotate(res) {
   }
   res.marks.forEach(function (m) {
     if (!m.ranges.length) return;
-    if (m.kind === 'title') { if (m.lang === lang) put('title', r.title, m.raw, m.ranges); }
-    else if (m.kind === 'variant') { if (v && m.vid === v.id && m.lang === lang) { put('chip', r.chips[v.id], m.raw, m.ranges); if (vtagOn) put('vtag', r.vtag, m.raw, m.ranges); } }
-    else if (m.kind === 'desc') { if (m.lang === lang && descT === m.raw) put('desc', r.desc, m.raw, m.ranges); }
+    if (m.kind === 'title') { if (m.lang === shownLang(d)) put('title', r.title, m.raw, m.ranges); }
+    else if (m.kind === 'variant') { if (v && m.vid === v.id && m.lang === shownLang(v)) { put('chip', r.chips[v.id], m.raw, m.ranges); if (vtagOn) put('vtag', r.vtag, m.raw, m.ranges); } }
+    else if (m.kind === 'desc') { if (descT === m.raw) put('desc', r.desc, m.raw, m.ranges); }
     else if (m.kind === 'host') { if (hostT && hostT.indexOf(m.raw) === 0) put('host', r.host, hostT, m.ranges); }
     else if (res.why && m.raw === res.why && !hid) hid = m;
   });
@@ -394,7 +405,7 @@ function setActive(r, opts) {
 }
 F.setActive = setActive;
 
-var warmed = {};
+var warmed = Object.create(null);
 function preconnect(url) {
   var o; try { o = new URL(url).origin; } catch (e) { return; }
   if (warmed[o] || !F.canFetch) return; warmed[o] = 1;
@@ -410,7 +421,7 @@ function syncURL() {
       p.delete('tab');
       if (q) p.set('q', q); else p.delete('q');
       var qs = p.toString();
-      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + (active && active.d ? '#' + active.d.id : ''));
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
     } catch (e) {}
   }, 250);
 }
@@ -427,7 +438,12 @@ function remember(d, v) {
   x.d = days; store.visits[d.id] = x;
   F.persist(); F.flush();
 }
-var committing = false, lastFrom = null;
+var committing = false, lastFrom = null, plateGuard = null;
+function armPlateGuard() {
+  clearTimeout(plateGuard);
+  plateGuard = setTimeout(function () { if (document.visibilityState === 'visible') resetPlate(); }, 2500);
+}
+addEventListener('pagehide', function () { clearTimeout(plateGuard); });
 F.noteVisit = function (r) {
   var tg = target(r.d, r.matchV);
   remember(r.d, tg.v); F.renderTabs(); F.toast(T().newTabToast);
@@ -446,7 +462,7 @@ F.openTool = function (r, v, mode, fromEl) {
   F.closeSheet(true);
   setText(plateTitle, L(d) + (tg.v ? ' — ' + L(tg.v) : ''));
   plateEl.style.setProperty('--plate', d.pig);
-  if (!M.ok()) { location.href = tg.url; return; }
+  if (!M.ok()) { location.href = tg.url; armPlateGuard(); return; }
   lastFrom = insetFor((fromEl || r.link).getBoundingClientRect());
   var items = Array.prototype.slice.call(listEl.querySelectorAll('.row-link, .band'));
   var pivot = items.indexOf(r.link), st = items.length > 1 ? 110 / (items.length - 1) : 0;
@@ -454,13 +470,14 @@ F.openTool = function (r, v, mode, fromEl) {
   indexEl.classList.add('is-committing');
   plateFill.style.clipPath = lastFrom;
   plateEl.classList.add('is-live');
-  var gone = false, go = function () { if (gone) return; gone = true; location.href = tg.url; };
+  var gone = false, go = function () { if (gone) return; gone = true; location.href = tg.url; armPlateGuard(); };
   var a = plateFill.animate([{ clipPath: lastFrom }, { clipPath: FULL }], { duration: 320, easing: M.EASE_OUT, fill: 'forwards' });
   plateTitle.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 240, delay: 120, easing: M.EASE_OUT, fill: 'both' });
   a.finished.then(go, go);
   setTimeout(go, 380);
 };
 function resetPlate() {
+  clearTimeout(plateGuard);
   plateEl.classList.remove('is-live');
   plateFill.getAnimations().forEach(function (a) { a.cancel(); });
   plateTitle.getAnimations().forEach(function (a) { a.cancel(); });
@@ -484,7 +501,9 @@ F.copyText = function (text, msg) {
   var ok = function () { F.toast(msg || T().copied); };
   var fb = function () {
     var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0';
-    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); ok();
+    var done = false;
+    document.body.appendChild(ta); ta.select(); try { done = document.execCommand('copy'); } catch (e) {} ta.remove();
+    if (done) ok(); else F.toast(T().copyFail);
   };
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok, fb); else fb();
 };
@@ -501,9 +520,10 @@ F.togglePin = function (r, silent) {
   });
 };
 F.movePin = function (r, dir) {
-  var i = store.pins.indexOf(r.d.id), j = i + dir;
-  if (i === -1 || j < 0 || j >= store.pins.length) return;
-  store.pins.splice(i, 1); store.pins.splice(j, 0, r.d.id); F.persist();
+  var live = livePins(), i = live.indexOf(r.d.id), j = i + dir;
+  if (i === -1 || j < 0 || j >= live.length) return;
+  var a = store.pins.indexOf(live[i]), b = store.pins.indexOf(live[j]);
+  store.pins[a] = live[j]; store.pins[b] = live[i]; F.persist();
   F.render({});
 };
 F.cycleVariant = function (r, dir) {

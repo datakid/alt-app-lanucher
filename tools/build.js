@@ -22,7 +22,14 @@ var doc;
 try { doc = JSON.parse(text); } catch (e) { fail('fihrist.json is not valid JSON: ' + e.message); }
 try { loader.loadCore().F.validate(doc); } catch (e) { fail('fihrist.json failed validation: ' + e.message); }
 
-var body = text.split('\n').filter(function (line) { return !/^\s*"\$schema"\s*:/.test(line); }).join('\n').replace(/\s+$/, '');
+var SCHEMA_LINE = /^\s*"\$schema"\s*:\s*"[^"]*",?\s*$/;
+var lines = text.split('\n'), body;
+if (lines.some(function (line) { return SCHEMA_LINE.test(line); })) {
+  body = lines.filter(function (line) { return !SCHEMA_LINE.test(line); }).join('\n').replace(/\s+$/, '');
+} else {
+  delete doc.$schema;
+  body = JSON.stringify(doc, null, 2);
+}
 var built = 'window.FIHRIST_SEED = ' + body + ';\n';
 
 function readText(file) {

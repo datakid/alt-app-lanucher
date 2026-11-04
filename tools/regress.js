@@ -15,7 +15,7 @@ function r3(n) { return Math.round(n * 1000) / 1000; }
 function capture() {
   var core = loader.loadCore();
   var F = core.F;
-  var doc = JSON.parse(fs.readFileSync(path.join(loader.root, 'fihrist.json'), 'utf8'));
+  var doc = JSON.parse(fs.readFileSync(path.join(__dirname, 'regress.fixture.json'), 'utf8'));
   var data = F.validate(doc);
   F.prepare(data.tools, data.groups);
   data.tools.forEach(function (d, i) { d.folio = i + 1; });

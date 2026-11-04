@@ -28,7 +28,7 @@ var DEFS = [
   { id: 'keys.show', icon: 'keys', kw: ['shortcuts', 'keys', 'keyboard', 'help', 'اختصارات', 'مفاتيح'], kbd: '?', run: function () { A().openKeys(); }, quiet: true },
   { id: 'whatsnew.show', icon: 'star', kw: ['new', 'whats new', 'changelog', 'version', 'الجديد', 'إصدار'], run: function () { A().openWhatsNew(); }, quiet: true }
 ];
-var CMDS = null, byId = {}, rowsById = {};
+var CMDS = null, byId = Object.create(null), rowsById = Object.create(null);
 
 function ensure() {
   if (CMDS) return;
@@ -103,8 +103,15 @@ P.arm = function () {
   gT = setTimeout(P.disarm, 900);
 };
 P.disarm = function () { gUntil = 0; clearTimeout(gT); ghintEl.hidden = true; };
-P.byKbd = function (k) {
-  var key = String(k).toLowerCase(), i;
+function keyOf(e) {
+  var k = String(e.key);
+  if (/^[a-zA-Z0-9]$/.test(k)) return k.toLowerCase();
+  var m = /^(?:Key([A-Z])|Digit([0-9]))$/.exec(e.code || '');
+  return m ? (m[1] || m[2]).toLowerCase() : k.toLowerCase();
+}
+P.keyOf = keyOf;
+P.byKbd = function (e) {
+  var key = keyOf(e), i;
   for (i = 0; i < F.DATA.length; i++) if (F.DATA[i].kbd === key) return F.DATA[i];
   return null;
 };

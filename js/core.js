@@ -1,19 +1,60 @@
 (function () {
 'use strict';
 var F = window.F = {};
+F.VERSION = '5.0.1';
+F.NEWS_ID = '5.0';
 var KEY = 'fihrist:v5', DKEY = 'fihrist:data:v5', LEGACY_KEYS = ['fihrist:v4', 'fihrist:v3', 'fihrist:v2'], LEGACY_DKEY = 'fihrist:data:v4';
 var PIGMENTS = ['indigo', 'verdigris', 'madder', 'orpiment', 'lapis', 'malachite', 'tyrian', 'bone'];
 var ICONS_OK = { layers: 1, calc: 1, flask: 1, printer: 1, star: 1, box: 1, pill: 1, chart: 1, doc: 1 };
 
 var store = { v: 5, theme: 'system', lang: 'ar', tab: 'all', density: 'cozy', newTab: false, pins: [], visits: {}, lastVariant: {}, shelf: true, motion: 'auto', seenWhatsNew: '' };
-function hydrate(src) {
-  if (!src || typeof src !== 'object') return;
-  Object.keys(store).forEach(function (k) {
-    var a = store[k], b = src[k];
-    if (k === 'v' || b == null || typeof a !== typeof b || Array.isArray(a) !== Array.isArray(b)) return;
-    store[k] = b;
+var THEMES = ['system', 'light', 'dark'], LANGS = ['ar', 'en'], DENSITIES = ['cozy', 'compact'], MOTIONS = ['auto', 'reduced'];
+function isObj(o) { return !!o && typeof o === 'object' && !Array.isArray(o); }
+function finite(n) { return typeof n === 'number' && isFinite(n); }
+function cleanPins(list) {
+  var seen = Object.create(null), out = [];
+  list.forEach(function (id) { if (typeof id === 'string' && id && !seen[id]) { seen[id] = 1; out.push(id); } });
+  return out;
+}
+function cleanVisits(src) {
+  var out = {};
+  Object.keys(src).forEach(function (id) {
+    var x = src[id];
+    if (id === '__proto__' || !isObj(x) || !finite(x.n) || !finite(x.t)) return;
+    var o = { n: x.n, t: x.t };
+    if (isObj(x.d)) {
+      o.d = {};
+      Object.keys(x.d).forEach(function (k) { if (k !== '__proto__' && finite(x.d[k])) o.d[k] = x.d[k]; });
+    }
+    out[id] = o;
   });
-  if (store.motion !== 'reduced') store.motion = 'auto';
+  return out;
+}
+function cleanVariants(src) {
+  var out = {};
+  Object.keys(src).forEach(function (id) { if (id !== '__proto__' && typeof src[id] === 'string') out[id] = src[id]; });
+  return out;
+}
+function sanitize(src) {
+  var out = {};
+  if (!isObj(src)) return out;
+  if (LANGS.indexOf(src.lang) !== -1) out.lang = src.lang;
+  if (THEMES.indexOf(src.theme) !== -1) out.theme = src.theme;
+  if (DENSITIES.indexOf(src.density) !== -1) out.density = src.density;
+  if (MOTIONS.indexOf(src.motion) !== -1) out.motion = src.motion;
+  if (typeof src.tab === 'string') out.tab = src.tab;
+  if (typeof src.newTab === 'boolean') out.newTab = src.newTab;
+  if (typeof src.shelf === 'boolean') out.shelf = src.shelf;
+  if (typeof src.seenWhatsNew === 'string') out.seenWhatsNew = src.seenWhatsNew;
+  if (Array.isArray(src.pins)) out.pins = cleanPins(src.pins);
+  if (isObj(src.visits)) out.visits = cleanVisits(src.visits);
+  if (isObj(src.lastVariant)) out.lastVariant = cleanVariants(src.lastVariant);
+  return out;
+}
+F.sanitizePrefs = sanitize;
+function hydrate(src, external) {
+  var clean = sanitize(src);
+  Object.keys(clean).forEach(function (k) { if (!(external && k === 'tab')) store[k] = clean[k]; });
 }
 function readJSON(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
 F.fresh = false;
@@ -21,8 +62,8 @@ try {
   var cur = readJSON(KEY), legacy = null, li;
   if (!cur) for (li = 0; li < LEGACY_KEYS.length && !legacy; li++) legacy = readJSON(LEGACY_KEYS[li]);
   hydrate(cur || legacy);
-  if (!cur && legacy && Array.isArray(legacy.recents)) legacy.recents.forEach(function (id, i) { store.visits[id] = { n: 3 - Math.min(i, 2), t: Date.now() - i * 864e5 }; });
-  if (!cur && !legacy) { F.fresh = true; store.seenWhatsNew = '5.0'; }
+  if (!cur && legacy && Array.isArray(legacy.recents)) legacy.recents.forEach(function (id, i) { if (typeof id !== 'string' || id === '__proto__') return; store.visits[id] = { n: 3 - Math.min(i, 2), t: Date.now() - i * 864e5 }; });
+  if (!cur && !legacy) { F.fresh = true; store.seenWhatsNew = F.NEWS_ID; }
   if (!cur) localStorage.setItem(KEY, JSON.stringify(store));
 } catch (e) {}
 var persistT = null, idleH = null, dirty = false;
@@ -45,51 +86,57 @@ F.persist = function () {
 F.onExternal = null;
 addEventListener('storage', function (e) {
   if (e.key !== KEY || !e.newValue) return;
-  try { hydrate(JSON.parse(e.newValue)); if (F.onExternal) F.onExternal(); } catch (x) {}
+  try { hydrate(JSON.parse(e.newValue), true); if (F.onExternal) F.onExternal(); } catch (x) {}
 });
 addEventListener('pagehide', F.flush);
 document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') F.flush(); });
 
 function str(x) { return typeof x === 'string' ? x.trim() : ''; }
 function isUrl(u) { return /^https?:\/\/[^\s]+$/i.test(u); }
+var ID_RE = /^[a-z0-9][a-z0-9-]*$/, RESERVED_GROUPS = ['all', 'pinned', 'recent', 'elsewhere', 'partial', 'cmd'];
 F.validate = function (doc) {
   if (!doc || typeof doc !== 'object') throw new Error('Not an object');
   if (!Array.isArray(doc.tools) || !doc.tools.length) throw new Error('"tools" must be a non-empty array');
   var groups = Array.isArray(doc.groups) && doc.groups.length ? doc.groups : null;
   if (!groups) throw new Error('"groups" must be a non-empty array');
   if (doc.format != null && doc.format !== 'fihrist/4' && doc.format !== 'fihrist/5') throw new Error('Unsupported format "' + doc.format + '"');
-  var gids = {}, kbds = {}, out = { format: 'fihrist/5', revision: Number(doc.revision) || 0, updated: str(doc.updated), groups: [], tools: [] };
+  var gids = Object.create(null), kbds = Object.create(null), out = { format: 'fihrist/5', revision: Number(doc.revision) || 0, updated: str(doc.updated), groups: [], tools: [] };
   groups.forEach(function (g, i) {
-    var id = str(g.id); if (!id || gids[id]) throw new Error('Group #' + (i + 1) + ' has a missing or duplicate id');
+    var id = str(g && g.id); if (!id || gids[id]) throw new Error('Group #' + (i + 1) + ' has a missing or duplicate id');
+    if (RESERVED_GROUPS.indexOf(id) !== -1) throw new Error('Group #' + (i + 1) + ' uses a reserved id "' + id + '"');
+    if (!ID_RE.test(id)) throw new Error('Group #' + (i + 1) + ' has an invalid id "' + id + '" (use a-z, 0-9 and -)');
     gids[id] = 1;
-    out.groups.push({ id: id, ar: str(g.ar) || str(g.en) || id, en: str(g.en) || str(g.ar) || id, icon: ICONS_OK[g.icon] ? g.icon : 'box' });
+    out.groups.push({ id: id, ar: str(g.ar), en: str(g.en), icon: ICONS_OK[g.icon] ? g.icon : '' });
   });
-  var tids = {};
+  var tids = Object.create(null);
   doc.tools.forEach(function (t, i) {
     var where = 'Tool #' + (i + 1) + (t && t.id ? ' (' + t.id + ')' : '');
-    var id = str(t && t.id);
+    var id = str(t && t.id), gid = str(t && t.group);
     if (!id || tids[id]) throw new Error(where + ': missing or duplicate id');
-    if (!gids[t.group]) throw new Error(where + ': unknown group "' + t.group + '"');
+    if (!ID_RE.test(id) || id in Object.prototype) throw new Error(where + ': invalid id (use a-z, 0-9 and -)');
+    if (!gids[gid]) throw new Error(where + ': unknown group "' + gid + '"');
     if (!str(t.ar) && !str(t.en)) throw new Error(where + ': needs "ar" or "en"');
     tids[id] = 1;
-    var o = { id: id, group: t.group, pigment: PIGMENTS.indexOf(t.pigment) !== -1 ? t.pigment : 'indigo',
-      ar: str(t.ar) || str(t.en), en: str(t.en) || str(t.ar), dar: str(t.dar) || str(t.den), den: str(t.den) || str(t.dar),
+    var o = { id: id, group: gid, pigment: PIGMENTS.indexOf(t.pigment) !== -1 ? t.pigment : 'indigo',
+      ar: str(t.ar), en: str(t.en), dar: str(t.dar), den: str(t.den),
       aliases: Array.isArray(t.aliases) ? t.aliases.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [],
       tags: Array.isArray(t.tags) ? t.tags.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [],
       closed: !!t.closed, since: /^\d{4}-\d{2}-\d{2}$/.test(t.since || '') ? t.since : '' };
     var kb = str(t.kbd).toLowerCase();
     if (/^[a-z0-9]$/.test(kb) && !kbds[kb]) { kbds[kb] = 1; o.kbd = kb; }
     if (Array.isArray(t.variants) && t.variants.length) {
-      var vids = {};
+      var vids = Object.create(null);
       o.variants = t.variants.map(function (v, j) {
-        var vid = str(v && v.id) || 'v' + j;
+        if (!v || typeof v !== 'object') throw new Error(where + ': variant #' + (j + 1) + ' is not an object');
+        var vid = str(v.id) || 'v' + j;
         if (vids[vid]) throw new Error(where + ': duplicate variant id "' + vid + '"');
         if (!isUrl(str(v.url))) throw new Error(where + ': variant "' + vid + '" has an invalid url');
         vids[vid] = 1;
-        return { id: vid, ar: str(v.ar) || str(v.en) || vid, en: str(v.en) || str(v.ar) || vid, url: str(v.url), dar: str(v.dar), den: str(v.den),
+        return { id: vid, ar: str(v.ar), en: str(v.en), url: str(v.url), dar: str(v.dar), den: str(v.den),
           aliases: Array.isArray(v.aliases) ? v.aliases.filter(function (a) { return typeof a === 'string' && a.trim(); }) : [], closed: !!v.closed };
       });
-      o.def = Math.min(Math.max(0, Number(t.def) || 0), o.variants.length - 1);
+      var di = Math.floor(Number(t.def));
+      o.def = di >= 0 && di < o.variants.length ? di : 0;
     } else {
       if (!isUrl(str(t.url))) throw new Error(where + ': needs a valid "url" or "variants"');
       o.url = str(t.url);
@@ -116,7 +163,7 @@ F.serialize = function (doc) {
   return '{\n' +
     '  "$schema": ' + JSON.stringify(F.SCHEMA_REF) + ',\n' +
     '  "format": "fihrist/5",\n' +
-    '  "revision": ' + Math.max(1, doc.revision | 0) + ',\n' +
+    '  "revision": ' + (doc.revision | 0) + ',\n' +
     '  "updated": ' + JSON.stringify(doc.updated) + ',\n' +
     '  "groups": [\n' + groups.join(',\n') + '\n  ],\n' +
     '  "tools": [\n' + tools.join(',\n') + '\n  ]\n}\n';
@@ -134,7 +181,7 @@ F.loadInitial = function () {
   return pick;
 };
 F.saveDoc = function (doc, src, forced) {
-  try { localStorage.setItem(DKEY, JSON.stringify({ doc: doc, src: src, forced: !!forced, at: Date.now() })); } catch (e) {}
+  try { localStorage.setItem(DKEY, JSON.stringify({ doc: doc, src: src, forced: !!forced, at: Date.now() })); return true; } catch (e) { return false; }
 };
 F.dropDoc = function () { try { localStorage.removeItem(DKEY); } catch (e) {} };
 F.canFetch = /^https?:$/.test(location.protocol);
@@ -265,22 +312,22 @@ F.buildIdx = function (d, g) {
   return f;
 };
 F.prepare = function (tools, groups) {
-  var gm = {};
+  var gm = Object.create(null);
   (groups || []).forEach(function (g) { gm[g.id] = g; });
   tools.forEach(function (d) {
     (d.variants || []).forEach(function (v) { v.host = F.hostOf(v.url); });
     if (d.url) d.host = F.hostOf(d.url);
     d.idx = F.buildIdx(d, gm[d.group]);
-    d.tf = []; d.vf = {};
+    d.tf = []; d.vf = Object.create(null);
     d.idx.forEach(function (f) { if (f.vid) (d.vf[f.vid] = d.vf[f.vid] || []).push(f); else d.tf.push(f); });
   });
   buildIndex(tools);
 };
 
 function buildIndex(tools) {
-  var maps = [{}, {}], fields = [], nO = 0, ix = { tools: tools, fields: fields, da: [], db: [], ja: [], jb: [], nF: 0, nO: 0 };
+  var maps = [Object.create(null), Object.create(null)], fields = [], nO = 0, ix = { tools: tools, fields: fields, da: [], db: [], ja: [], jb: [], nF: 0, nO: 0 };
   tools.forEach(function (d, ti) {
-    var vo = {};
+    var vo = Object.create(null);
     d.ti = ti; d.ow = nO++; d.vow = [];
     (d.variants || []).forEach(function (v) { vo[v.id] = nO; d.vow.push(nO); nO++; });
     d.idx.forEach(function (f) {

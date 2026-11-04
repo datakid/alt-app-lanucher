@@ -11,8 +11,8 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 | `favicon.svg` | The seal: a drawn ف (filled shape with an open loop) in bone on an ink squircle, with a madder diamond dot. The same shape is inlined in the header and in the empty state |
 | `fihrist.json` | **Editable data source.** Edit this file and bump `revision` |
 | `js/data.js` | Built-in copy of the data (`window.FIHRIST_SEED`), so the app works offline / from `file://`. **Generated** from `fihrist.json`, do not edit by hand |
-| `tools/build.js` | Validates `fihrist.json` with the app's own validator, regenerates `js/data.js`, stamps the service worker version (text and binary files are both hashed), checks the manifest icons exist and runs the search regression. `node tools/build.js --check` fails if anything differs |
-| `tools/regress.js` | Runs 28 search queries in Arabic and English and compares ids, versions, scores and highlight ranges with `tools/regress.snap.json`, a snapshot taken from v4 |
+| `tools/build.js` | Validates `fihrist.json` with the app's own validator, regenerates `js/data.js`, stamps the service worker version (text and binary files are both hashed), and checks the manifest icons exist. `node tools/build.js --check` also runs the search regression and fails if anything differs |
+| `tools/regress.js` | Runs 28 search queries in Arabic and English and compares ids, versions, scores and highlight ranges with `tools/regress.snap.json`, a snapshot taken from v4. It reads `tools/regress.fixture.json`, a frozen copy of the data, so editing `fihrist.json` never changes the snapshot. Only an intentional ranking change needs `node tools/regress.js --snap` |
 | `tools/loader.js` | Node `vm` harness shared by the two tools above |
 | `sw.js` | Service worker (http/https only). Precaches the app shell and caches Google Fonts after their first load. A new version waits until you press **Reload** in the toast. `VERSION` is stamped by `tools/build.js`, do not edit it by hand |
 | `js/core.js` | Store, schema validator, data loading, Arabic/Franco normalisation, search index and ranking, icons |
@@ -25,10 +25,9 @@ A bilingual (Arabic / English) keyboard-first index of pharmacy and insurance to
 | `css/tokens.css` | Colour, spacing, radius, motion and type tokens |
 | `css/app.css` | All component styles |
 | `fihrist.schema.json` | JSON Schema for `fihrist.json`: completion, bilingual hovers (with colour tables), snippets and plain-language errors in VS Code and any editor that supports JSON Schema |
-| `.vscode/settings.json` | Links the schema, smooth scrolling and caret, bracket and token colours from the Fihrist pigments (separate light and dark sets) |
 
 ## Editing in VS Code
-- Open the folder. `fihrist.json` picks up the schema through `"$schema": "./fihrist.schema.json"` and `.vscode/settings.json`.
+- Open the folder. `fihrist.json` picks up the schema through `"$schema": "./fihrist.schema.json"`.
 - Inside `tools`, type `{` and choose **Tool · single link** or **Tool · with variants**. Inside `variants`, choose **Variant**. Tab moves through the fields; `pigment`, `group` and `icon` show drop-down choices.
 - Hover any key to see what it does. Hover `pigment` to see every colour with its light and dark hex.
 - Errors explain the fix in plain words, for example *"This tool has variants, so the link belongs on each variant. Remove "url"."*
@@ -49,7 +48,7 @@ Files tagged `fihrist/4`, or with no `format`, still load. Export always writes 
 - `groups[]`: `id`, `ar`, `en`, `icon` (`layers|calc|flask|printer|star|box|pill|chart|doc`)
 - `tools[]`: `id`, `group`, `pigment` (`indigo|verdigris|madder|orpiment|lapis|malachite|tyrian|bone`), `ar`, `en`, `dar`, `den`, `aliases[]`, `tags[]`, `kbd`, `since` (YYYY-MM-DD; shows a "New" flag for 21 days), `closed`, then **either** `url` **or** `variants[]` (`id`, `ar`, `en`, `url`, optional `dar`, `den`, `aliases[]`, `closed`) plus `def` (index of the default variant).
 - `tags` are extra search words that never appear on screen. They rank a little below aliases and never show as the "why" hint.
-- `kbd` is one character, `a`–`z` or `0`–`9`. Press `g`, then that key, to open the tool. A key can belong to one tool only; a repeated key is ignored.
+- `kbd` is one character, `a`–`z` or `0`–`9`. Press `g`, then that key, to open the tool. A key can belong to one tool only; a repeated key is ignored. No built-in tool has a `kbd` yet, so the hotkey is opt-in.
 
 Rule for aliases: a word that points at ONE version goes in that variant's `aliases`; a word for the tool in general stays in the tool's `aliases`. Never put the same word in both.
 
@@ -66,7 +65,7 @@ Rule for aliases: a word that points at ONE version goes in that variant's `alia
 - Pins with **Undo**. Reorder pins with `⌥↑/↓` in the Pinned tab; rows slide to their new place.
 - Tool sheet: versions with a sliding thumb, open, new tab, pin, copy link, **Fihrist deep link** (`#tool-id`), share, **QR code** for the tool's link, and **usage stats** (times opened, last used, a 14-day chart). It is a real dialog: Esc, backdrop click, focus return, and on phones a drag-to-dismiss with a spring flick.
 - Settings sheet in cards: appearance (theme, density, motion), behaviour (default open in same or new tab, Today shelf), data, and preferences.
-- Shortcuts panel (`?`). Arrow navigation wraps around. Number keys jump to a row by its number.
+- Shortcuts panel (`?`). Arrow navigation wraps around. Number keys jump to a row by its number (when the search box is not focused).
 - Preferences sync live across open tabs (`storage` event). Old v2, v3 and v4 preferences migrate automatically and the old keys are left in place.
 - Installable app with offline support. Offline/online toasts. Print styles. Reduced-motion (system setting or in-app) and forced-colors support.
 
@@ -81,7 +80,7 @@ Rule for aliases: a word that points at ONE version goes in that variant's `alia
 
 ## URIs
 - `index.html?q=<query>`: start with a search
-- `index.html#<tool-id>`: start with that tool selected
+- `index.html#<tool-id>`: select that tool once on load (switches to All and clears the search if the tool is hidden). The address bar no longer keeps the hash afterwards
 - `index.html?tab=<tab-id>`: start on a tab (`pinned`, `recent`, or a group id)
 
 ## Storage
