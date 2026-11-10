@@ -1,0 +1,6 @@
+5.0.1 baseline, fixture big-500, CPU x4, scroll capped at 150 steps
+lang width keys slowEv(>16ms) maxEv longTasks(>50) maxLong shift  frames fps   maxFrame >24ms
+ar    1280   23         65  3032        251    2994  0.497    307  11.3     216.7   306  OVER 
+en    1280   23         65  2392        295    2331  0.535    309  10.5     216.6   307  OVER 
+ar     390   23         65  2672        119    2651  2.052    320  24.2     100.0   247  OVER 
+en     390   23         65  2336         72    2177  1.607    332  28.7     116.6   228  OVER 

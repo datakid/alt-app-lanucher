@@ -1,0 +1,922 @@
+{
+ "ar-light-cozy-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 79.89,
+    "optical": -1.05,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "chip": {
+    "h": 28,
+    "w": 49.95,
+    "optical": -1.05,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "vtag": {
+    "h": 21.28,
+    "w": 52.02,
+    "optical": -1.14,
+    "padStart": 20.06,
+    "padEnd": 9.59,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-new": {
+    "h": 18.31,
+    "w": 36.69,
+    "optical": -1.16,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-closed": {
+    "h": 18.31,
+    "w": 46.78,
+    "optical": -1.16,
+    "padStart": 16.83,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 75.84,
+    "optical": 0.82,
+    "padStart": 15.19,
+    "padEnd": 27.34,
+    "size": 12.8,
+    "font": "Readex Pro",
+    "script": "ar",
+    "countBaselineDelta": -0.25
+   },
+   "scope": {
+    "h": 29.55,
+    "w": 74.28,
+    "optical": -0.44,
+    "padStart": 12.8,
+    "padEnd": 25.83,
+    "size": 11.52,
+    "font": "Readex Pro",
+    "script": "ar"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -4,
+   "markOpticalDelta": -3.31,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 134.97,
+   "titleFont": "Amiri",
+   "titleSize": 28
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 302.67,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 15.39
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 304.3,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 1,
+   "parser": 1,
+   "drug-list": 1,
+   "paid-calculator": 1,
+   "id-dates": 0,
+   "roi": 1,
+   "qisma-mizan": 0,
+   "pattern-recognition": 1,
+   "plan-maker": 1,
+   "criteria-builder": 0,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 0
+  }
+ },
+ "ar-light-compact-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 79.89,
+    "optical": -1.05,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "chip": {
+    "h": 28,
+    "w": 49.95,
+    "optical": -1.05,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "vtag": {
+    "h": 21.28,
+    "w": 52.02,
+    "optical": -1.14,
+    "padStart": 20.06,
+    "padEnd": 9.59,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-new": {
+    "h": 18.31,
+    "w": 36.69,
+    "optical": -1.16,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-closed": {
+    "h": 18.31,
+    "w": 46.78,
+    "optical": -1.16,
+    "padStart": 16.83,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 75.84,
+    "optical": 0.82,
+    "padStart": 15.19,
+    "padEnd": 27.34,
+    "size": 12.8,
+    "font": "Readex Pro",
+    "script": "ar",
+    "countBaselineDelta": -0.25
+   },
+   "scope": {
+    "h": 29.6,
+    "w": 74.39,
+    "optical": -0.46,
+    "padStart": 12.82,
+    "padEnd": 25.86,
+    "size": 11.52,
+    "font": "Readex Pro",
+    "script": "ar"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -2,
+   "markOpticalDelta": -2.16,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 113.48,
+   "titleFont": "Amiri",
+   "titleSize": 22.08
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 302.67,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 15.39
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 304.3,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 1,
+   "parser": 1,
+   "drug-list": 1,
+   "paid-calculator": 1,
+   "id-dates": 0,
+   "roi": 1,
+   "qisma-mizan": 0,
+   "pattern-recognition": 1,
+   "plan-maker": 1,
+   "criteria-builder": 0,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 0
+  }
+ },
+ "ar-dark-cozy-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 79.89,
+    "optical": -1.05,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "chip": {
+    "h": 28,
+    "w": 49.95,
+    "optical": -1.05,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "vtag": {
+    "h": 21.28,
+    "w": 52.02,
+    "optical": -1.14,
+    "padStart": 20.06,
+    "padEnd": 9.59,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-new": {
+    "h": 18.31,
+    "w": 36.69,
+    "optical": -1.16,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-closed": {
+    "h": 18.31,
+    "w": 46.78,
+    "optical": -1.16,
+    "padStart": 16.83,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 75.84,
+    "optical": 0.82,
+    "padStart": 15.19,
+    "padEnd": 27.34,
+    "size": 12.8,
+    "font": "Readex Pro",
+    "script": "ar",
+    "countBaselineDelta": -0.25
+   },
+   "scope": {
+    "h": 29.55,
+    "w": 74.28,
+    "optical": -0.44,
+    "padStart": 12.8,
+    "padEnd": 25.83,
+    "size": 11.52,
+    "font": "Readex Pro",
+    "script": "ar"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -4,
+   "markOpticalDelta": -3.31,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 134.97,
+   "titleFont": "Amiri",
+   "titleSize": 28
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 302.67,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 15.39
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 304.3,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 1,
+   "parser": 1,
+   "drug-list": 1,
+   "paid-calculator": 1,
+   "id-dates": 0,
+   "roi": 1,
+   "qisma-mizan": 0,
+   "pattern-recognition": 1,
+   "plan-maker": 1,
+   "criteria-builder": 0,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 0
+  }
+ },
+ "ar-dark-compact-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 79.89,
+    "optical": -1.05,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "chip": {
+    "h": 28,
+    "w": 49.95,
+    "optical": -1.05,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "vtag": {
+    "h": 21.28,
+    "w": 52.02,
+    "optical": -1.14,
+    "padStart": 20.06,
+    "padEnd": 9.59,
+    "size": 12.16,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-new": {
+    "h": 18.31,
+    "w": 36.69,
+    "optical": -1.16,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "flag-closed": {
+    "h": 18.31,
+    "w": 46.78,
+    "optical": -1.16,
+    "padStart": 16.83,
+    "padEnd": 9,
+    "size": 9.6,
+    "font": "Readex Pro",
+    "script": "ar"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 75.84,
+    "optical": 0.82,
+    "padStart": 15.19,
+    "padEnd": 27.34,
+    "size": 12.8,
+    "font": "Readex Pro",
+    "script": "ar",
+    "countBaselineDelta": -0.25
+   },
+   "scope": {
+    "h": 29.6,
+    "w": 74.39,
+    "optical": -0.46,
+    "padStart": 12.82,
+    "padEnd": 25.86,
+    "size": 11.52,
+    "font": "Readex Pro",
+    "script": "ar"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -2,
+   "markOpticalDelta": -2.16,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 113.48,
+   "titleFont": "Amiri",
+   "titleSize": 22.08
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 302.67,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 15.39
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": 2.23,
+   "countX": 304.3,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 1,
+   "parser": 1,
+   "drug-list": 1,
+   "paid-calculator": 1,
+   "id-dates": 0,
+   "roi": 1,
+   "qisma-mizan": 0,
+   "pattern-recognition": 1,
+   "plan-maker": 1,
+   "criteria-builder": 0,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 0
+  }
+ },
+ "en-light-cozy-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 63.73,
+    "optical": 2.09,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "chip": {
+    "h": 28,
+    "w": 43.14,
+    "optical": 2.09,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "vtag": {
+    "h": 23.52,
+    "w": 47.81,
+    "optical": 0.74,
+    "padStart": 20.64,
+    "padEnd": 9.59,
+    "size": 13.44,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "flag-new": {
+    "h": 17.22,
+    "w": 37.41,
+    "optical": -0.11,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "flag-closed": {
+    "h": 17.22,
+    "w": 64.38,
+    "optical": -0.11,
+    "padStart": 16.58,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 83.08,
+    "optical": 0.7,
+    "padStart": 15.19,
+    "padEnd": 26.03,
+    "size": 14.4,
+    "font": "Newsreader",
+    "script": "en",
+    "countBaselineDelta": -1.64
+   },
+   "scope": {
+    "h": 29.55,
+    "w": 59.75,
+    "optical": 0.46,
+    "padStart": 12.8,
+    "padEnd": 24.87,
+    "size": 11.52,
+    "font": "Newsreader",
+    "script": "en"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -5,
+   "markOpticalDelta": -1.75,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 127.09,
+   "titleFont": "Fraunces",
+   "titleSize": 24.8
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 962.33,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 13.8
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 960.7,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 0,
+   "parser": 0,
+   "drug-list": 0,
+   "paid-calculator": 1,
+   "id-dates": 1,
+   "roi": 0,
+   "qisma-mizan": 1,
+   "pattern-recognition": 1,
+   "plan-maker": 0,
+   "criteria-builder": 1,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 1
+  }
+ },
+ "en-light-compact-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 63.73,
+    "optical": 2.09,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "chip": {
+    "h": 28,
+    "w": 43.14,
+    "optical": 2.09,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "vtag": {
+    "h": 23.52,
+    "w": 47.81,
+    "optical": 0.74,
+    "padStart": 20.64,
+    "padEnd": 9.59,
+    "size": 13.44,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "flag-new": {
+    "h": 17.22,
+    "w": 37.41,
+    "optical": -0.11,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "flag-closed": {
+    "h": 17.22,
+    "w": 64.38,
+    "optical": -0.11,
+    "padStart": 16.58,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 83.08,
+    "optical": 0.7,
+    "padStart": 15.19,
+    "padEnd": 26.03,
+    "size": 14.4,
+    "font": "Newsreader",
+    "script": "en",
+    "countBaselineDelta": -1.64
+   },
+   "scope": {
+    "h": 29.62,
+    "w": 59.89,
+    "optical": 0.44,
+    "padStart": 12.84,
+    "padEnd": 24.93,
+    "size": 11.52,
+    "font": "Newsreader",
+    "script": "en"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -3,
+   "markOpticalDelta": -1.23,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 108.34,
+   "titleFont": "Fraunces",
+   "titleSize": 20.48
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 962.33,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 13.8
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 960.7,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 0,
+   "parser": 0,
+   "drug-list": 0,
+   "paid-calculator": 1,
+   "id-dates": 1,
+   "roi": 0,
+   "qisma-mizan": 1,
+   "pattern-recognition": 1,
+   "plan-maker": 0,
+   "criteria-builder": 1,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 1
+  }
+ },
+ "en-dark-cozy-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 63.73,
+    "optical": 2.09,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "chip": {
+    "h": 28,
+    "w": 43.14,
+    "optical": 2.09,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "vtag": {
+    "h": 23.52,
+    "w": 47.81,
+    "optical": 0.74,
+    "padStart": 20.64,
+    "padEnd": 9.59,
+    "size": 13.44,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "flag-new": {
+    "h": 17.22,
+    "w": 37.41,
+    "optical": -0.11,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "flag-closed": {
+    "h": 17.22,
+    "w": 64.38,
+    "optical": -0.11,
+    "padStart": 16.58,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 83.08,
+    "optical": 0.7,
+    "padStart": 15.19,
+    "padEnd": 26.03,
+    "size": 14.4,
+    "font": "Newsreader",
+    "script": "en",
+    "countBaselineDelta": -1.64
+   },
+   "scope": {
+    "h": 29.55,
+    "w": 59.75,
+    "optical": 0.46,
+    "padStart": 12.8,
+    "padEnd": 24.87,
+    "size": 11.52,
+    "font": "Newsreader",
+    "script": "en"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -5,
+   "markOpticalDelta": -1.75,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 127.09,
+   "titleFont": "Fraunces",
+   "titleSize": 24.8
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 962.33,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 13.8
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 960.7,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 0,
+   "parser": 0,
+   "drug-list": 0,
+   "paid-calculator": 1,
+   "id-dates": 1,
+   "roi": 0,
+   "qisma-mizan": 1,
+   "pattern-recognition": 1,
+   "plan-maker": 0,
+   "criteria-builder": 1,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 1
+  }
+ },
+ "en-dark-compact-1280x800-x1": {
+  "pills": {
+   "chip-current": {
+    "h": 28,
+    "w": 63.73,
+    "optical": 2.09,
+    "padStart": 24.27,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "chip": {
+    "h": 28,
+    "w": 43.14,
+    "optical": 2.09,
+    "padStart": 13.8,
+    "padEnd": 13.8,
+    "size": 12.16,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "vtag": {
+    "h": 23.52,
+    "w": 47.81,
+    "optical": 0.74,
+    "padStart": 20.64,
+    "padEnd": 9.59,
+    "size": 13.44,
+    "font": "Newsreader",
+    "script": "en"
+   },
+   "flag-new": {
+    "h": 17.22,
+    "w": 37.41,
+    "optical": -0.11,
+    "padStart": 9,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "flag-closed": {
+    "h": 17.22,
+    "w": 64.38,
+    "optical": -0.11,
+    "padStart": 16.58,
+    "padEnd": 9,
+    "size": 8.96,
+    "font": "IBM Plex Mono",
+    "script": "en"
+   },
+   "tab": {
+    "h": 36.02,
+    "w": 83.08,
+    "optical": 0.7,
+    "padStart": 15.19,
+    "padEnd": 26.03,
+    "size": 14.4,
+    "font": "Newsreader",
+    "script": "en",
+    "countBaselineDelta": -1.64
+   },
+   "scope": {
+    "h": 29.62,
+    "w": 59.89,
+    "optical": 0.44,
+    "padStart": 12.84,
+    "padEnd": 24.93,
+    "size": 11.52,
+    "font": "Newsreader",
+    "script": "en"
+   }
+  },
+  "row": {
+   "folioBaselineDelta": -3,
+   "markOpticalDelta": -1.23,
+   "hostBaselineDelta": 0,
+   "hostWidth": 129.11,
+   "rowHeight": 108.34,
+   "titleFont": "Fraunces",
+   "titleSize": 20.48
+  },
+  "searchEmpty": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 962.33,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 13.8
+  },
+  "searchTyped": {
+   "height": 58,
+   "iconCentre": 0,
+   "countCentre": -0.16,
+   "countX": 960.7,
+   "padInlineStart": 18.59,
+   "padInlineEnd": 9
+  },
+  "chipWidths": {
+   "ledger-form": 0,
+   "parser": 0,
+   "drug-list": 0,
+   "paid-calculator": 1,
+   "id-dates": 1,
+   "roi": 0,
+   "qisma-mizan": 1,
+   "pattern-recognition": 1,
+   "plan-maker": 0,
+   "criteria-builder": 1,
+   "pillbug": 0,
+   "prep": 1,
+   "text-tools": 1
+  }
+ }
+}

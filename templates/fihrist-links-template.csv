@@ -1,0 +1,8 @@
+﻿url,name_ar,name_en,description_ar,description_en,group,variant,aliases,pigment,key
+https://calendar.google.com,التقويم,Calendar,جدول المواعيد والاجتماعات,Meetings and schedule,أدوات العمل,,"مواعيد, calendar",lapis,
+https://docs.google.com,المستندات,Docs,كتابة المستندات,Write documents,أدوات العمل,Docs,"word, كتابة",indigo,
+https://docs.google.com/spreadsheets,المستندات,Docs,,,أدوات العمل,Sheets,"excel, جداول",verdigris,
+https://example.com/ar-only,دليل الموظف,,دليل داخلي للموظفين,,أدوات العمل,,دليل,madder,
+https://news.ycombinator.com,,Hacker News,,Tech news,Personal,,"news, hn",orpiment,
+https://github.com,,GitHub,,Code hosting,Personal,,"git, repos",bone,
+https://wikipedia.org,,Wikipedia,,The free encyclopedia,Personal,,"encyclopedia, wiki",tyrian,

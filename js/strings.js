@@ -1,6 +1,6 @@
 window.F.STR = {
   ar: {
-    wordmark: 'فهرست', placeholder: 'ابحث عن أداة أو نسخة…', all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
+    wordmark: 'فهرست', placeholder: 'ابحث بالاسم أو الوصف أو الرابط…', hints: ['ابحث بالاسم أو الوصف أو الرابط…', 'جرّب: @vercel', 'جرّب: #طباعة خط', 'اكتب > للأوامر'], all: 'الكل', recent: 'الأخيرة', pinnedG: 'المثبّتة',
     elsewhere: 'في أقسام أخرى', partial: 'نتائج جزئية · لا تطابق لـ',
     empty: 'لا نتائج', emptyHint: 'جرّب كلمة أخرى أو امسح البحث', swapTry: 'هل تقصد', clearAll: 'مسح البحث والتصنيف',
     copied: 'تم نسخ الرابط', copyFail: 'تعذّر النسخ', closed: 'مغلق', isNew: 'جديد',
@@ -18,26 +18,27 @@ window.F.STR = {
     prefsSaved: 'تم حفظ النسخة الاحتياطية', prefsLoaded: 'تمت استعادة التفضيلات', historyCleared: 'تم مسح السجل', dropHere: 'أفلت ملف fihrist.json هنا',
     newData: 'تحديث متاح', apply: 'تطبيق', offline: 'غير متصل', online: 'عاد الاتصال',
     k: [['/', '⌘K', 'بحث'], ['↑', '↓', 'تنقّل'], ['←', '→', 'تبديل النسخة'], ['⌥', '← →', 'تبديل النسخة أثناء البحث'], ['↵', '', 'فتح'], ['⌘', '↵', 'تبويب جديد'], ['⇧', '↵', 'الإجراءات'],
-      ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم (خارج خانة البحث)'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Esc', '', 'مسح / إغلاق'],
+      ['⌥', 'P', 'تثبيت'], ['⌥', 'C', 'نسخ الرابط'], ['1–9', '', 'قفز بالرقم (خارج خانة البحث)'], ['⌥', '1–9', 'تبويب حسب الترتيب'], ['?', '', 'الاختصارات'], ['Tab', '', 'البحث داخل قالب رابط'], ['@', '', 'بحث بالموقع'], ['#', '', 'حصر في مجموعة'], ['>', '', 'أوامر'], ['Esc', '', 'مسح / إغلاق'],
       ['>', '', 'الأوامر'], ['g', 'حرف', 'فتح الأداة بالاختصار'], ['⌥', 'S', 'إظهار أو إخفاء «اليوم»'], ['⌥', 'T', 'تبديل المظهر'], ['⌥', 'L', 'تبديل اللغة']],
     shelfTitle: 'اليوم', shelfHide: 'إخفاء', shelfHidden: 'تم إخفاء «اليوم»', shelfShow: 'إظهار «اليوم»',
     behaviour: 'السلوك', prefs: 'التفضيلات', motion: 'الحركة', motionAuto: 'تلقائي', motionReduced: 'مخففة',
     commands: 'الأوامر', cmdHint: 'اكتب ‎>‎ للأوامر', cmdDone: 'تم',
     qr: 'رمز QR', back: 'رجوع', scopeAll: 'كل الأقسام', swNew: 'نسخة جديدة من فهرست', reload: 'إعادة التحميل',
-    whatsNewTitle: 'الجديد في الإصدار ٥', whatsNewToast: 'فهرست ٥ · أسرع وأنعم', see: 'عرض', last14: 'آخر ١٤ يومًا',
+    whatsNewTitle: 'الجديد في الإصدار ٥٫٥', whatsNewToast: 'فهرست ٥٫٥ · بحث أذكى وروابطك معك', see: 'عرض', last14: 'آخر ١٤ يومًا',
     gHint: 'g… اضغط حرف الأداة', current: 'الحالي', on: 'مفعّل', off: 'متوقف', langName: { ar: 'العربية', en: 'الإنجليزية' },
-    qrScan: 'امسح الرمز لفتح الرابط على هاتفك', qrLong: 'الرابط أطول من أن يُرمَّز',
-    whatsNew: ['«اليوم»: أدواتك المثبّتة والأكثر استخدامًا في مكان واحد', 'قائمة أنعم تتحرك دون وميض أثناء الكتابة', 'اكتب ‎>‎ لتغيير الإعدادات بسرعة', 'ورقة أداة جديدة مع إحصاء آخر ١٤ يومًا', 'يمكن تثبيت فهرست كتطبيق ويعمل دون اتصال'],
+    qrScan: 'امسح الرمز لفتح الرابط على هاتفك', qrLong: 'الرابط أطول من أن يُرمَّز', guess: 'أقرب تطابق للوصف', mine: 'روابطي', mineAdd: 'إضافة رابط', mineImport: 'استيراد ملف', mineTplX: 'قالب Excel', mineTplC: 'قالب CSV', mineExX: 'تصدير Excel', mineExC: 'تصدير CSV', mineExJ: 'تصدير JSON', mineClear: 'حذف كل روابطي', mineEdit: 'تعديل', mineDel: 'حذف', openLink: 'فتح هذا الرابط', addLink: 'إضافة إلى روابطي',
+    whatsNew: ['بحث أذكى: بالاسم أو بوصف ما تريد أو بالرابط نفسه', 'مرشّحان سريعان: ‎@‎ للموقع و ‎#‎ للمجموعة', 'روابطك: أضفها أو استوردها من Excel أو CSV، مع قالب جاهز', 'تنسيق أدق: أزرار وشارات متراصّة بدقة في العربية والإنجليزية', 'أسرع مع مئات الروابط، وكل ما في ٥٫٠ باقٍ كما هو'],
     cmd: {
       'theme.system': 'المظهر: تلقائي', 'theme.light': 'المظهر: فاتح', 'theme.dark': 'المظهر: داكن', 'lang.toggle': 'اللغة: تبديل',
       'density.cozy': 'الكثافة: مريح', 'density.compact': 'الكثافة: مضغوط', 'open.same': 'الفتح: نفس التبويب', 'open.new': 'الفتح: تبويب جديد',
       'shelf.toggle': 'إظهار أو إخفاء «اليوم»', 'motion.auto': 'الحركة: تلقائي', 'motion.reduced': 'الحركة: مخففة',
       'data.check': 'البيانات: البحث عن تحديث', 'data.import': 'البيانات: استيراد ملف', 'data.export': 'البيانات: تصدير', 'data.revert': 'البيانات: العودة للمدمجة',
-      'prefs.export': 'التفضيلات: نسخ احتياطي', 'prefs.import': 'التفضيلات: استعادة', 'history.clear': 'السجل: مسح', 'keys.show': 'عرض الاختصارات', 'whatsnew.show': 'الجديد في الإصدار ٥'
+      'mine.add': 'روابطي: إضافة رابط', 'mine.import': 'روابطي: استيراد ملف', 'mine.template': 'روابطي: تنزيل القالب', 'mine.export': 'روابطي: تصدير',
+      'prefs.export': 'التفضيلات: نسخ احتياطي', 'prefs.import': 'التفضيلات: استعادة', 'history.clear': 'السجل: مسح', 'keys.show': 'عرض الاختصارات', 'whatsnew.show': 'الجديد في الإصدار ٥٫٥'
     }
   },
   en: {
-    wordmark: 'Fihrist', placeholder: 'Search tools or versions…', all: 'All', recent: 'Recent', pinnedG: 'Pinned',
+    wordmark: 'Fihrist', placeholder: 'Search by name, description or link…', hints: ['Search by name, description or link…', 'Try: @vercel', 'Try: #print font', 'Type > for commands'], all: 'All', recent: 'Recent', pinnedG: 'Pinned',
     elsewhere: 'In other sections', partial: 'Partial matches · no match for',
     empty: 'No matches', emptyHint: 'Try another word or clear the search', swapTry: 'Did you mean', clearAll: 'Clear search and filter',
     copied: 'Link copied', copyFail: "Couldn't copy", closed: 'Closed', isNew: 'New',
@@ -55,22 +56,23 @@ window.F.STR = {
     prefsSaved: 'Backup saved', prefsLoaded: 'Preferences restored', historyCleared: 'History cleared', dropHere: 'Drop fihrist.json here',
     newData: 'Update available', apply: 'Apply', offline: 'Offline', online: 'Back online',
     k: [['/', '⌘K', 'Search'], ['↑', '↓', 'Browse'], ['←', '→', 'Switch version'], ['⌥', '← →', 'Switch version while searching'], ['↵', '', 'Open'], ['⌘', '↵', 'New tab'], ['⇧', '↵', 'Actions'],
-      ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio (outside the search box)'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Esc', '', 'Clear / close'],
+      ['⌥', 'P', 'Pin'], ['⌥', 'C', 'Copy link'], ['1–9', '', 'Jump by folio (outside the search box)'], ['⌥', '1–9', 'Tab by position'], ['?', '', 'Shortcuts'], ['Tab', '', 'Search inside a link template'], ['@', '', 'Search by host'], ['#', '', 'Limit to a group'], ['>', '', 'Commands'], ['Esc', '', 'Clear / close'],
       ['>', '', 'Commands'], ['g', 'key', 'Open tool by hotkey'], ['⌥', 'S', 'Show or hide Today'], ['⌥', 'T', 'Cycle theme'], ['⌥', 'L', 'Toggle language']],
     shelfTitle: 'Today', shelfHide: 'Hide', shelfHidden: 'Today shelf hidden', shelfShow: 'Show Today shelf',
     behaviour: 'Behaviour', prefs: 'Preferences', motion: 'Motion', motionAuto: 'Auto', motionReduced: 'Reduced',
     commands: 'Commands', cmdHint: 'Type > for commands', cmdDone: 'Done',
     qr: 'QR code', back: 'Back', scopeAll: 'All sections', swNew: 'New version of Fihrist', reload: 'Reload',
-    whatsNewTitle: "What's new in v5", whatsNewToast: 'Fihrist 5 · faster and smoother', see: 'See', last14: 'Last 14 days',
+    whatsNewTitle: "What's new in v5.5", whatsNewToast: 'Fihrist 5.5 · smarter search, your own links', see: 'See', last14: 'Last 14 days',
     gHint: 'g… press a tool key', current: 'Current', on: 'On', off: 'Off', langName: { ar: 'Arabic', en: 'English' },
-    qrScan: 'Scan to open this link on your phone', qrLong: 'This link is too long for a QR code',
-    whatsNew: ['Today shelf: your pinned and most-used tools in one place', 'A smoother list that never flickers while you type', 'Type > to change settings fast', 'New tool sheet with a 14-day usage chart', 'Install Fihrist as an app; it works offline'],
+    qrScan: 'Scan to open this link on your phone', qrLong: 'This link is too long for a QR code', guess: 'Best match for your description', mine: 'My links', mineAdd: 'Add link', mineImport: 'Import file', mineTplX: 'Excel template', mineTplC: 'CSV template', mineExX: 'Export Excel', mineExC: 'Export CSV', mineExJ: 'Export JSON', mineClear: 'Remove all my links', mineEdit: 'Edit', mineDel: 'Delete', openLink: 'Open this link', addLink: 'Add to My links',
+    whatsNew: ['Smarter search: by name, by describing what you want, or by the link itself', 'Two quick filters: @ for the host and # for a group', 'Your own links: add them, or import Excel or CSV with a ready template', 'Sharper details: pills and badges line up exactly in Arabic and English', 'Faster with hundreds of links, and everything from 5.0 is kept'],
     cmd: {
       'theme.system': 'Theme: Auto', 'theme.light': 'Theme: Light', 'theme.dark': 'Theme: Dark', 'lang.toggle': 'Language: Switch',
       'density.cozy': 'Density: Cozy', 'density.compact': 'Density: Compact', 'open.same': 'Open in: Same tab', 'open.new': 'Open in: New tab',
       'shelf.toggle': 'Show or hide Today shelf', 'motion.auto': 'Motion: Auto', 'motion.reduced': 'Motion: Reduced',
       'data.check': 'Data: Check for update', 'data.import': 'Data: Import file', 'data.export': 'Data: Export', 'data.revert': 'Data: Revert to built-in',
-      'prefs.export': 'Preferences: Back up', 'prefs.import': 'Preferences: Restore', 'history.clear': 'History: Clear', 'keys.show': 'Show shortcuts', 'whatsnew.show': "What's new in v5"
+      'mine.add': 'My links: Add a link', 'mine.import': 'My links: Import a file', 'mine.template': 'My links: Download the template', 'mine.export': 'My links: Export',
+      'prefs.export': 'Preferences: Back up', 'prefs.import': 'Preferences: Restore', 'history.clear': 'History: Clear', 'keys.show': 'Show shortcuts', 'whatsnew.show': "What's new in v5.5"
     }
   }
 };

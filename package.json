@@ -1,0 +1,22 @@
+{
+  "name": "fihrist",
+  "private": true,
+  "description": "Dev tooling only. The app itself has no runtime dependencies.",
+  "scripts": {
+    "check": "node tools/build.js --check",
+    "lint": "node tools/lint.js",
+    "bench": "node tools/bench.js",
+    "qa:shots": "node qa/shots.mjs",
+    "qa:measure": "node qa/measure.mjs",
+    "qa:behavior": "node qa/behavior.mjs",
+    "qa:perf": "node qa/perf.mjs"
+  },
+  "devDependencies": {
+    "@fontsource-variable/fraunces": "^5.0.0",
+    "@fontsource-variable/newsreader": "^5.0.0",
+    "@fontsource-variable/readex-pro": "^5.0.0",
+    "@fontsource/amiri": "^5.0.0",
+    "@fontsource/ibm-plex-mono": "^5.0.0",
+    "playwright": "^1.63.0"
+  }
+}

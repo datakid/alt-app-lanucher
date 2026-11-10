@@ -60,7 +60,7 @@ shell.forEach(function (rel) {
   var file = path.join(root, rel);
   if (!fs.existsSync(file)) fail('sw.js lists a missing file: ' + rel);
   hash.update(rel + '\n');
-  if (/\.(png|ico|woff2?)$/i.test(rel)) hash.update(fs.readFileSync(file));
+  if (/\.(png|ico|woff2?|xlsx)$/i.test(rel)) hash.update(fs.readFileSync(file));
   else hash.update(file === out ? built : readText(file));
   hash.update('\n');
 });
@@ -72,7 +72,10 @@ var summary = 'revision ' + doc.revision + ', ' + doc.tools.length + ' tools, ' 
 
 if (check) {
   if (pending.length) fail(pending.map(function (p) { return p.name; }).join(', ') + ' out of date. Run: node tools/build.js');
+  if (!require('./lint').run(false)) fail('lint failed');
   if (!regress.run(false)) fail('search regression failed');
+  if (!require('./regress55').run(false)) fail('search expectations failed');
+  if (!require('./regress-mine').run(false)) fail('personal links checks failed');
   console.log('in sync (' + summary + ')');
 } else if (!pending.length) {
   console.log('already up to date (' + summary + ')');

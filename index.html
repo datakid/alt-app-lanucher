@@ -44,10 +44,11 @@
     <label class="seek__field" id="seek-field">
       <svg class="seek__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
       <input id="seek" class="seek__input" type="search" role="combobox" aria-expanded="true" aria-controls="listbox" aria-autocomplete="list" aria-activedescendant="" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
+      <span class="seek__hint" id="seek-hint" aria-hidden="true"></span>
       <button class="seek__scope" id="seek-scope" type="button" hidden></button>
       <span class="seek__count" id="seek-count" aria-hidden="true"></span>
-      <kbd class="kbd" aria-hidden="true">/</kbd>
-      <button class="seek__clear" id="seek-clear" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <span class="seek__tail"><kbd class="kbd" aria-hidden="true">/</kbd>
+      <button class="seek__clear" id="seek-clear" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
     </label>
   </div>
   <nav class="tabs" id="tabs" role="tablist"><span class="tabs__ink" id="tabs-ink" aria-hidden="true"></span></nav>
@@ -91,7 +92,7 @@
 </dialog>
 
 <div class="toast" id="toast"><div class="toast__body" id="toast-body" role="status"></div></div>
-<div class="plate" id="plate" aria-hidden="true"><div class="plate__fill" id="plate-fill"></div><span class="plate__title" id="plate-title"></span></div>
+<div class="plate" id="plate" aria-hidden="true"><div class="plate__fill" id="plate-fill"></div><span class="plate__dia"></span><span class="plate__title" id="plate-title"></span></div>
 <div class="ghint" id="ghint" aria-hidden="true" hidden></div>
 <div class="drop" id="drop" aria-hidden="true"></div>
 

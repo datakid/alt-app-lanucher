@@ -1,5 +1,30 @@
 # Changelog
 
+## 5.5 — 2026-11-07
+
+### Added
+- **Smart search.** A link, a host or part of a link finds the tool and the exact version (`lx-parser.vercel`, `simpledashboard21`, `https://example.org/x`). Describe what you want in a sentence, in Arabic, English or Franco, and the closest tools show under a "Best match for your description" band with the matching words highlighted. `@netlify` searches hosts only, `#print font` searches inside a group, and a link that matches nothing offers **Open this link**.
+- **Lexicon.** An optional `lexicon` object in `fihrist.json` teaches description search your own synonyms. The schema documents it.
+- **My links.** Add personal links one by one, paste several lines at once, or import an Excel (`.xlsx`) or CSV file with a preview, merge or replace, and Undo. Personal links live in their own key (`fihrist:mine:v1`), sync across open tabs, appear in search, tabs and the Today shelf with a small diamond, and survive **Revert to built-in data**. Export them as Excel, CSV or JSON. Templates are in `templates/`.
+- **Keyword templates.** A link containing `{q}` or `%s` is a template. Type to find it, press **Tab**, type an argument and press Enter. Arabic arguments are encoded.
+- A small dependency-free spreadsheet reader and writer (`js/xlsx.js`), loaded only when needed. No third-party script is added.
+- Developer tooling: `tools/lint.js`, `tools/bench.js`, `tools/regress55.js`, `tools/regress-mine.js`, generated fixtures, and a Playwright harness in `qa/`.
+
+- **Data revision 8** (`fihrist.json`): a new **Practice** group; Power Query Manager (Tools), Platen, Reaction Time and Basic Cover (Print) added; Typing Practice moved to Practice; Waymark added as a third Criteria Builder version; Entity Viewer added as the Alt of Entity Tracker. Descriptions are terse and factual in both languages.
+
+### Changed
+- Pills, badges, tabs, segmented controls and the search field now share one size and spacing scale and one face (Readex Pro) in both languages, with the text centred optically. Version chips keep a fixed width when selected, and indicators are diamonds.
+- Rows follow baseline rules (folio, title and host line up), the host is shortened in the middle and reads at full contrast, and spacing comes from tokens.
+- Visual identity: a ruled margin that the caret rides on, rubricated group bands that end in a diamond, an illuminated active row, pigment drops, a faint paper grain, a focus underline and a rotating search hint.
+- The search index builds 2 to 4 times faster than in 5.0.1 (field forms and join text are made only when a query needs them, words are split with native string search, the vocabulary uses a `Map`). It is built in small slices during idle time, so it no longer sits in front of the first paint, and a search typed meanwhile finishes the rest at once. Results are cached and only visible rows are measured, so typing stays fast with hundreds of links.
+- Hidden rows are hidden in place instead of being removed from the page.
+
+### Fixed
+- Everything listed under 5.0.1.
+
+### Kept
+- The 28 v4 search queries return exactly the same results. Every 5.0 shortcut is kept. Storage keys are unchanged. `fihrist/4` and `fihrist/5` files still load, and exporting data with no personal links is byte-identical to 5.0.
+
 ## 5.0.1 — 2026-11-04
 
 ### Fixed

@@ -30,18 +30,25 @@ F.setText = setText;
 var DATA = [], BY_ID = Object.create(null), GROUPS = [], GMETA = Object.create(null), rows = Object.create(null), bands = Object.create(null), NEW_WINDOW = 21 * 864e5;
 F.rows = rows; F.byId = BY_ID;
 F.setDoc = function (doc, src) {
+  F.lexicon = doc.lexicon || null;
   F.doc = doc; F.docSrc = src;
-  DATA = F.DATA = doc.tools; GROUPS = doc.groups.map(function (g) { return g.id; });
+  var mine = F.mineDoc(), taken = Object.create(null), allGroups = doc.groups.concat(mine.groups);
+  doc.tools.forEach(function (t) { if (t.kbd) taken[t.kbd] = 1; });
+  mine.tools.forEach(function (t) { if (t.kbd && taken[t.kbd]) t.kbd = ''; else if (t.kbd) taken[t.kbd] = 1; });
+  F.mineGroupIds = Object.create(null);
+  mine.groups.forEach(function (g) { F.mineGroupIds[g.id] = 1; });
+  DATA = F.DATA = mine.tools.length ? doc.tools.concat(mine.tools) : doc.tools; GROUPS = allGroups.map(function (g) { return g.id; });
   GMETA = Object.create(null);
   GMETA.pinned = { ar: F.STR.ar.pinnedG, en: F.STR.en.pinnedG, icon: 'pinF' };
   GMETA.recent = { ar: F.STR.ar.recent, en: F.STR.en.recent, icon: 'clock' };
   GMETA.elsewhere = { ar: F.STR.ar.elsewhere, en: F.STR.en.elsewhere, icon: 'ext' };
   GMETA.partial = { ar: F.STR.ar.partial, en: F.STR.en.partial, icon: 'search' };
-  doc.groups.forEach(function (g) { GMETA[g.id] = { id: g.id, ar: g.ar, en: g.en, icon: g.icon || 'box' }; });
+  GMETA.guess = { ar: F.STR.ar.guess, en: F.STR.en.guess, icon: 'search' };
+  allGroups.forEach(function (g) { GMETA[g.id] = { id: g.id, ar: g.ar, en: g.en, icon: g.icon || 'box', mine: !!F.mineGroupIds[g.id] }; });
   F.GMETA = GMETA;
   Object.keys(BY_ID).forEach(function (k) { delete BY_ID[k]; });
   var now = Date.now();
-  F.prepare(DATA, doc.groups);
+  F.prepare(DATA, allGroups);
   DATA.forEach(function (d, i) {
     d.folio = i + 1; BY_ID[d.id] = d; d.pig = 'var(--p-' + d.pigment + ')';
     var age = now - Date.parse(d.since);
@@ -71,23 +78,52 @@ F.target = function (d, v) {
 };
 var target = F.target;
 
+var inView = new Set(), ioReady = false, inkBoot = 0;
+var viewIO = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
+  ioReady = true;
+  entries.forEach(function (e) {
+    if (e.isIntersecting) {
+      inView.add(e.target);
+      var rr = e.target._row;
+      if (rr && rr.inkStale) { rr.inkStale = false; placeInk(rr); }
+    } else inView.delete(e.target);
+  });
+}, { rootMargin: '100% 0px 100% 0px' }) : null;
+function inkAllowed(r) {
+  if (!viewIO || inView.has(r.li)) return true;
+  if (!ioReady) return ++inkBoot <= 30;
+  return false;
+}
 var inkRO = 'ResizeObserver' in window ? new ResizeObserver(function (entries) {
   var list = [];
-  entries.forEach(function (e) { var r = e.target._r; if (r && r.ink) { var tg = target(r.d, r.matchV); list.push([r.ink, tg.v ? r.chips[tg.v.id] : null]); } });
-  M.slideMany(list, 'xy');
+  entries.forEach(function (e) {
+    var r = e.target._r;
+    if (!r || !r.ink) return;
+    if (!inkAllowed(r)) { r.inkStale = true; return; }
+    var tg = target(r.d, r.matchV); list.push([r.ink, tg.v ? r.chips[tg.v.id] : null]);
+  });
+  if (list.length) M.slideMany(list, 'xy');
 }) : null;
 
+function shortHost(h) {
+  if (h.length <= 26) return h;
+  var dot = h.indexOf('.');
+  if (dot < 0) return h.slice(0, 12) + '\u2026' + h.slice(-12);
+  var tail = h.slice(dot + 1);
+  return h.slice(0, Math.min(dot, 8)) + '\u2026' + (tail.length > 16 ? h.slice(-14) : tail);
+}
 function buildRow(d) {
   var li = el('li', 'row'); li.setAttribute('role', 'presentation'); li.dataset.id = d.id; li.style.setProperty('--pigment', d.pig);
   var a = el('a', 'row-link', li); a.id = 'opt-' + d.id; a.tabIndex = -1; a.draggable = false; a.rel = 'noopener'; a.setAttribute('role', 'option'); a.setAttribute('aria-selected', 'false');
   var folio = el('span', 'folio', a); folio.setAttribute('aria-hidden', 'true'); el('span', 'mark', a).setAttribute('aria-hidden', 'true');
   var body = el('span', 'body', a), tl = el('span', 'title-line', body);
-  var title = el('span', 'title', tl), vtag = d.variants ? el('span', 'vtag', tl) : null, flag = el('span', 'flag', tl);
+  var title = el('span', 'title', tl), vtag = d.variants ? el('span', 'vtag', tl) : null, flag = el('span', 'flag', tl), tpl = el('span', 'tpl', tl);
+  tpl.hidden = true; tpl.textContent = '{q}'; tpl.setAttribute('aria-hidden', 'true');
   if (vtag) { vtag.hidden = true; vtag.setAttribute('aria-hidden', 'true'); }
   tl.insertAdjacentHTML('beforeend', svg('pinF', 'pinmark'));
   var meta = el('span', 'meta', body), why = el('span', 'why', meta), desc = el('span', 'desc', meta), host = el('span', 'host', meta);
   why.hidden = true;
-  var r = { d: d, li: li, link: a, folio: folio, title: title, vtag: vtag, flag: flag, why: why, desc: desc, host: host, chips: {}, sig: null, jobs: [], matchV: null, anim: null };
+  var r = { d: d, li: li, link: a, folio: folio, title: title, vtag: vtag, flag: flag, tpl: tpl, why: why, desc: desc, host: host, chips: {}, sig: null, jobs: [], matchV: null, anim: null };
   li._r = r;
   if (d.variants) {
     var chips = el('span', 'chips', body); chips.setAttribute('role', 'group');
@@ -100,16 +136,18 @@ function buildRow(d) {
 }
 function buildAll() {
   if (inkRO) inkRO.disconnect();
+  if (viewIO) { viewIO.disconnect(); inView.clear(); }
+  ioReady = false; inkBoot = 0;
   Object.keys(rows).forEach(function (k) { delete rows[k]; });
   Object.keys(bands).forEach(function (k) { delete bands[k]; });
   while (listEl.lastChild && listEl.lastChild !== caretEl) listEl.removeChild(listEl.lastChild);
-  ['pinned', 'recent', 'elsewhere', 'partial'].concat(GROUPS).forEach(function (g) {
+  ['pinned', 'recent', 'elsewhere', 'partial', 'guess'].concat(GROUPS).forEach(function (g) {
     var b = el('li', 'band'); b.setAttribute('role', 'presentation'); b.dataset.g = g;
     b.innerHTML = svg(GMETA[g].icon, 'band__icon');
     var bd = bands[g] = { li: b, text: el('span', 'band__text', b), count: el('span', 'band__count', b), anim: null };
     b._r = bd;
   });
-  DATA.forEach(function (d) { rows[d.id] = buildRow(d); });
+  DATA.forEach(function (d) { rows[d.id] = buildRow(d); if (viewIO) { rows[d.id].li._row = rows[d.id]; viewIO.observe(rows[d.id].li); } });
   active = null; lastKey = null; geoDirty = true; shelfSig = '';
 }
 function descOf(d, tg) {
@@ -125,22 +163,24 @@ function paintRow(r) {
   r.why.hidden = true; setText(r.why, '');
   setText(r.title, L(d));
   setText(r.desc, descOf(d, tg));
-  setText(r.host, tg.closed ? '' : tg.host); r.host.hidden = tg.closed;
+  setText(r.host, tg.closed ? '' : shortHost(tg.host)); r.host.hidden = tg.closed;
   r.flag.hidden = !(tg.closed || d.isNew); setText(r.flag, tg.closed ? s.closed : s.isNew);
   r.flag.classList.toggle('flag--closed', tg.closed);
   r.li.classList.toggle('is-closed', tg.closed);
   r.li.classList.toggle('is-pinned', isPinned(d.id));
   r.more.setAttribute('aria-label', L(d) + ' — ' + s.more);
-  if (tg.closed) r.link.removeAttribute('href'); else r.link.setAttribute('href', tg.url);
+  var isTpl = !tg.closed && F.isTemplate(tg.url);
+  r.tpl.hidden = !isTpl || !!(F.eng && F.eng.id === d.id);
+  if (tg.closed) r.link.removeAttribute('href'); else r.link.setAttribute('href', isTpl ? F.fillTemplate(tg.url, '') : tg.url);
   if (d.variants) d.variants.forEach(function (v) {
-    var c = r.chips[v.id]; setText(c, L(v));
+    var c = r.chips[v.id], lab = L(v); setText(c, lab); if (c.dataset.t !== lab) c.dataset.t = lab;
     c.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
     c.setAttribute('aria-label', L(d) + ' — ' + L(v));
     c.classList.toggle('is-hit', r.matchV === v);
   });
   if (r.vtag) { var on = !!(r.matchV && d.variants.length > 1); r.vtag.hidden = !on; setText(r.vtag, on ? L(r.matchV) : ''); }
   r.sig = null;
-  if (r.ink) placeInk(r);
+  if (r.ink) { if (inkAllowed(r)) placeInk(r); else r.inkStale = true; }
 }
 function placeInk(r, now) {
   if (!r.ink) return;
@@ -170,9 +210,13 @@ F.renderTabs = function () {
   list.forEach(function (x) {
     var b = el('button', 'tab', tabsEl); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = x.id; b.id = 'tab-' + x.id;
     b.setAttribute('aria-selected', x.id === store.tab ? 'true' : 'false'); b.tabIndex = x.id === store.tab ? 0 : -1;
-    el('span', 'tab__t', b).textContent = x.label; el('sup', 'tab__n', b).textContent = num(x.n);
+    el('span', 'tab__t', b).textContent = x.label;
+    if (GMETA[x.id] && GMETA[x.id].mine) el('span', 'tab__d', b);
+    el('span', 'tab__n', b).textContent = num(x.n);
   });
   slideTabs();
+  var cur = $('tab-' + store.tab);
+  if (cur && cur.scrollIntoView) cur.scrollIntoView({ inline: 'nearest', block: 'nearest' });
 };
 function slideTabs() { M.slide(tabsInk, $('tab-' + store.tab), 'xy'); }
 F.slideTabs = slideTabs;
@@ -194,7 +238,9 @@ tabsEl.addEventListener('keydown', function (e) {
   F.setTab(n.id); var t = $('tab-' + n.id); if (t) t.focus();
 });
 scopeEl.addEventListener('click', function () {
+  if (F.eng) { F.disengage(true); return; }
   if (F.palette && F.palette.test(seekEl.value)) { seekEl.value = ''; F.render({ animate: true }); seekEl.focus(); return; }
+  if (F.lastOut && F.lastOut.scope && /^\s*#/.test(seekEl.value)) { seekEl.value = ''; F.render({ animate: true }); seekEl.focus(); return; }
   if (store.tab !== 'all') F.setTab('all');
 });
 
@@ -203,14 +249,19 @@ F.getActive = function () { return active; };
 F.order = function () { return order; };
 
 function buildSeq(q, hasQ, tab, rec) {
+  F.lastOut = null;
+  if (F.eng && rows[F.eng.id]) { rows[F.eng.id].jobs = []; return [{ row: rows[F.eng.id] }]; }
   var s = T(), seq = [], inTab = function (d) { return tab === 'all' || (tab === 'pinned' ? isPinned(d.id) : tab === 'recent' ? rec.indexOf(d.id) !== -1 : d.group === tab); };
   if (hasQ) {
-    var out = F.search(seekEl.value, DATA, searchCtx()), list = out.full.length ? out.full : out.partial, here = [], away = [];
+    var out = F.search(seekEl.value, DATA, searchCtx()), guessed = !out.full.length && out.guess && out.guess.length, list = out.full.length ? out.full : guessed ? out.guess : out.partial, here = [], away = [];
+    F.lastOut = out;
     list.forEach(function (x) { (inTab(x.d) ? here : away).push(x); });
-    if (!out.full.length && list.length) seq.push({ band: 'partial', n: list.length, label: s.partial + ' ' + out.missed.map(function (m) { return '«' + m + '»'; }).join(' ') });
+    if (guessed) seq.push({ band: 'guess', n: list.length });
+    else if (!out.full.length && list.length) seq.push({ band: 'partial', n: list.length, label: s.partial + ' ' + (out.missedShown || out.missed).map(function (m) { return '«' + m + '»'; }).join(' ') });
     here.forEach(function (x) { seq.push({ row: rows[x.d.id], res: x }); });
     if (away.length) { seq.push({ band: 'elsewhere', n: away.length }); away.forEach(function (x) { seq.push({ row: rows[x.d.id], res: x }); }); }
   } else if (tab === 'pinned' || tab === 'recent') {
+    F.lastOut = null;
     (tab === 'pinned' ? livePins() : rec).forEach(function (id) { if (BY_ID[id]) seq.push({ row: rows[id] }); });
   } else {
     var pinned = livePins().map(function (id) { return BY_ID[id]; });
@@ -226,14 +277,15 @@ function buildSeq(q, hasQ, tab, rec) {
 }
 
 function reconcile(nodes) {
-  var cur = listEl.firstElementChild, i, n, nx;
-  if (cur === caretEl) cur = cur.nextElementSibling;
+  var want = new Set(nodes), cur = listEl.firstElementChild, i, n;
   for (i = 0; i < nodes.length; i++) {
     n = nodes[i];
+    while (cur && (cur === caretEl || !want.has(cur))) cur = cur.nextElementSibling;
+    if (n.hidden) n.hidden = false;
     if (cur === n) { cur = cur.nextElementSibling; continue; }
     listEl.insertBefore(n, cur);
   }
-  while (cur) { nx = cur.nextElementSibling; if (cur !== caretEl) listEl.removeChild(cur); cur = nx; }
+  for (cur = listEl.firstElementChild; cur; cur = cur.nextElementSibling) if (cur !== caretEl && !cur.hidden && !want.has(cur)) cur.hidden = true;
 }
 function holder(n) { return n._r || n; }
 function idOf(row) { return row.d ? row.d.id : row.id; }
@@ -241,10 +293,14 @@ function idOf(row) { return row.d ? row.d.id : row.id; }
 F.render = function (opts) {
   opts = opts || {};
   var t0 = F.perf ? performance.now() : 0;
-  var snap = null;
-  if (M.ok() && !opts.noFlip) { var cur = [], cn = listEl.firstElementChild; while (cn) { if (cn !== caretEl) cur.push(cn); cn = cn.nextElementSibling; } snap = { nodes: cur, map: cur.length ? M.snap(listEl, cur) : new Map() }; }
+  var snap = null, burst = !opts.animate && performance.now() - (F.keyAt || 0) < 90;
+  if (M.ok() && !opts.noFlip && !burst) {
+    var cur = [], cn = listEl.firstElementChild;
+    while (cn) { if (cn !== caretEl && (!viewIO || inView.has(cn) || !ioReady)) cur.push(cn); cn = cn.nextElementSibling; }
+    if (cur.length <= 40) snap = { nodes: cur, map: cur.length ? M.snap(listEl, cur) : new Map() };
+  }
   if (HL) HL.clear();
-  var s = T(), raw = seekEl.value, q = raw.trim(), hasQ = q.length > 0, tab = store.tab, cmd = !!(F.palette && F.palette.test(raw));
+  var s = T(), raw = seekEl.value, q = raw.trim(), hasQ = q.length > 0, tab = store.tab, cmd = !F.eng && !!(F.palette && F.palette.test(raw));
   seekFieldEl.classList.toggle('has-value', raw.length > 0);
   var rec = recentIds(), seq, i, x, r;
   if (cmd) {
@@ -268,6 +324,7 @@ F.render = function (opts) {
       applyJobs(r, fresh);
     }
   }
+  listEl.dataset.mode = F.lastOut && F.lastOut.mode ? F.lastOut.mode : '';
   var nodes = [], shown = {};
   seq.forEach(function (y) {
     if (y.band) { var b = bands[y.band]; setText(b.text, y.label || L(GMETA[y.band])); setText(b.count, num(y.n)); nodes.push(b.li); return; }
@@ -285,8 +342,10 @@ F.render = function (opts) {
   document.body.classList.toggle('is-empty', n === 0);
   document.body.classList.toggle('is-cmd', cmd);
   if (n === 0) F.paintEmpty(q);
-  var label = cmd ? s.commands : (tab !== 'all' ? (TAB_LIST.filter(function (z) { return z.id === tab; })[0] || {}).label : '');
-  scopeEl.hidden = !label; if (label) setText(scopeEl, (cmd ? '⌘ ' : '') + label);
+  var scoped = !cmd && hasQ && F.lastOut && F.lastOut.scope ? F.lastOut.scope : null;
+  var engL = F.eng && BY_ID[F.eng.id] ? L(BY_ID[F.eng.id]) : '';
+  var label = engL ? engL : cmd ? s.commands : scoped ? L(scoped) : (tab !== 'all' ? (TAB_LIST.filter(function (z) { return z.id === tab; })[0] || {}).label : '');
+  scopeEl.hidden = !label; if (label) setText(scopeEl, (engL ? '\u25C6 ' : cmd ? '⌘ ' : scoped ? '# ' : '') + label);
   scopeEl.setAttribute('aria-label', label ? label + ' — ' + s.scopeAll : '');
   var total = cmd ? F.palette.total() : DATA.length;
   setText(countEl, hasQ || tab !== 'all' ? num(n) + ' / ' + num(total) : num(total));
@@ -314,6 +373,7 @@ function annotate(res) {
     else if (m.kind === 'variant') { if (v && m.vid === v.id && m.lang === shownLang(v)) { put('chip', r.chips[v.id], m.raw, m.ranges); if (vtagOn) put('vtag', r.vtag, m.raw, m.ranges); } }
     else if (m.kind === 'desc') { if (descT === m.raw) put('desc', r.desc, m.raw, m.ranges); }
     else if (m.kind === 'host') { if (hostT && hostT.indexOf(m.raw) === 0) put('host', r.host, hostT, m.ranges); }
+    else if (m.kind === 'url') { if (hostT) put('host', r.host, m.raw, m.ranges); }
     else if (res.why && m.raw === res.why && !hid) hid = m;
   });
   for (i = 0; i < acc.length; i++) painted += acc[i].rg.length;
@@ -356,8 +416,13 @@ F.searchCtx = searchCtx;
 var geo = new Map(), geoDirty = true, caretWant = null, caretInstant = false, caretShown = false, caretAnim = null;
 function measureGeo() {
   geo.clear();
-  for (var i = 0; i < order.length; i++) { var r = order[i]; geo.set(r, { y: r.li.offsetTop + r.link.offsetTop, h: r.link.offsetHeight }); }
   geoDirty = false;
+  if (caretWant) geoOf(caretWant);
+}
+function geoOf(r) {
+  var g = geo.get(r);
+  if (!g) { g = { y: r.li.offsetTop + r.link.offsetTop, h: r.link.offsetHeight }; geo.set(r, g); }
+  return g;
 }
 var caretAt = null;
 function placeCaret() {
@@ -385,7 +450,7 @@ function placeCaret() {
 function caretTo(r, instant) {
   caretWant = r; caretInstant = !!instant;
   if (!r) { placeCaret(); return; }
-  if (geoDirty || !geo.has(r)) M.frame(function () { if (geoDirty || (caretWant && !geo.has(caretWant))) measureGeo(); }, placeCaret);
+  if (geoDirty || !geo.has(r)) M.frame(function () { if (geoDirty) measureGeo(); else if (caretWant) geoOf(caretWant); }, placeCaret);
   else placeCaret();
 }
 F.recaret = function () { geoDirty = true; if (active) caretTo(active, true); };
@@ -456,13 +521,14 @@ var FULL = 'inset(0px 0px 0px 0px round 0px)';
 F.openTool = function (r, v, mode, fromEl) {
   var d = r.d, tg = target(d, v || r.matchV);
   if (tg.closed) { F.toast(T().closedToast); return; }
-  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); window.open(tg.url, '_blank', 'noopener'); F.renderTabs(); F.toast(T().newTabToast); return; }
+  var dest = F.isTemplate(tg.url) ? F.fillTemplate(tg.url, F.eng && F.eng.id === d.id ? seekEl.value : '') : tg.url;
+  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); window.open(dest, '_blank', 'noopener'); F.renderTabs(); F.toast(T().newTabToast); return; }
   if (committing) return;
   remember(d, tg.v); committing = true;
   F.closeSheet(true);
   setText(plateTitle, L(d) + (tg.v ? ' — ' + L(tg.v) : ''));
   plateEl.style.setProperty('--plate', d.pig);
-  if (!M.ok()) { location.href = tg.url; armPlateGuard(); return; }
+  if (!M.ok()) { location.href = dest; armPlateGuard(); return; }
   lastFrom = insetFor((fromEl || r.link).getBoundingClientRect());
   var items = Array.prototype.slice.call(listEl.querySelectorAll('.row-link, .band'));
   var pivot = items.indexOf(r.link), st = items.length > 1 ? 110 / (items.length - 1) : 0;
@@ -470,7 +536,7 @@ F.openTool = function (r, v, mode, fromEl) {
   indexEl.classList.add('is-committing');
   plateFill.style.clipPath = lastFrom;
   plateEl.classList.add('is-live');
-  var gone = false, go = function () { if (gone) return; gone = true; location.href = tg.url; armPlateGuard(); };
+  var gone = false, go = function () { if (gone) return; gone = true; location.href = dest; armPlateGuard(); };
   var a = plateFill.animate([{ clipPath: lastFrom }, { clipPath: FULL }], { duration: 320, easing: M.EASE_OUT, fill: 'forwards' });
   plateTitle.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 240, delay: 120, easing: M.EASE_OUT, fill: 'both' });
   a.finished.then(go, go);
@@ -588,10 +654,37 @@ F.toast = function (msg, actLabel, actFn, ms) {
   toastT = setTimeout(toastHide, dur);
 };
 
+F.engage = function (r) {
+  if (!r || F.eng) return;
+  F.eng = { id: r.d.id };
+  seekEl.value = '';
+  F.setActive(null);
+  F.render({ animate: true });
+  F.setActive(rows[r.d.id], { noScroll: true });
+  seekEl.focus();
+};
+F.disengage = function (clear) {
+  if (!F.eng) return;
+  F.eng = null;
+  if (clear) seekEl.value = '';
+  F.render({ animate: true });
+  seekEl.focus();
+};
+F.openHref = function (href) {
+  var a = document.createElement('a');
+  a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  document.body.appendChild(a); a.click(); a.remove();
+};
 F.paintEmpty = function (q) {
   var s = T(), box = $('empty-body'); box.textContent = '';
   el('strong', '', box).textContent = s.empty;
   el('div', '', box).textContent = s.emptyHint;
+  var lo = F.lastOut;
+  if (lo && lo.url && lo.href && !(F.palette && F.palette.test(q))) {
+    var ob = el('button', 'empty__btn', box); ob.type = 'button'; ob.textContent = s.openLink; ob.addEventListener('click', function () { F.openHref(lo.href); });
+    if (F.personalAdd) { var ab = el('button', 'empty__btn', box); ab.type = 'button'; ab.textContent = s.addLink; ab.addEventListener('click', function () { F.personalAdd(lo.href); }); }
+    return;
+  }
   if (q && !(F.palette && F.palette.test(q))) {
     var alt = F.swapLayout(q);
     if (alt !== q) {

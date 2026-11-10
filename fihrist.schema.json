@@ -66,6 +66,22 @@
       "markdownDescription": "### Tools · الأدوات\n\nOne row per tool, in this order. Each tool has **either** a single `url` **or** a list of `variants`.\n\nType `{` inside the array to pick a ready-made tool.",
       "minItems": 1,
       "items": { "$ref": "#/$defs/tool" }
+    },
+    "lexicon": {
+      "type": "object",
+      "title": "Lexicon · قاموس المرادفات",
+      "markdownDescription": "### Lexicon · قاموس المرادفات\n\nOptional. Teaches description search your own words: each key is a term and its list holds synonyms, in any of Arabic, English or Franco. Up to 200 terms, 10 synonyms each.\n\nيعلّم البحث بالوصف كلماتك الخاصة: كل مفتاح كلمة وقائمته مرادفاتها بالعربية أو الإنجليزية أو الفرانكو.",
+      "maxProperties": 200,
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "minItems": 1,
+        "maxItems": 10
+      },
+      "examples": [{ "ledger": ["دفتر", "daftar", "register"] }],
+      "defaultSnippets": [
+        { "label": "{ term: [synonyms] }", "body": { "${1:term}": ["${2:synonym}", "${3:مرادف}"] } }
+      ]
     }
   },
   "$defs": {

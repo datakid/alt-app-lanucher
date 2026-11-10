@@ -114,7 +114,10 @@ function slideWrite(ind, xy, now) {
   if (tween) {
     var f0 = { transform: 'translate(' + from.x + 'px,' + from.y + 'px)', width: from.w + 'px' }, f1 = { transform: t, width: to.w + 'px' };
     if (xy) { f0.height = from.h + 'px'; f1.height = to.h + 'px'; }
-    ind._slide = ind.animate([f0, f1], { duration: 320, easing: EASE_OUT });
+    ind._slide = ind.animate([f0, f1], { duration: 280, easing: EASE_OUT });
+    ind.classList.add('is-moving');
+    clearTimeout(ind._wc);
+    ind._wc = setTimeout(function () { ind.classList.remove('is-moving'); }, 780);
   }
   ind._at = to;
 }

@@ -5,7 +5,7 @@ var vm = require('vm');
 
 var root = path.join(__dirname, '..');
 
-function loadCore(seedStore) {
+function loadCore(seedStore, opts) {
   var mem = seedStore || {};
   var store = {
     getItem: function (k) { return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null; },
@@ -28,7 +28,12 @@ function loadCore(seedStore) {
     location: win.location,
     console: console
   }));
-  vm.runInContext(fs.readFileSync(path.join(root, 'js', 'core.js'), 'utf8'), ctx, { filename: 'core.js' });
+  if (opts && opts.url) ctx.URL = URL;
+  vm.runInContext(fs.readFileSync((opts && opts.corePath) || path.join(root, 'js', 'core.js'), 'utf8'), ctx, { filename: 'core.js' });
+  if (opts && opts.scripts) {
+    ctx.TextEncoder = TextEncoder; ctx.TextDecoder = TextDecoder; ctx.Uint8Array = Uint8Array; ctx.Uint16Array = Uint16Array; ctx.Uint32Array = Uint32Array;
+    opts.scripts.forEach(function (s) { vm.runInContext(fs.readFileSync(path.join(root, s), 'utf8'), ctx, { filename: s }); });
+  }
   return { F: win.F, mem: mem };
 }
 
