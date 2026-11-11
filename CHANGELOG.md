@@ -18,6 +18,7 @@
 - Visual identity: a ruled margin that the caret rides on, rubricated group bands that end in a diamond, an illuminated active row, pigment drops, a faint paper grain, a focus underline and a rotating search hint.
 - The search index builds 2 to 4 times faster than in 5.0.1 (field forms and join text are made only when a query needs them, words are split with native string search, the vocabulary uses a `Map`). It is built in small slices during idle time, so it no longer sits in front of the first paint, and a search typed meanwhile finishes the rest at once. Results are cached and only visible rows are measured, so typing stays fast with hundreds of links.
 - Hidden rows are hidden in place instead of being removed from the page.
+- The tool sheet's version selector shows the start of each host (the part that tells versions apart), with even spacing and no clipping, and keeps three versions on one row on phones.
 
 ### Fixed
 - Everything listed under 5.0.1.

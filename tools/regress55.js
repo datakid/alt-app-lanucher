@@ -76,6 +76,13 @@ var CASES = [
 
 var LIVE = [
   { q: 'power query', top: 'power-query-manager' },
+  { q: 'power query viewer', top: 'power-query-manager' },
+  { q: 'javascript', top: 'platen' },
+  { q: 'golang', top: 'platen' },
+  { q: 'rust', top: 'platen' },
+  { q: 'sql', top: 'platen' },
+  { q: 'جافاسكريبت', top: 'platen' },
+  { q: 'coding practice', top: 'platen' },
   { q: 'باور كويري', top: 'power-query-manager' },
   { q: 'python practice', top: 'platen' },
   { q: 'بايثون', top: 'platen' },

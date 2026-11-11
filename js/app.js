@@ -105,13 +105,33 @@ var inkRO = 'ResizeObserver' in window ? new ResizeObserver(function (entries) {
   if (list.length) M.slideMany(list, 'xy');
 }) : null;
 
-function shortHost(h) {
-  if (h.length <= 26) return h;
-  var dot = h.indexOf('.');
-  if (dot < 0) return h.slice(0, 12) + '\u2026' + h.slice(-12);
-  var tail = h.slice(dot + 1);
-  return h.slice(0, Math.min(dot, 8)) + '\u2026' + (tail.length > 16 ? h.slice(-14) : tail);
+function shortHost(h, max) {
+  max = max || 26;
+  if (h.length <= max) return h;
+  var dot = h.indexOf('.'), k;
+  if (dot < 0) { k = Math.floor((max - 1) / 2); return h.slice(0, k) + '\u2026' + h.slice(-k); }
+  var head = Math.max(4, Math.min(dot, 8)), room = max - head - 1, tail = h.slice(dot + 1);
+  if (tail.length > room) tail = h.slice(-room);
+  return h.slice(0, head).replace(/[-.]+$/, '') + '\u2026' + tail;
 }
+F.shortHost = shortHost;
+F.hostLabels = function (hosts, max) {
+  var parts = hosts.map(function (h) { var dot = h.indexOf('.'); return dot < 0 ? h : h.slice(0, dot) + '.' + h.slice(dot + 1).split('.')[0]; });
+  if (parts.every(function (p) { return p.length <= max; })) return parts;
+  return hosts.map(function (h) {
+    var dot = h.indexOf('.'), label = dot < 0 ? h : h.slice(0, dot);
+    return label.length <= max ? label : label.slice(0, max - 1).replace(/[-.]+$/, '') + '\u2026';
+  });
+};
+F.hostLabel = function (h, max) {
+  if (h.length <= max) return h;
+  var dot = h.indexOf('.');
+  if (dot < 0) return h.slice(0, max - 1) + '\u2026';
+  var label = h.slice(0, dot), prov = h.slice(dot + 1).split('.')[0], both = label + '.' + prov;
+  if (both.length <= max) return both;
+  if (label.length <= max) return label;
+  return label.slice(0, max - 1).replace(/[-.]+$/, '') + '\u2026';
+};
 function buildRow(d) {
   var li = el('li', 'row'); li.setAttribute('role', 'presentation'); li.dataset.id = d.id; li.style.setProperty('--pigment', d.pig);
   var a = el('a', 'row-link', li); a.id = 'opt-' + d.id; a.tabIndex = -1; a.draggable = false; a.rel = 'noopener'; a.setAttribute('role', 'option'); a.setAttribute('aria-selected', 'false');

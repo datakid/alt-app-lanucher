@@ -150,10 +150,11 @@ function toolSheet(r) {
     if (d.variants.length <= 4) {
       var vl = el('div', 'seg seg--v', sheetBody); vl.setAttribute('role', 'group'); vl.setAttribute('aria-label', s.versions);
       el('span', 'seg__ink', vl).setAttribute('aria-hidden', 'true');
-      d.variants.forEach(function (v) {
+      var hostTexts = F.hostLabels(d.variants.map(function (v) { return v.host; }), hostCap(d.variants.length));
+      d.variants.forEach(function (v, vi) {
         var b = el('button', 'seg__b' + (v.closed ? ' is-closed' : ''), vl); b.type = 'button';
         b.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
-        el('b', '', b).textContent = L(v); el('small', '', b).textContent = v.host;
+        el('b', '', b).textContent = L(v); el('small', '', b).textContent = hostTexts[vi];
         b.addEventListener('click', function () { pickVariant(r, v); });
         b.addEventListener('dblclick', function () { F.openTool(r, v); });
       });
@@ -162,7 +163,7 @@ function toolSheet(r) {
       d.variants.forEach(function (v) {
         var b = el('button', 'sv' + (v.closed ? ' is-closed' : ''), grid); b.type = 'button';
         b.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
-        el('b', '', b).textContent = L(v); el('small', '', b).textContent = v.host;
+        el('b', '', b).textContent = L(v); el('small', '', b).textContent = F.hostLabel(v.host, 26);
         b.addEventListener('click', function () { pickVariant(r, v); });
         b.addEventListener('dblclick', function () { F.openTool(r, v); });
       });
@@ -189,6 +190,7 @@ function toolSheet(r) {
   } else st.textContent = s.never;
   return first;
 }
+function hostCap(n) { return Math.max(12, Math.floor((window.innerWidth < 520 ? 42 : 66) / n)); }
 function pickVariant(r, v) {
   store.lastVariant[r.d.id] = v.id; r.matchV = seekEl.value.trim() ? v : null; F.persist(); F.paintRow(r); F.buzz();
   toolSheet(r); slideSegs();
