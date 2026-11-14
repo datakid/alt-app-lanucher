@@ -22,6 +22,30 @@ function tile(parent, label, icon, fn) {
   b.addEventListener('click', fn);
   return b;
 }
+function linkEl(parent, cls, label, icon, href, fn, iconCls) {
+  var b = el('a', cls, parent, svg(icon, iconCls || '')); b.draggable = false; b.rel = 'noopener';
+  el('span', '', b).textContent = label;
+  if (href) b.setAttribute('href', href); else b.setAttribute('aria-disabled', 'true');
+  b.addEventListener('click', function (e) {
+    if (!b.getAttribute('href')) { e.preventDefault(); return; }
+    fn(e, b);
+  });
+  return b;
+}
+function openLinkHandler(r, forceTab) {
+  return function (e, b) {
+    var mod = e.metaKey || e.ctrlKey || e.shiftKey;
+    if (mod || forceTab || store.newTab) {
+      if (!mod) b.target = '_blank';
+      if (!mod) F.closeSheet();
+      F.noteVisit(r);
+      return;
+    }
+    e.preventDefault();
+    b.removeAttribute('target');
+    F.openTool(r, null);
+  };
+}
 function head(title, sub, pig, flag) {
   sheetPanel.style.setProperty('--pigment', pig || 'var(--seal)');
   $('sheet-title').textContent = title;
@@ -86,7 +110,7 @@ F.sheetOpen = function () { return sheetEl.open; };
 sheetEl.addEventListener('cancel', function (e) { e.preventDefault(); F.closeSheet(); });
 sheetEl.addEventListener('click', function (e) { if (e.target === sheetEl || e.target === scrimEl) F.closeSheet(); });
 sheetEl.addEventListener('keydown', function (e) {
-  if (sheetRow && e.key === 'Enter' && !e.target.closest('button')) { e.preventDefault(); var tabbed = e.metaKey || e.ctrlKey; if (!tabbed && store.newTab) F.closeSheet(); F.openTool(sheetRow, null, tabbed ? 'tab' : null); }
+  if (sheetRow && e.key === 'Enter' && !e.target.closest('button, a[href]')) { e.preventDefault(); var tabbed = e.metaKey || e.ctrlKey; if (!tabbed && store.newTab) F.closeSheet(); F.openTool(sheetRow, null, tabbed ? 'tab' : null); }
 });
 sheetEl.addEventListener('close', function () { root.style.overflow = ''; });
 
@@ -158,6 +182,7 @@ function toolSheet(r) {
         b.addEventListener('click', function () { pickVariant(r, v); });
         b.addEventListener('dblclick', function () { F.openTool(r, v); });
       });
+      M.follow(vl.querySelector('.seg__ink'));
     } else {
       var grid = el('div', 'variants', sheetBody);
       d.variants.forEach(function (v) {
@@ -170,9 +195,11 @@ function toolSheet(r) {
     }
   }
   var acts = el('div', 'actions', sheetBody);
-  var first = act(acts, s.open, 'go', function () { if (store.newTab) F.closeSheet(); F.openTool(r, null); }, 'act--primary', '↵', tg.closed);
+  var dest = F.hrefOf(d, r.matchV);
+  var first = linkEl(acts, 'act act--primary', s.open, 'go', dest, openLinkHandler(r, false), root.dir === 'rtl' ? 'flip' : '');
+  el('span', 'kbd', first).textContent = '↵';
   var tiles = el('div', 'tiles', sheetBody);
-  tile(tiles, s.newTab, 'ext', function () { F.closeSheet(); F.openTool(r, null, 'tab'); }).disabled = tg.closed;
+  linkEl(tiles, 'tile', s.newTab, 'ext', dest, openLinkHandler(r, true));
   tile(tiles, F.isPinned(d.id) ? s.unpin : s.pin, 'pin', function () { F.closeSheet(); F.togglePin(r); });
   tile(tiles, s.copy, 'copy', function () { F.closeSheet(); F.copyUrl(r); });
   if (d.mine) {
@@ -182,6 +209,7 @@ function toolSheet(r) {
   tile(tiles, s.deep, 'link', function () { F.closeSheet(); F.copyText(location.href.split('#')[0].split('?')[0] + '#' + d.id); });
   if (navigator.share) tile(tiles, s.share, 'share', function () { F.closeSheet(); navigator.share({ title: L(d), url: F.target(d, r.matchV).url }).catch(function () {}); });
   if (F.qr) tile(tiles, s.qr, 'qr', function () { qrView(r); }).disabled = tg.closed;
+  tiles.dataset.n = String(tiles.children.length); tiles.dataset.r = String(tiles.children.length % 3); tiles.dataset.o = String(tiles.children.length % 2);
   var v = store.visits[d.id], st = el('div', 'stat', sheetBody);
   if (v) {
     var t1 = el('span', '', st); t1.append(s.opened + ' '); el('b', '', t1).textContent = num(v.n); t1.append(' ' + s.times);
@@ -255,6 +283,7 @@ function seg(parent, label, opts, cur, fn, quiet) {
       fn(o[0]);
     });
   });
+  M.follow(g.querySelector('.seg__ink'));
 }
 function card(title) {
   var c = el('section', 'card-group', sheetBody);
@@ -419,35 +448,55 @@ listEl.addEventListener('click', function (e) {
   if (listEl._suppress) { listEl._suppress = false; e.preventDefault(); return; }
   var r = rowOf(e.target); if (!r) return;
   if (r.cmd) { e.preventDefault(); F.setActive(r, { noScroll: true }); P.run(r); return; }
-  var mod = e.metaKey || e.ctrlKey || e.shiftKey, plain = !e.target.closest('.more, .chip');
-  if (mod && plain && r.link.getAttribute('href')) { F.setActive(r, { noScroll: true }); F.noteVisit(r); return; }
-  e.preventDefault();
-  F.setActive(r, { noScroll: true });
-  if (e.target.closest('.more')) { F.openSheet(r); return; }
-  var chip = e.target.closest('.chip'), v = null;
+  if (e.target.closest('.more')) { e.preventDefault(); F.setActive(r, { noScroll: true }); F.openSheet(r); return; }
+  var chip = e.target.closest('.chip'), v = null, a = chip || r.link;
   if (chip) v = r.d.variants.filter(function (x) { return x.id === chip.dataset.v; })[0];
-  F.openTool(r, v, mod ? 'tab' : null);
+  var mod = e.metaKey || e.ctrlKey || e.shiftKey;
+  if (a.getAttribute('href') && (mod || store.newTab)) {
+    if (!mod) a.target = '_blank';
+    F.setActive(r, { noScroll: true }); F.noteVisit(r, v); return;
+  }
+  e.preventDefault();
+  a.removeAttribute('target');
+  F.setActive(r, { noScroll: true });
+  F.openTool(r, v, null);
 });
 listEl.addEventListener('auxclick', function (e) {
   if (e.button !== 1) return;
   var r = rowOf(e.target); if (!r || r.cmd) return;
-  if (!e.target.closest('.more, .chip') && r.link.getAttribute('href')) { F.noteVisit(r); return; }
+  var chip = e.target.closest('.chip'), a = chip || r.link;
+  if (!e.target.closest('.more') && a.getAttribute('href')) {
+    F.noteVisit(r, chip ? r.d.variants.filter(function (x) { return x.id === chip.dataset.v; })[0] : null);
+    return;
+  }
   e.preventDefault();
-  var ch = e.target.closest('.chip');
-  F.openTool(r, ch ? r.d.variants.filter(function (x) { return x.id === ch.dataset.v; })[0] : null, 'tab');
+  F.openTool(r, null, 'tab');
 });
 shelfTrack.addEventListener('click', function (e) {
   if (shelfTrack._suppress) { shelfTrack._suppress = false; e.preventDefault(); return; }
   var c = e.target.closest('.card'); if (!c) return;
   var r = F.rows[c.dataset.id]; if (!r) return;
-  F.openTool(r, null, (e.metaKey || e.ctrlKey || e.shiftKey) ? 'tab' : null, c);
+  var mod = e.metaKey || e.ctrlKey || e.shiftKey;
+  if (c.getAttribute('href') && (mod || store.newTab)) {
+    if (!mod) c.target = '_blank';
+    F.noteVisit(r); return;
+  }
+  e.preventDefault();
+  c.removeAttribute('target');
+  F.openTool(r, null, null, c);
 });
 shelfTrack.addEventListener('auxclick', function (e) {
   if (e.button !== 1) return;
   var c = e.target.closest('.card'); if (!c || !F.rows[c.dataset.id]) return;
-  e.preventDefault(); F.openTool(F.rows[c.dataset.id], null, 'tab');
+  if (c.getAttribute('href')) { F.noteVisit(F.rows[c.dataset.id]); return; }
+  e.preventDefault();
 });
 shelfTrack.addEventListener('keydown', function (e) {
+  if (e.key === ' ' && !e.repeat && !e.metaKey && !e.ctrlKey && !e.altKey && e.target.closest && e.target.closest('.card')) {
+    e.preventDefault(); e.stopPropagation();
+    e.target.closest('.card').click();
+    return;
+  }
   if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
   var cards = Array.prototype.slice.call(shelfTrack.querySelectorAll('.card')), i = cards.indexOf(document.activeElement);
   if (i === -1) return;
@@ -656,7 +705,7 @@ addEventListener('offline', function () { F.toast(T().offline); });
 addEventListener('online', function () { F.toast(T().online); });
 
 if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { $('seek-wrap').classList.toggle('is-stuck', !en[0].isIntersecting); }).observe($('stick-sentinel'));
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { F.recaret(); F.slideTabs(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { F.recaret(); F.slideTabs(true); });
 
 var mineLoading = null;
 F.loadMine = function (cb) {

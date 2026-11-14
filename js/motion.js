@@ -99,33 +99,83 @@ M.flip = function (nodes, mutateFn, opts) {
   });
 };
 
+function liveRect(ind) {
+  var cs = getComputedStyle(ind), m;
+  try { m = new DOMMatrixReadOnly(cs.transform === 'none' ? '' : cs.transform); } catch (e) { m = { m41: 0, m42: 0 }; }
+  return { x: m.m41, y: m.m42, w: parseFloat(cs.width) || 0, h: parseFloat(cs.height) || 0 };
+}
+function near(a, b) {
+  return Math.abs(a.x - b.x) < .5 && Math.abs(a.y - b.y) < .5 && Math.abs(a.w - b.w) < .5 && Math.abs(a.h - b.h) < .5;
+}
 function slideRead(ind, target, xy) {
+  ind._want = target; ind._xy = xy;
   ind._next = target && target.isConnected ? { x: target.offsetLeft, y: xy ? target.offsetTop : 0, w: target.offsetWidth, h: xy ? target.offsetHeight : 0 } : null;
 }
+function endMove(ind) {
+  clearTimeout(ind._wc);
+  ind.classList.remove('is-moving');
+}
 function slideWrite(ind, xy, now) {
-  var to = ind._next, from = ind._at;
+  var to = ind._next, from;
   ind._next = null;
-  if (!to || !to.w) { ind.style.opacity = '0'; ind._at = null; return; }
+  if (!to || !to.w) {
+    if (ind._slide) { try { ind._slide.cancel(); } catch (e) {} ind._slide = null; }
+    endMove(ind);
+    ind.style.opacity = '0'; ind._at = null;
+    return;
+  }
+  from = ind._slide ? liveRect(ind) : ind._at;
   var t = 'translate(' + to.x + 'px,' + to.y + 'px)';
-  var tween = from && M.ok() && !now && ind.style.opacity !== '0' && (from.x !== to.x || from.y !== to.y || from.w !== to.w || from.h !== to.h);
+  var tween = from && M.ok() && !now && ind.style.opacity !== '0' && !near(from, to);
   if (ind._slide) { try { ind._slide.cancel(); } catch (e) {} ind._slide = null; }
   ind.style.transform = t; ind.style.width = to.w + 'px'; if (xy) ind.style.height = to.h + 'px';
   ind.style.opacity = '1';
   if (tween) {
     var f0 = { transform: 'translate(' + from.x + 'px,' + from.y + 'px)', width: from.w + 'px' }, f1 = { transform: t, width: to.w + 'px' };
     if (xy) { f0.height = from.h + 'px'; f1.height = to.h + 'px'; }
-    ind._slide = ind.animate([f0, f1], { duration: 280, easing: EASE_OUT });
+    var dur = Math.round(Math.min(420, 200 + Math.hypot(to.x - from.x, to.y - from.y) * .4));
+    var anim = ind.animate([f0, f1], { duration: dur, easing: EASE_OUT });
+    ind._slide = anim;
     ind.classList.add('is-moving');
-    clearTimeout(ind._wc);
-    ind._wc = setTimeout(function () { ind.classList.remove('is-moving'); }, 780);
-  }
+    var done = function () { if (ind._slide === anim) { ind._slide = null; endMove(ind); } };
+    anim.onfinish = done; anim.oncancel = function () { if (ind._slide === anim) ind._slide = null; };
+  } else endMove(ind);
   ind._at = to;
 }
+function settle(ind) {
+  if (ind._want === undefined || !ind.isConnected) return;
+  slideRead(ind, ind._want, ind._xy);
+  var n = ind._next;
+  if (n && n.w && ind._at && near(n, ind._at)) { ind._next = null; return; }
+  slideWrite(ind, ind._xy, true);
+}
+var followRO = 'ResizeObserver' in window ? new ResizeObserver(function (entries) {
+  var hosts = [], list = [], i, t, h;
+  for (i = 0; i < entries.length; i++) {
+    t = entries[i].target;
+    h = t._inkSet ? t : t.parentNode;
+    if (h && h._inkSet && hosts.indexOf(h) < 0) hosts.push(h);
+  }
+  hosts.forEach(function (x) { x._inkSet.forEach(function (ind) { list.push(ind); }); });
+  for (i = 0; i < list.length; i++) settle(list[i]);
+}) : null;
+M.follow = function (ind) {
+  var box = ind && ind.parentNode, c;
+  if (!followRO || !box) return;
+  if (!box._inkSet) { box._inkSet = new Set(); followRO.observe(box, { box: 'border-box' }); }
+  box._inkSet.add(ind);
+  for (c = box.firstElementChild; c; c = c.nextElementSibling) {
+    if (c !== ind && !c._inkSeen) { c._inkSeen = true; followRO.observe(c, { box: 'border-box' }); }
+  }
+};
 M.slide = function (ind, target, axis, now) {
   if (!ind) return;
   var xy = axis === 'xy';
+  ind._want = target; ind._xy = xy;
   if (now) { slideRead(ind, target, xy); slideWrite(ind, xy, true); return; }
-  M.frame(function () { slideRead(ind, target, xy); }, function () { slideWrite(ind, xy, false); });
+  if (ind._queued) return;
+  ind._queued = true;
+  M.frame(function () { slideRead(ind, ind._want, ind._xy); }, function () { ind._queued = false; slideWrite(ind, ind._xy, false); });
 };
 M.slideMany = function (list, axis) {
   var xy = axis === 'xy', i;

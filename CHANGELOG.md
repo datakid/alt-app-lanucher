@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — 2026-11-14
+
+### Fixed
+- Sliding pills (tabs, version chips, segmented controls) could take a wrong shape or sit off their tab after a font load, a count change, a wider sibling, a padding change, a rotation or a language switch. The pill now follows its tab through a resize observer on the tab, its siblings and its container, restarts an interrupted slide from where it visually is, and coalesces several moves in one frame instead of hiding itself.
+- Ctrl, Shift and middle click open a new tab again on rows, version chips, Today cards and the tool sheet, including with uBlock Origin. Chips, cards and the sheet's **Open** and **New tab** actions are real links with real addresses, so the browser performs the click itself instead of the page calling `window.open`. Template tools keep their link in step with the typed argument.
+- Space activates a focused Today card, as it does on a button.
+
+### Changed
+- Tool sheet actions balance their rows (no lone tile left of centre) and keep clear of the focus ring around **Open**.
+- Pressing the selected tab, chip or segment no longer shrinks its label off the pill. Segmented controls use a radius concentric with their frame, and the switch knob stretches while pressed.
+- Long press on touch no longer shows the browser's link preview over rows, chips, cards and buttons.
+
 ## 5.5 — 2026-11-07
 
 ### Added

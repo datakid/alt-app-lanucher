@@ -77,6 +77,21 @@ F.target = function (d, v) {
   return v ? { url: v.url, host: v.host, v: v, closed: !!(d.closed || v.closed) } : { url: d.url, host: d.host, v: null, closed: !!d.closed };
 };
 var target = F.target;
+F.hrefOf = function (d, v) {
+  var tg = target(d, v);
+  if (tg.closed) return null;
+  if (!F.isTemplate(tg.url)) return tg.url;
+  return F.fillTemplate(tg.url, F.eng && F.eng.id === d.id ? $('seek').value : '');
+};
+F.syncHrefs = function (r) {
+  if (!r || !r.d) return;
+  var h = F.hrefOf(r.d, r.matchV);
+  if (h) r.link.setAttribute('href', h); else r.link.removeAttribute('href');
+  if (r.d.variants) r.d.variants.forEach(function (v) {
+    var c = r.chips[v.id], vh = F.hrefOf(r.d, v);
+    if (vh) c.setAttribute('href', vh); else c.removeAttribute('href');
+  });
+};
 
 var inView = new Set(), ioReady = false, inkBoot = 0;
 var viewIO = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
@@ -95,10 +110,11 @@ function inkAllowed(r) {
   return false;
 }
 var inkRO = 'ResizeObserver' in window ? new ResizeObserver(function (entries) {
-  var list = [];
+  var list = [], seen = [];
   entries.forEach(function (e) {
     var r = e.target._r;
-    if (!r || !r.ink) return;
+    if (!r || !r.ink || seen.indexOf(r) >= 0) return;
+    seen.push(r);
     if (!inkAllowed(r)) { r.inkStale = true; return; }
     var tg = target(r.d, r.matchV); list.push([r.ink, tg.v ? r.chips[tg.v.id] : null]);
   });
@@ -148,8 +164,12 @@ function buildRow(d) {
   if (d.variants) {
     var chips = el('span', 'chips', body); chips.setAttribute('role', 'group');
     r.ink = el('span', 'chips__ink', chips); r.ink.setAttribute('aria-hidden', 'true');
-    d.variants.forEach(function (v) { var c = el('button', 'chip', chips); c.type = 'button'; c.tabIndex = -1; c.dataset.v = v.id; r.chips[v.id] = c; });
-    chips._r = r; if (inkRO) inkRO.observe(chips);
+    chips._r = r; if (inkRO) inkRO.observe(chips, { box: 'border-box' });
+    d.variants.forEach(function (v) {
+      var c = el('a', 'chip', chips); c.tabIndex = -1; c.draggable = false; c.rel = 'noopener'; c.dataset.v = v.id;
+      c._r = r; r.chips[v.id] = c;
+      if (inkRO) inkRO.observe(c, { box: 'border-box' });
+    });
   }
   r.more = el('button', 'more', a, svg('more')); r.more.type = 'button'; r.more.tabIndex = -1;
   return r;
@@ -191,7 +211,7 @@ function paintRow(r) {
   r.more.setAttribute('aria-label', L(d) + ' — ' + s.more);
   var isTpl = !tg.closed && F.isTemplate(tg.url);
   r.tpl.hidden = !isTpl || !!(F.eng && F.eng.id === d.id);
-  if (tg.closed) r.link.removeAttribute('href'); else r.link.setAttribute('href', isTpl ? F.fillTemplate(tg.url, '') : tg.url);
+  F.syncHrefs(r);
   if (d.variants) d.variants.forEach(function (v) {
     var c = r.chips[v.id], lab = L(v); setText(c, lab); if (c.dataset.t !== lab) c.dataset.t = lab;
     c.setAttribute('aria-current', tg.v === v ? 'true' : 'false');
@@ -234,11 +254,11 @@ F.renderTabs = function () {
     if (GMETA[x.id] && GMETA[x.id].mine) el('span', 'tab__d', b);
     el('span', 'tab__n', b).textContent = num(x.n);
   });
-  slideTabs();
+  slideTabs(tabsInk._cur == null || tabsInk._cur === store.tab);
   var cur = $('tab-' + store.tab);
   if (cur && cur.scrollIntoView) cur.scrollIntoView({ inline: 'nearest', block: 'nearest' });
 };
-function slideTabs() { M.slide(tabsInk, $('tab-' + store.tab), 'xy'); }
+function slideTabs(now) { tabsInk._cur = store.tab; M.follow(tabsInk); M.slide(tabsInk, $('tab-' + store.tab), 'xy', now === true); }
 F.slideTabs = slideTabs;
 F.setTab = function (id) {
   if (!TAB_LIST.some(function (x) { return x.id === id; })) return;
@@ -343,6 +363,7 @@ F.render = function (opts) {
       if (fresh) { paintRow(r); r.sig = sg; }
       applyJobs(r, fresh);
     }
+    if (F.eng && rows[F.eng.id]) F.syncHrefs(rows[F.eng.id]);
   }
   listEl.dataset.mode = F.lastOut && F.lastOut.mode ? F.lastOut.mode : '';
   var nodes = [], shown = {};
@@ -529,8 +550,8 @@ function armPlateGuard() {
   plateGuard = setTimeout(function () { if (document.visibilityState === 'visible') resetPlate(); }, 2500);
 }
 addEventListener('pagehide', function () { clearTimeout(plateGuard); });
-F.noteVisit = function (r) {
-  var tg = target(r.d, r.matchV);
+F.noteVisit = function (r, v) {
+  var tg = target(r.d, v || r.matchV);
   remember(r.d, tg.v); F.renderTabs(); F.toast(T().newTabToast);
 };
 function insetFor(rc) {
@@ -542,7 +563,7 @@ F.openTool = function (r, v, mode, fromEl) {
   var d = r.d, tg = target(d, v || r.matchV);
   if (tg.closed) { F.toast(T().closedToast); return; }
   var dest = F.isTemplate(tg.url) ? F.fillTemplate(tg.url, F.eng && F.eng.id === d.id ? seekEl.value : '') : tg.url;
-  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); window.open(dest, '_blank', 'noopener'); F.renderTabs(); F.toast(T().newTabToast); return; }
+  if (mode !== 'here' && (mode === 'tab' || store.newTab)) { remember(d, tg.v); F.openHref(dest); F.renderTabs(); F.toast(T().newTabToast); return; }
   if (committing) return;
   remember(d, tg.v); committing = true;
   F.closeSheet(true);
@@ -685,9 +706,11 @@ F.engage = function (r) {
 };
 F.disengage = function (clear) {
   if (!F.eng) return;
+  var prev = F.eng.id;
   F.eng = null;
   if (clear) seekEl.value = '';
   F.render({ animate: true });
+  if (rows[prev]) F.syncHrefs(rows[prev]);
   seekEl.focus();
 };
 F.openHref = function (href) {
@@ -737,7 +760,8 @@ function renderShelf() {
   shelfTrack.textContent = '';
   ids.forEach(function (id) {
     var d = BY_ID[id], tg = target(d), cell = el('div', 'shelf__cell', shelfTrack); cell.setAttribute('role', 'listitem');
-    var b = el('button', 'card', cell); b.type = 'button'; b.dataset.id = id; b.style.setProperty('--pigment', d.pig);
+    var b = el('a', 'card', cell); b.draggable = false; b.rel = 'noopener'; b.dataset.id = id; b.style.setProperty('--pigment', d.pig);
+    var ch = F.hrefOf(d); if (ch) b.setAttribute('href', ch);
     el('span', 'card__sw', b, svg((GMETA[d.group] || {}).icon || 'box')).setAttribute('aria-hidden', 'true');
     if (isPinned(id)) el('span', 'card__pin', b, svg('pinF')).setAttribute('aria-hidden', 'true');
     el('span', 'card__title', b).textContent = L(d);

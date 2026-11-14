@@ -1,5 +1,5 @@
 'use strict';
-var VERSION = 'fihrist-shell-a8bcf9da49';
+var VERSION = 'fihrist-shell-511e9dff7f';
 var FONTS = 'fihrist-fonts';
 var SHELL = ['index.html', 'manifest.webmanifest', 'css/tokens.css', 'css/app.css', 'js/data.js', 'js/core.js', 'js/strings.js', 'js/motion.js', 'js/app.js', 'js/palette.js', 'js/ui.js', 'js/qr.js', 'favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png', 'icons/apple-touch-180.png', 'js/xlsx.js', 'js/mine-core.js', 'js/mine-ui.js', 'templates/fihrist-links-template.xlsx', 'templates/fihrist-links-template.csv'];
 var FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
