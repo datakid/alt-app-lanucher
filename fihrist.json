@@ -1,8 +1,8 @@
 {
   "$schema": "./fihrist.schema.json",
   "format": "fihrist/5",
-  "revision": 8,
-  "updated": "2026-11-09",
+  "revision": 9,
+  "updated": "2026-11-16",
   "groups": [
     { "id": "core", "ar": "الأساسية", "en": "Core", "icon": "layers" },
     { "id": "tools", "ar": "الأدوات", "en": "Tools", "icon": "calc" },
@@ -111,9 +111,16 @@
       "ar": "الحصاد", "en": "Harvest Studio", "dar": "أيقونات التطبيقات وتلوين المجموعة", "den": "App favicons, glyph tracing and set colouring",
       "aliases": ["harvest", "harvest studio", "alhasad", "hasad", "favicon", "favicons", "icons", "icon", "ayqunat", "ayqonat", "الحصاد", "حصاد", "ايقونات", "أيقونات", "ايقونة"] },
 
-    { "id": "power-query-manager", "group": "tools", "pigment": "lapis", "url": "https://power-query-manager.vercel.app/", "since": "2026-11-09",
+    { "id": "power-query-manager", "group": "tools", "pigment": "lapis", "since": "2026-11-09",
       "ar": "مدير Power Query", "en": "Power Query Manager", "dar": "عارض ومدير Power Query", "den": "Power Query viewer and manager",
-      "aliases": ["pq", "power query", "powerquery", "queries", "m language", "باور كويري", "استعلامات"] },
+      "aliases": ["pq", "power query", "powerquery", "queries", "m language", "باور كويري", "استعلامات"], "def": 0,
+      "variants": [
+        { "id": "main", "ar": "الرئيسي", "en": "Main", "url": "https://power-query-manager.vercel.app/" },
+        { "id": "seam", "ar": "سيم", "en": "Seam", "dar": "إصلاح ملفات وورد وإكسل وباوربوينت التالفة", "den": "Repair damaged Word, Excel and PowerPoint files", "aliases": ["seam", "repair", "fix", "damaged", "corrupt", "corrupted", "office", "excel", "word", "powerpoint", "ismalah", "islah", "إصلاح", "اصلاح", "تالف", "تالفة", "ملف تالف", "أوفيس", "اكسل", "إكسل"], "url": "https://seam-1esq.vercel.app/" }
+      ] },
+    { "id": "randomizer", "group": "tools", "pigment": "malachite", "url": "https://randomizer-tawny-mu.vercel.app/", "since": "2026-11-16",
+      "ar": "مولد ارقام عشوائية", "en": "Randomizer", "dar": "كلمات مرور وجداول واختيار ونرد وأرقام عشوائية", "den": "Passwords, tables, picks, dice and random numbers",
+      "aliases": ["random", "randomizer", "random numbers", "random number generator", "generator", "password", "passwords", "dice", "roll", "pick", "muwallid", "mowalled", "moulid arqam", "arqam ashwaeya", "عشوائي", "عشوائية", "ارقام عشوائية", "أرقام عشوائية", "مولد", "مولد أرقام", "كلمة مرور", "نرد"] },
     { "id": "typing-practice", "group": "practice", "pigment": "orpiment", "url": "https://typing-practice-wine-eta.vercel.app/", "since": "2026-10-17",
       "ar": "تمرين الكتابة", "en": "Typing Practice", "dar": "تدريب على الكتابة بلوحة المفاتيح", "den": "Keyboard typing practice",
       "aliases": ["tamreen el-kitaba", "tadreeb", "tadreeb kitaba", "typing", "typing practice", "typing test", "tarq", "keyboard", "kitaba", "تدريب", "تدريب كتابة", "كتابة", "تمرين", "طرق"] },
